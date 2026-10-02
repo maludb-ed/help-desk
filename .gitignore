@@ -1,3 +1,11 @@
 .DS_Store
 docs/claude-log/
 .claude/settings.local.json
+config/.env
+config/*.local.php
+storage/
+logs/
+mcp/venv/
+__pycache__/
+*.pyc
+html/assets/vendors/*/node_modules/

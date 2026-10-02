@@ -68,6 +68,13 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-02): Phase 0 — the design written and the owner's twelve decisions recorded (`docs/helpdesk-design.md` §14);
-  nothing else built. Next: the schema proven on a scratch database, the kit, `maludb-os.json`, `os/`, `skills/`, `deploy/`, the
-  installer's `plan`; then Phase 1 (tool surface, manifest, slice specs) for the checkpoint.**
+- **State (2026-10-02): Phase 0 BUILT and proven** — the schema db/001–015 (`db/proof/phase0_proof.sql`, 81 checks), the kit (sign-on receivers,
+  mirror, sync, activity, MCP common files, registry builder, token mint, dev hand-off and fixture, dev router), `maludb-os.json`, `os/`, six skills,
+  `deploy/` templates + `ROOT_STEPS.sh`; `tests/phase0/run.sh` = 15 checks (scratch `helpdesk_dev0`, `php -S :8296`); the installer's `plan` clean.
+  The record and the decisions taken: `docs/helpdesk-design.md` §15. **Next: Phase 1** (tool surface, action manifest, registry, eleven slice specs)
+  for the checkpoint — no feature PHP before the owner approves them together.
+- Proofs: `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
+  `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.
+- The shell's menu table is `app/features/shell/nav.php` (the bootstrap requires it; Phase 2 builds the shell around it). `app/activity.php`
+  takes `ticket_id` and `queue_id` (and `actor_requester_id` for a public door) on every row; a public door sets `$GLOBALS['__public_door']`
+  to `portal` or `webhook` so `source` is right. `PARTIAL_UPDATE_TARGETS` is empty until the manifest names the `*_update` handlers.

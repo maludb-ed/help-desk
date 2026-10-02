@@ -1,0 +1,10 @@
+[Unit]
+Description=Help Desk worker: the outbox (email, texts through the kernel), the mail poll, SLA clocks and warnings, pending-elapsed, auto-close, time-based rules, dispatch (one pass)
+After=network.target postgresql.service
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory={{APP_DIR}}
+ExecStart=/usr/bin/php {{APP_DIR}}/bin/worker.php

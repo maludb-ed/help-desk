@@ -1,0 +1,5 @@
+mcp>=1.2,<2
+asyncpg>=0.29
+uvicorn>=0.30
+anthropic>=0.40
+python-dateutil>=2.9      # RRULE expansion for the Calendar read tools (business_schedule.py)

@@ -285,7 +285,7 @@ and grants link to the kernel) · My MCP tokens.
 
 | Phase | Deliverable | Gate |
 |---|---|---|
-| 0 | this document; the schema db/001–0NN proven on a scratch database (`db/proof/`); the kit copied from txtSchedules; `maludb-os.json`, `os/{expert,triage,frontline}.md`, `skills/`, `deploy/` templates (**every port env in `env.required`** — §13); the installer's `plan` | the owner's go on §12 |
+| 0 | **built 2026-10-02:** this document and the owner's answers (§14); the schema **db/001–015** proven on a scratch database (`db/proof/phase0_proof.sql`, 81 checks); the kit (Projects' unscoped identity, roles and sign-on files; txtSchedules' newer MCP common files, HTTP helper and sync), proven without a kernel (`tests/phase0/run.sh`: 15 checks — fixture sync, hand-off, replay, audience, unknown member, tampered signature, sign-out notice, health); `maludb-os.json` (every port env in `env.required`), `os/{expert,triage,frontline}.md`, six skills (three runbooks), `deploy/` templates with the public doors, `deploy/ROOT_STEPS.sh` (the port pin first); the installer's `plan` reads the repository clean | the owner's go on §12 — **given 2026-10-02** |
 | 1 | `docs/helpdesk-mcp-tool-surface.md` (≈32 records tools + 6 activity tools + `app_roles`), `docs/helpdesk-action-manifest.md` (≈45 screens, ≈75 actions, ≈12 pausing for agents), `mcp/action_registry.json`, the slice specs in `docs/build-specs/` (`sso-shell` and the ten slices; **tickets-core is the exemplar**) | **approved together, before any PHP** |
 | 2 | `/sso`, `/sso/logout`, the mirror and its timer, `members.roles` from the claims and the feed, `hd_has_right()`, the ingest bridge, the shell (phone-first, command bar through the chat endpoint), `/api/v1/health`, the vhost with the public allow-list; installed beside the kernel | hand-off replay refused; an unknown member refused; a revoked grant shuts every door within a minute; 375 and 1280 |
 | 3 | the slices, in order: **(1) queues and people** (queues, members, linked departments, organizations, requesters, business hours, SLA policies — the CRUD exemplar for workers) → **(2) the vocabulary** (statuses, the transitions matrix, types, categories, tags, custom fields) → **(3) tickets core — the exemplar slice** (list with filters and search, create for every requester kind, detail, conversation and composer, attachments, transitions with required fields, assign to a person or an agent, followers, links and merge, triage shortcuts, SLA targets and risk, needs-reply, viewers, the secure link minted, `my_queue` for agents) → **(4) views and the board** → **(5) working faster** (canned responses with placeholders and side-effects, custom fields on the forms, bulk update, time entries) → **(6) the requesters' doors** (the public form, the secure ticket page, the member home, CSAT survey and settings) → **(7) email and notifications** (MaluMail mailboxes, the webhook and poll, threading, reply-above-the-line, the outbox: email, K6 texts, the bell, mentions, pending-elapsed and SLA notices, follow-up on closed) → **(8) automation and the worker** (triggers, time-based rules, assignment methods incl. to an agent, SLA escalations, problem-solves-incidents, auto-close, **dispatch**, the one timer) → **(9) the knowledge base** (sections, articles, public pages, suggest / send / convert) → **(10) reports and settings** (the dashboards, rule stats, inbound and delivery failures, the Agents page, MCP tokens) | each slice: screens + handlers + logging + manifest entries + tools, proven at 375 and 1280 on a scratch database, the installed application never touched |
@@ -367,8 +367,44 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
-**Phase 0, 2026-10-02: this document written and the owner's twelve decisions recorded (§14); the repository cloned to `/srv/apps/helpdesk`; nothing else built. Next: the schema (db/001–0NN) proven on a scratch database, the kit, `maludb-os.json`, `os/`, `skills/`, `deploy/`, the installer's `plan`; then Phase 1.**
-Found the same day, outside this application: Apache down on every name since 06:13 UTC because txtSchedules'
-installed vhost still holds `{{MCP_RECORDS_PORT}}` / `{{MCP_ACTIVITY_PORT}}` (K11). The fix is the owner's
-(root): fill the two placeholders with 8102 and 8103 in `/etc/apache2/sites-available/txtschedules.conf`,
-`apachectl configtest`, `systemctl start apache2`.
+**Phase 0 — built and proven, 2026-10-02.** The schema (`db/001`–`015`, 2,000 lines: the mirror and the acting member;
+the activity log with `ticket_id` and `queue_id` on every row; tokens; five roles and fourteen rights with `hd_has_right()`;
+settings and organizations with domains; requesters of three kinds with `hd_requester_for_member/email()`; business hours
+with `hd_business_add_minutes()` and SLA policies; queues held by name or by department (`hd_held_queue_ids()`,
+`hd_queue_ids_with_right()`); the vocabulary with the transitions table and `hd_transition()`; tickets with numbering,
+the policy match, the SLA clock in triggers (start, meet, pause, resume, re-aim), the message trigger (support's reply
+meets first/next response; the requester's reply starts next response and reopens pending or solved-in-window), tags,
+followers, links, viewers, attachments, the secure link (`hd_secure_link_mint/ticket()`, hashes only, rotation, expiry
+at close); canned responses, saved views (eight standard ones seeded, the team board among them), automation rules (two
+housekeeping rules seeded) and runs, time entries; the form ledger, CSAT, mailboxes, inbound and outbound mail, the
+knowledge base; notifications, preferences, the outbox, agent dispatches; the visibility functions; 36 `mcp_*` views and
+`mcp_activity_log`). **Proof:** `db/proof/phase0_proof.sql` — 81 checks, every actor of §2 (a requester, support through a
+department, a named collaborator who follows, a lead, the super-admin, an invited external and their organization, an
+agent assignee and an agent requester, an unadmitted agent, an unknown id, nobody), the life of a ticket (reply, pending,
+the requester's reply reopening, solve, reopen, close, re-aim on priority), the secure link, the activity rule.
+`tests/phase0/run.sh` — the kit against `php -S` and the fixture: 15 checks. **96 green.**
+
+**Decisions taken while building** (conservative readings; the owner may overturn any):
+1. A **requester-only caller sees the vocabulary** (statuses, transitions, types, visible categories, queues' names) so the
+   create form and `get_vocabulary` work for everyone; queue *membership*, SLA policies and automation need `tickets.view_queue`.
+2. **An invited external's requester row is claimed by the organization whose domain their address carries**; an employee's
+   is claimed by none. An external by email is claimed the same way at first contact.
+3. **Solving ends every open clock** (first response included): a solved ticket owes no response.
+4. **A move inside one category** (open → a custom open status) is always allowed; the transitions table governs moves
+   between categories only; custom statuses may not be `new` or `closed`; built-in statuses keep their category.
+5. **`needs_reply` is strict** (the requester's reply strictly newer than support's); the proof dates the two a second apart.
+6. The **secure-link opener and the writer's functions are revoked from PUBLIC** — a function is PUBLIC-executable by
+   default and the records role must not open a link or mint one.
+7. **Sequences survive a rollback**: the proof checks the number's shape and step, not an absolute `HD-1001`.
+8. `maludb-os.json` lists **no MCP endpoints yet** (they come back in Phase 4 when the servers answer) and carries each
+   agent's `duty` for the record; the installer does not read `duty` yet — the owner creates the two duties in Agent HR
+   (ROOT_STEPS 3) until it does.
+9. **The installer's plan** confirmed the port rule: with no `config/.env`, `MCP_RECORDS_PORT` and `MCP_ACTIVITY_PORT`
+   have "no value known" and the vhost would be installed with `{{…}}` unfilled — D12's pin (ROOT_STEPS 0) is what prevents
+   a repeat of 2026-10-02's outage until K11 lands.
+
+Next: **Phase 1** — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-manifest.md`, `mcp/action_registry.json`
+and the eleven specs in `docs/build-specs/` (sso-shell and the ten slices, tickets-core the exemplar), for the checkpoint.
+
+Found the same day, outside this application: Apache down on every name from 06:13 UTC because txtSchedules'
+installed vhost still held `{{MCP_RECORDS_PORT}}` / `{{MCP_ACTIVITY_PORT}}` (K11); the owner restored it at 16:08 UTC.

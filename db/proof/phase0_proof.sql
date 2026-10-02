@@ -78,8 +78,11 @@ SELECT pg_temp.check((SELECT count(*) FROM hd_role_rights WHERE role_key = 'admi
 SELECT pg_temp.check((SELECT count(*) FROM ticket_statuses) = 6 AND (SELECT count(*) FROM status_transitions) = 16 AND (SELECT count(*) FROM ticket_types) = 4
                      AND (SELECT count(*) FROM saved_views WHERE is_system) = 8 AND (SELECT count(*) FROM sla_policies) = 1 AND (SELECT count(*) FROM business_hours) = 1,
                      'seeded: six statuses, sixteen transitions, four types, eight standard views, one policy, one schedule');
-SELECT pg_temp.check((SELECT number FROM tickets WHERE id = (SELECT fan FROM tk)) = 'HD-1001' AND (SELECT number FROM tickets WHERE id = (SELECT invoice FROM tk)) = 'HD-1005',
-                     'numbering HD-1001 onward from one sequence (D9)');
+-- (a sequence survives the rollback, so the proof checks the shape and the step, not the absolute number: HD-1001 is the sequence's START)
+SELECT pg_temp.check((SELECT bool_and(number ~ '^HD-[0-9]{4,}$') FROM tickets)
+                     AND (SELECT split_part(number, '-', 2)::int FROM tickets WHERE id = (SELECT invoice FROM tk)) - (SELECT split_part(number, '-', 2)::int FROM tickets WHERE id = (SELECT fan FROM tk)) = 4
+                     AND (SELECT split_part(number, '-', 2)::int FROM tickets WHERE id = (SELECT fan FROM tk)) >= 1001,
+                     'numbering HD-NNNN from one sequence starting at 1001, never reused (D9)');
 SELECT pg_temp.check((SELECT status_id FROM tickets WHERE id = (SELECT fan FROM tk)) = (SELECT id FROM ticket_statuses WHERE key = 'new'), 'a new ticket starts in the default status');
 SELECT pg_temp.check((SELECT organization_id FROM tickets WHERE id = (SELECT login FROM tk)) = (SELECT org FROM fx), 'an email from customer.invalid is claimed by the organization through its domain');
 SELECT pg_temp.check((SELECT kind FROM requesters WHERE id = :jo_r) = 'external' AND (SELECT kind FROM requesters WHERE id = :agent_r) = 'agent' AND (SELECT kind FROM requesters WHERE id = :priya_r) = 'member',

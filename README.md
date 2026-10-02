@@ -4,8 +4,10 @@ A memory-first, ask-me-anything help desk ticketing system for humans and AI age
 
 ## Status
 
-Phase 0: the domain plan (2026-10-01) and the OS-fitted design (2026-10-02) are written; the owner's decisions
-(`docs/helpdesk-design.md` §12) are awaited before the schema. No application code yet.
+Phase 0 complete (2026-10-02): the OS-fitted design with the owner's twelve decisions, the schema (`db/001`–`015`, proven by
+`db/proof/phase0_proof.sql`), the sign-on kit proven without a kernel (`tests/phase0/run.sh`), `maludb-os.json`, the three agents'
+job descriptions, six skills and the deploy templates. Next: Phase 1 (tool surface, action manifest, slice specs) for the checkpoint.
+No feature screens yet.
 
 Help Desk is an application **of the Business OS** (kernel repo `/var/www`): installed at `/srv/apps/helpdesk`,
 served as `helpdesk.<domain>`, signed in by the kernel, worked by people and by the kernel's agents through MCP,

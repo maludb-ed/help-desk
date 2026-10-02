@@ -26,7 +26,7 @@ umask 077
 cat > "$ENVF" <<ENV
 APP_ENV=dev
 APP_DEBUG=1
-APP_NAME=Help Desk
+APP_NAME="Help Desk"
 APP_KEY=helpdesk
 APP_URL=http://127.0.0.1:8291
 DB_HOST=127.0.0.1
