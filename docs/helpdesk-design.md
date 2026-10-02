@@ -348,13 +348,26 @@ three days is the honest estimate, the tickets-core slice being half of it.
 - Vhost allow-list (public): `/request`, `/t/`, `/kb`, `/channels/malumail/mail`, `/api/v1/health`, `/mcp/records`,
   `/mcp/activity`.
 
-## 14. The owner's answers
+## 14. The owner's answers (2026-10-02 — rules, not questions)
 
-*(to be recorded here, as D1–Dn, when given)*
+| # | Decision | Where it lives |
+|---|---|---|
+| D1 | **Externals have no account**: email and the secure ticket link `/t/<token>` are their authority; the public form `/request`; an invited external member may also use the launcher (D-A with D-B on top) | §4; `requesters.member_id` nullable; `ticket_links_secure`; the vhost allow-list |
+| D2 | **Roles**: Requester (key `user`), Collaborator, Support staff, Lead, Help Desk admin; "agent" means an OS agent | §6; `hd_roles`; `app_roles` |
+| D3 | **One desk per installation** (scope kind none); queues, optionally linked to a kernel department | §3; `queues.department_id` |
+| D4 | **Email is MaluMail**: a mailbox per queue, the signed new-mail webhook plus a one-minute poll, threaded replies; the application holds the MaluMail key; first address `support@subello.com` | §8; slice 7; `mailboxes` |
+| D5 | **An agent's public reply pauses** (`ticket_reply` = `external_send`) until the owner relaxes the policy per agent or queue; triage actions never pause | §5; `maludb-os.json` `approvals[]` |
+| D6 | **Three shipped agents**: expert (command bar), triage (`*/5`, assigns to queues, to people only by rule), frontline (`*/10`, answers from the knowledge base, hands to a person when unsure); hired on install | §5; `os/{expert,triage,frontline}.md`; `agents[]` |
+| D7 | **The activity log is the history** — no ticket-events table | §7 |
+| D8 | **No webhooks and no external write tokens in version 1**: OS agents act through the kernel's Actions MCP; a person's own token is read-only | §3, §5 |
+| D9 | **Numbering `HD-1001` onward**, prefix a setting, one sequence | `ticket_sequences`, `app_settings` |
+| D10 | **Catalog**: business area Everyday, category other, icon `feather-life-buoy`, criticality high | `maludb-os.json` |
+| D11 | **Kernel items K8–K11 are approved**, built in the kernel repo beside this application, K11 first | §11 |
+| D12 | **Ports pinned before `apply`**: `APP_INTERNAL_PORT=8182`, `MCP_RECORDS_PORT=8825`, `MCP_ACTIVITY_PORT=8826`, all three in `env.required` | §13; `config/.env` |
 
 ## 15. State
 
-**Phase 0, 2026-10-02: this document written; the repository cloned to `/srv/apps/helpdesk`; nothing else built.**
+**Phase 0, 2026-10-02: this document written and the owner's twelve decisions recorded (§14); the repository cloned to `/srv/apps/helpdesk`; nothing else built. Next: the schema (db/001–0NN) proven on a scratch database, the kit, `maludb-os.json`, `os/`, `skills/`, `deploy/`, the installer's `plan`; then Phase 1.**
 Found the same day, outside this application: Apache down on every name since 06:13 UTC because txtSchedules'
 installed vhost still holds `{{MCP_RECORDS_PORT}}` / `{{MCP_ACTIVITY_PORT}}` (K11). The fix is the owner's
 (root): fill the two placeholders with 8102 and 8103 in `/etc/apache2/sites-available/txtschedules.conf`,

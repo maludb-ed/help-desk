@@ -23,6 +23,7 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
 - **Vocabulary: "agent" means an OS AI agent**, always. The person who works tickets is *support staff*; the holder
   of a ticket is its *assignee*. The Phase 0 plan's "agent" / "light agent" / "AI agent (external)" are support staff /
   collaborator / a hired OS agent.
+- **The owner's decisions (2026-10-02, design §14) are rules**: D1 externals by secure link and email, no account; D2 the five roles, base key `user`; D3 one desk, queues per department; D4 MaluMail mailboxes; D5 an agent's reply pauses; D6 expert, triage, frontline hired on install; D7 history = the activity log; D8 no webhooks, no write tokens; D9 `HD-` numbering; D10 catalog Everyday/other; D11 kernel items K8–K11 approved; D12 ports 8182/8825/8826 pinned.
 - **Checkpoint gate**: no feature PHP until the owner approves the schema + tool surface + manifest + slice specs
   together (Phase 1). Schema changes after that are numbered additive migrations, each with sign-off.
 - **Externals have no account** (design §4): a ticket's secure link `/t/<token>` (hashed, rotatable, expiring) and the
@@ -67,5 +68,6 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-02): Phase 0 — the design written (`docs/helpdesk-design.md`); nothing else built; the owner's
-  decisions (design §12) awaited.**
+- **State (2026-10-02): Phase 0 — the design written and the owner's twelve decisions recorded (`docs/helpdesk-design.md` §14);
+  nothing else built. Next: the schema proven on a scratch database, the kit, `maludb-os.json`, `os/`, `skills/`, `deploy/`, the
+  installer's `plan`; then Phase 1 (tool surface, manifest, slice specs) for the checkpoint.**
