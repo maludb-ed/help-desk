@@ -143,7 +143,7 @@ another requester is never in a payload.**
 
 | Entity param | Tool | query param | id field | label field |
 |---|---|---|---|---|
-| `ticket`, `parent`, `duplicate_of`, `merge_into`, `other_ticket` | `find_tickets` | `q` (a number or words) | `ticket_id` | `label` |
+| `ticket`, `merge_into`, `other_ticket`, `tickets[]` | `find_tickets` | `q` (a number or words) | `ticket_id` | `label` |
 | `queue` | `find_queues` | `q` (name) | `queue_id` | `name` |
 | `assignee`, `member`, `follower`, `on_behalf_of`, `lead` | `find_members` | `q` (name) | `member_id` | `display_name` |
 | `requester`, `cc` | `find_requesters` | `q` (name or email) | `requester_id` | `display_name` |

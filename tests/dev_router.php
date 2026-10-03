@@ -10,8 +10,12 @@ if ($path !== '/' && is_file($root . $path)) {
     if (str_ends_with($path, '.webmanifest')) { header('Content-Type: application/manifest+json'); readfile($root . $path); return true; }
     return false;                                             // a static file or a real .php file
 }
-if (preg_match('#^/api/v1/calendar/([a-f0-9]{48})\.ics$#', $path, $m)) { $_GET['token'] = $m[1]; $_REQUEST['token'] = $m[1]; $_SERVER['SCRIPT_NAME'] = '/api/v1/calendar.php'; $_SERVER['SCRIPT_FILENAME'] = $root . '/api/v1/calendar.php'; chdir($root . '/api/v1'); require $root . '/api/v1/calendar.php'; return true; }
-$map = ['/sso' => '/sso.php', '/sso/logout' => '/sso/logout.php', '/api/v1/health' => '/api/v1/health.php'];
+$map = ['/sso' => '/sso.php', '/sso/logout' => '/sso/logout.php', '/api/v1/health' => '/api/v1/health.php', '/request' => '/request.php', '/channels/malumail/mail' => '/channels/malumail-mail.php'];
+if (preg_match('#^/t/([a-f0-9]{48})(?:/(reply|confirm|reopen|rate|attachment))?$#', $path, $m)) { $_GET['token'] = $m[1]; $_REQUEST['token'] = $m[1]; $t = isset($m[2]) ? "/t/{$m[2]}.php" : '/t.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
+if (preg_match('#^/settings/automation/([0-9]+)/runs$#', $path, $m)) { $_GET['id'] = $m[1]; $_REQUEST['id'] = $m[1]; $t = '/settings/automation/runs.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
+if (preg_match('#^/reports/([a-z_]+)$#', $path, $m) && !is_file($root . "/reports/{$m[1]}.php")) { $_GET['report'] = $m[1]; $_REQUEST['report'] = $m[1]; $t = '/reports/report.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
+if (preg_match('#^/kb/s/([a-z0-9-]+)$#', $path, $m)) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $t = '/kb/section.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
+if (preg_match('#^/kb/([a-z0-9-]+)$#', $path, $m) && !is_file($root . "/kb/{$m[1]}.php") && !is_dir($root . "/kb/{$m[1]}")) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $t = '/kb/article.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
 $rel = rtrim($path, '/') ?: '/';
 if (isset($map[$rel])) { $target = $map[$rel]; }
 elseif ($rel === '/') { $target = '/index.php'; }

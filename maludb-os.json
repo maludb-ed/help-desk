@@ -53,7 +53,9 @@
       "MAIL_FROM",
       "MAIL_FROM_NAME",
       "ATTACHMENT_MAX_BYTES",
-      "API_CORS_ORIGINS"
+      "API_CORS_ORIGINS",
+      "MALUMAIL_MCP_URL",
+      "MAILBOX_SUPPORT_WEBHOOK_SECRET"
     ]
   },
   "services": [

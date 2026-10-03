@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T12:15:21+00:00",
+    "generated_at": "2026-10-03T12:26:18+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -2016,7 +2016,7 @@
             "confirm": false,
             "approval": null,
             "log_event": "tag.save",
-            "who": "lead",
+            "who": "manage",
             "built": false
         },
         "tag_delete": {

@@ -4,10 +4,10 @@ A memory-first, ask-me-anything help desk ticketing system for humans and AI age
 
 ## Status
 
-Phase 0 complete (2026-10-02): the OS-fitted design with the owner's twelve decisions, the schema (`db/001`–`015`, proven by
-`db/proof/phase0_proof.sql`), the sign-on kit proven without a kernel (`tests/phase0/run.sh`), `maludb-os.json`, the three agents'
-job descriptions, six skills and the deploy templates. Next: Phase 1 (tool surface, action manifest, slice specs) for the checkpoint.
-No feature screens yet.
+Phase 0 complete (2026-10-02) and Phase 1 written (2026-10-03), awaiting the owner's checkpoint: the OS-fitted design with the
+owner's decisions, the schema (`db/001`–`016`, proven by `db/proof/phase0_proof.sql`), the sign-on kit proven without a kernel
+(`tests/phase0/run.sh`), `maludb-os.json`, the three agents' job descriptions, six skills, the deploy templates, the MCP tool surface,
+the action manifest (65 screens, 96 actions) and eleven build specs in `docs/build-specs/`. No feature screens yet.
 
 Help Desk is an application **of the Business OS** (kernel repo `/var/www`): installed at `/srv/apps/helpdesk`,
 served as `helpdesk.<domain>`, signed in by the kernel, worked by people and by the kernel's agents through MCP,
@@ -16,6 +16,7 @@ and part of every OS install. `CLAUDE.md` carries the rules.
 ## Documents
 
 - [docs/helpdesk-design.md](docs/helpdesk-design.md) — **read first**: the design fitted to the Business OS — what changes from the Phase 0 plan, requesters without an OS account, agents filing and working tickets, roles and rights, the memory model, the build order, what the kernel owes, the decisions asked of the owner.
+- [docs/helpdesk-mcp-tool-surface.md](docs/helpdesk-mcp-tool-surface.md) and [docs/helpdesk-action-manifest.md](docs/helpdesk-action-manifest.md) — Phase 1: every read tool and every screen and action; `docs/build-specs/` holds the eleven slice specs (`tickets-core.md` is the exemplar).
 - [docs/01-phase0-plan.md](docs/01-phase0-plan.md) — actors, memory model, question inventory, action inventory, slice order, kanban design, MCP coverage, checkpoint decisions.
 - [docs/research/third-party-help-desk-systems.md](docs/research/third-party-help-desk-systems.md) — comparative research across Zendesk, Freshdesk, Jira Service Management, ServiceNow, Help Scout, osTicket, Zammad, HubSpot, Linear, and Intercom.
 

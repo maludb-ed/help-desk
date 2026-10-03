@@ -286,7 +286,7 @@ and grants link to the kernel) · My MCP tokens.
 | Phase | Deliverable | Gate |
 |---|---|---|
 | 0 | **built 2026-10-02:** this document and the owner's answers (§14); the schema **db/001–015** proven on a scratch database (`db/proof/phase0_proof.sql`, 81 checks); the kit (Projects' unscoped identity, roles and sign-on files; txtSchedules' newer MCP common files, HTTP helper and sync), proven without a kernel (`tests/phase0/run.sh`: 15 checks — fixture sync, hand-off, replay, audience, unknown member, tampered signature, sign-out notice, health); `maludb-os.json` (every port env in `env.required`), `os/{expert,triage,frontline}.md`, six skills (three runbooks), `deploy/` templates with the public doors, `deploy/ROOT_STEPS.sh` (the port pin first); the installer's `plan` reads the repository clean | the owner's go on §12 — **given 2026-10-02** |
-| 1 | `docs/helpdesk-mcp-tool-surface.md` (≈32 records tools + 6 activity tools + `app_roles`), `docs/helpdesk-action-manifest.md` (≈45 screens, ≈75 actions, ≈12 pausing for agents), `mcp/action_registry.json`, the slice specs in `docs/build-specs/` (`sso-shell` and the ten slices; **tickets-core is the exemplar**) | **approved together, before any PHP** |
+| 1 | **written 2026-10-03:** `docs/helpdesk-mcp-tool-surface.md` (36 records tools incl. `app_roles`, 6 activity tools, Q1–Q44 covered), `docs/helpdesk-action-manifest.md` (**65 screens, 96 actions, 40 pausing for agents**), `mcp/action_registry.json`, **db/016** (the review's additions), and eleven specs in `docs/build-specs/` (`sso-shell` and the ten slices; **tickets-core is the exemplar**; 1,449 lines) | **approved together, before any PHP** — the questions are §15 |
 | 2 | `/sso`, `/sso/logout`, the mirror and its timer, `members.roles` from the claims and the feed, `hd_has_right()`, the ingest bridge, the shell (phone-first, command bar through the chat endpoint), `/api/v1/health`, the vhost with the public allow-list; installed beside the kernel | hand-off replay refused; an unknown member refused; a revoked grant shuts every door within a minute; 375 and 1280 |
 | 3 | the slices, in order: **(1) queues and people** (queues, members, linked departments, organizations, requesters, business hours, SLA policies — the CRUD exemplar for workers) → **(2) the vocabulary** (statuses, the transitions matrix, types, categories, tags, custom fields) → **(3) tickets core — the exemplar slice** (list with filters and search, create for every requester kind, detail, conversation and composer, attachments, transitions with required fields, assign to a person or an agent, followers, links and merge, triage shortcuts, SLA targets and risk, needs-reply, viewers, the secure link minted, `my_queue` for agents) → **(4) views and the board** → **(5) working faster** (canned responses with placeholders and side-effects, custom fields on the forms, bulk update, time entries) → **(6) the requesters' doors** (the public form, the secure ticket page, the member home, CSAT survey and settings) → **(7) email and notifications** (MaluMail mailboxes, the webhook and poll, threading, reply-above-the-line, the outbox: email, K6 texts, the bell, mentions, pending-elapsed and SLA notices, follow-up on closed) → **(8) automation and the worker** (triggers, time-based rules, assignment methods incl. to an agent, SLA escalations, problem-solves-incidents, auto-close, **dispatch**, the one timer) → **(9) the knowledge base** (sections, articles, public pages, suggest / send / convert) → **(10) reports and settings** (the dashboards, rule stats, inbound and delivery failures, the Agents page, MCP tokens) | each slice: screens + handlers + logging + manifest entries + tools, proven at 375 and 1280 on a scratch database, the installed application never touched |
 | 4 | the two MCP servers with the run-facts gate, `app_roles`, the registry wrapper (`deploy/kernel-registry-helpdesk.json`), the three agents declared with their grants and duties; the kernel's Actions-MCP contract proved against its own `application_actions.register()` with a stubbed hook | the command bar answers "what needs my reply" (`my_queue`); an agent's `ticket_reply` pauses; the triage agent's duty files nothing it should not |
@@ -366,6 +366,42 @@ three days is the honest estimate, the tickets-core slice being half of it.
 | D12 | **Ports pinned before `apply`**: `APP_INTERNAL_PORT=8182`, `MCP_RECORDS_PORT=8825`, `MCP_ACTIVITY_PORT=8826`, all three in `env.required` | §13; `config/.env` |
 
 ## 15. State
+
+**Phase 1 — written 2026-10-03, for the checkpoint.** The tool surface (36 + 6 tools, the resolve table, the log-payload
+rules), the action manifest (65 screens, 96 actions in 14 sections; 40 actions carry an approval category: every public
+reply, canned reply, article sent and survey as `external_send`; merges, early closes, bulk changes and every settings save
+as `other`; deletions as `deletion`), the registry built from it clean (no unresolved endpoint, no prose parameter), and
+eleven specs: `sso-shell` (Phase 2), `queues-people` (1, the CRUD exemplar for workers), `vocabulary` (2), **`tickets-core`
+(3, THE EXEMPLAR)**, `views-board` (4), `working-faster` (5), `requesters-doors` (6), `email-notifications` (7),
+`automation-worker` (8), `knowledge-base` (9), `reports-settings` (10). Every action and screen name in the specs matches the
+registry (checked by script). **db/016** (additive, applied on the scratch database, 96 proof checks green) holds what the
+specs' review found the schema should carry: `notifications.kind` gains `created`, `cc_added`, `survey`; `sla_targets.warned_at`;
+`agent_dispatches.attempts`; `tickets.first_reopened_at` (stamped by the trigger); `app_settings.form_limit_per_email/_ip`;
+`mcp_csat_settings`, `mcp_queue_presence`; `mcp_tickets` re-created with the new column last.
+
+**Resolved in the review** (the specs' findings, decided conservatively): `tag_save` needs `tickets.manage` (no tag right
+exists); `transition_save`'s `allowed = no` deletes the row (no `allowed` column); the resolve table names only parameters
+that exist (`ticket`, `merge_into`, `other_ticket`, `tickets[]`); `MALUMAIL_MCP_URL` and `MAILBOX_<NAME>_WEBHOOK_SECRET` are
+optional env keys; the vhost and the dev router gain the four rewrites outside the canonical shape (a rule's runs, a report,
+the knowledge base's section and article slugs); `general-settings` and `settings_save` share one file; `queue_presence_set`
+stays under `/settings/queues/` and is linked from `/settings/`; a CC's reply is a public reply, not a new ticket; the
+dispatch retry is at most three attempts; the agents' `duty` in `maludb-os.json` is a record until the installer reads it.
+
+**Questions for the owner at the checkpoint** (each has a proposed answer in its spec; silence = the proposal):
+1. **Spam** — mark only (solve with code `spam` + tag), or also suppress the address for future mail after two spam
+   tickets (`requester_emails.suppressed_at`, additive)? Proposed: mark only in v1.
+2. **A closed ticket** — may a Lead reopen it by hand, or is a follow-up ticket always the answer? Proposed: follow-up always.
+3. **The composer** — plain text with paragraphs in v1, no rich editor? Proposed: yes.
+4. **A personal signature** (`{{agent.signature}}`) — add `notification_prefs.signature`, or use the mailbox's signature
+   else the name? Proposed: the mailbox's, add the column later if asked.
+5. **Charts on the reports** — tables and count cards only in v1 (Projects vendored a chart library)? Proposed: tables only.
+6. **The public form's limits** — 5 an hour per address, 20 per IP (now settings in db/016)? Proposed: those.
+7. **A queue's lead without `reports.view`** — sees the dashboard for their queue? Proposed: yes.
+8. **Knowledge base** — public articles `noindex` until told otherwise; vote counts only (no `kb_feedback` table)? Proposed: both.
+9. **Auto-close** tells the requester nothing (the solve already asked them)? Proposed: silent.
+10. **The logo** — `feather-life-buoy` stands in until your artwork.
+
+Next, on approval: **Phase 2** (`docs/build-specs/sso-shell.md`), then the ten slices in order.
 
 **Phase 0 — built and proven, 2026-10-02.** The schema (`db/001`–`015`, 2,000 lines: the mirror and the acting member;
 the activity log with `ticket_id` and `queue_id` on every row; tokens; five roles and fourteen rights with `hd_has_right()`;

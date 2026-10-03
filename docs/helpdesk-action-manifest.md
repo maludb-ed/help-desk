@@ -180,7 +180,7 @@ Actions (base `/settings/statuses/`, the vocabulary under `/settings/vocabulary/
 | `type_archive` | `/settings/vocabulary/type-archive.php` | **type** | restore | ✔ | other | `type.archive` | admin |
 | `category_save` | `/settings/vocabulary/category.php` | category (to change an existing one), **name**, parent, description, default_queue, default_type, default_priority (low or normal or high or urgent), policy, requester_visible (yes or no), sort_order | restore prior | | other | `category.save` | admin |
 | `category_archive` | `/settings/vocabulary/category-archive.php` | **category** | restore | ✔ | other | `category.archive` | admin |
-| `tag_save` | `/settings/vocabulary/tag.php` | tag (to rename an existing one), **label**, slug | restore prior | | | `tag.save` | lead |
+| `tag_save` | `/settings/vocabulary/tag.php` | tag (to rename an existing one), **label**, slug | restore prior | | | `tag.save` | manage |
 | `tag_delete` | `/settings/vocabulary/tag-delete.php` | **tag** (removed from every ticket) | — | ✔ | deletion | `tag.delete` | admin |
 | `field_save` | `/settings/fields/save.php` | field (to change an existing one), **label**, key (letters and underscores or empty to derive it), **field_type** (text or number or date or select or multi_select or checkbox), options[] (for select and multi_select), **applies_to** (ticket or organization or requester), types[] (show for these ticket types only), required_on_solve (yes or no), requester_visible (yes or no), sort_order | restore prior | | other | `field.save` | admin |
 | `field_archive` | `/settings/fields/archive.php` | **field** | restore | ✔ | other | `field.archive` | admin |
