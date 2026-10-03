@@ -24,5 +24,5 @@ $fromQuery = http_build_query(array_diff_key($query, ['view' => 1, 'sort' => 1])
         <select name="sort" id="inbox-filter-sort" class="form-select btn-touch w-auto" aria-label="Sort"><?php foreach (['last_activity' => 'Last activity', 'sla_due' => 'SLA due', 'priority' => 'Priority', 'created_at' => 'Newest', 'updated_at' => 'Updated'] as $k => $l): ?><option value="<?= e($k) ?>" <?= $filters['sort'] === $k ? 'selected' : '' ?>><?= e($l) ?></option><?php endforeach; ?></select>
         <button type="submit" class="btn btn-light btn-touch" id="inbox-filter-btn" aria-label="Search"><i class="feather-search"></i></button>
     </div></form>
-    <?= view('tickets/partials/ticket-list.php', ['rows' => $rows, 'page' => $page, 'more' => $more, 'query' => $query, 'here' => $here, 'tz' => $tz, 'base' => '/inbox']) ?>
+    <?= view('tickets/partials/ticket-list.php', ['rows' => $rows, 'page' => $page, 'more' => $more, 'query' => $query, 'here' => $here, 'tz' => $tz, 'base' => '/inbox', 'bulk' => $bulk ?? false]) ?>
 </div>

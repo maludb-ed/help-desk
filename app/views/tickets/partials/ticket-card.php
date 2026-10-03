@@ -1,6 +1,7 @@
-<?php /** One ticket as a card (the phone). Data: t, here, tz */ $id = (int) $t['ticket_id']; $sla = $t['sla_state'] ?? null; ?>
+<?php /** One ticket as a card (the phone). Data: t, here, tz, bulk? */ $id = (int) $t['ticket_id']; $sla = $t['sla_state'] ?? null; $bulk = $bulk ?? false; ?>
 <div class="card mb-2 ticket-card sla-<?= e($sla ?? 'none') ?>" id="ticket-card-<?= $id ?>"><div class="card-body p-3">
     <div class="d-flex justify-content-between align-items-start gap-2">
+        <?php if ($bulk): ?><input type="checkbox" class="form-check-input mt-1" name="tickets[]" value="<?= $id ?>" id="ticket-card-<?= $id ?>-pick" aria-label="Select <?= e($t['number']) ?>"><?php endif; ?>
         <div class="min-w-0"><?= hx_link(with_back('/tickets/' . $id, $here), '<span class="text-muted fs-12">' . e($t['number']) . '</span> <span class="fw-bold">' . e($t['subject']) . '</span>', 'text-dark', 'id="ticket-card-' . $id . '-link"') ?></div>
         <span class="badge bg-<?= e($t['status_color']) ?> text-nowrap"><?= e($t['status_label']) ?></span>
     </div>

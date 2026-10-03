@@ -1,7 +1,20 @@
 <?php
 declare(strict_types=1);
-/** Action `ticket_set_fields` (log `ticket.set_fields`, changed only): work; priority, type, category, due_at, custom (validated for the ticket's type). */
+/** Action `ticket_set_fields` (log `ticket.set_fields`, changed only): work; priority, type, category, due_at, custom (validated for the ticket's type). A GET (?type=&ticket=) answers the custom-fields partial of a type (slice 5, Pattern A; no log). */
 require_once dirname(__DIR__, 2) . '/app/features/tickets/handler.php';
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    require_login();
+    $pdo = db();
+    $typeId = request_integer('type');
+    $ticketId = request_integer('ticket');
+    $values = [];
+    if ($ticketId !== null && can_see_ticket($ticketId)) {
+        $values = ticket_facts($pdo, $ticketId)['custom_values'] ?? [];
+    }
+    header('Vary: HX-Request');
+    echo view('tickets/partials/custom-fields.php', ['defs' => custom_fields_for($pdo, 'ticket', $typeId), 'values' => $values]);
+    exit;
+}
 hd_handler_begin();
 $pdo = db();
 $me = (int) current_member_id();

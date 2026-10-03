@@ -10,6 +10,8 @@
             <?= csrf_field() ?><input type="hidden" name="ticket" value="<?= $id ?>"><input type="hidden" name="return_to" value="<?= e($here) ?>">
             <?php foreach ($pending as $a): ?><input type="hidden" name="attachments[]" value="<?= (int) $a['attachment_id'] ?>"><?php endforeach; ?>
             <textarea name="body" id="ticket-reply-form-field-body" class="form-control mb-2 composer-body" rows="4" required maxlength="20000" placeholder="Write to the requester…"></textarea>
+            <input type="hidden" name="caret" id="ticket-reply-caret" value="">
+            <div id="ticket-reply-canned-effects" class="mb-2"></div>
             <?php if ($work): ?>
             <div class="row g-2 align-items-end mb-2">
                 <div class="col-12 col-md-6"><label class="form-label fs-12 text-muted mb-0" for="ticket-reply-form-field-then">Then set status</label>
@@ -18,8 +20,13 @@
                     <select name="resolution_code" id="ticket-reply-form-field-code" class="form-select btn-touch"><option value="">—</option><?php foreach (RESOLUTION_CODES as $k => $l): ?><option value="<?= e($k) ?>"><?= e($l) ?></option><?php endforeach; ?></select></div>
             </div>
             <?php endif; ?>
-            <button type="submit" class="btn btn-primary btn-touch w-100" id="ticket-reply-form-send-btn"><i class="feather-send me-1"></i>Send reply</button>
+            <div class="d-flex gap-2">
+                <?php if ($work): ?><button type="button" class="btn btn-light btn-touch" id="ticket-reply-canned-btn" hx-get="/canned/?picker=1&amp;ticket=<?= $id ?>" hx-target="#canned-picker" hx-swap="innerHTML"><i class="feather-file-text me-1"></i>Canned ▾</button><?php endif; ?>
+                <button type="submit" class="btn btn-primary btn-touch flex-grow-1" id="ticket-reply-form-send-btn"><i class="feather-send me-1"></i>Send reply</button>
+            </div>
         </form>
+        <div id="canned-picker"></div>
+        <script>(function () { var ta = document.getElementById('ticket-reply-form-field-body'), c = document.getElementById('ticket-reply-caret'); if (!ta || !c) return; ['keyup', 'click', 'select', 'blur'].forEach(function (ev) { ta.addEventListener(ev, function () { c.value = ta.selectionStart; }); }); })();</script>
     </details>
     <?php endif; ?>
     <?php if ($note): ?>

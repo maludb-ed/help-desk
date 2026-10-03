@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T18:02:37+00:00",
+    "generated_at": "2026-10-03T18:29:46+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -447,8 +447,8 @@
                 "q",
                 "folder"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "canned-add": {
             "screen": "canned-add",
@@ -456,7 +456,7 @@
             "section": "Working faster: canned responses and bulk changes",
             "when": "to write a canned response with placeholders and side-effects",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "canned-edit": {
@@ -465,7 +465,7 @@
             "section": "Working faster: canned responses and bulk changes",
             "when": "to change a canned response",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "bulk-update": {
@@ -476,7 +476,7 @@
             "params": [
                 "tickets"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "mailboxes-list": {
@@ -3302,7 +3302,7 @@
             "approval": null,
             "log_event": "canned.create",
             "who": "work for personal; lead for queue and global",
-            "built": false
+            "built": true
         },
         "canned_update": {
             "action": "canned_update",
@@ -3357,7 +3357,7 @@
             "approval": null,
             "log_event": "canned.update",
             "who": "own or lead",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "canned_delete": {
@@ -3377,7 +3377,7 @@
             "approval": "deletion",
             "log_event": "canned.delete",
             "who": "own or lead",
-            "built": false
+            "built": true
         },
         "canned_apply": {
             "action": "canned_apply",
@@ -3414,7 +3414,7 @@
             "approval": "external_send",
             "log_event": "canned.apply",
             "who": "work",
-            "built": false
+            "built": true
         },
         "tickets_bulk_update": {
             "action": "tickets_bulk_update",
@@ -3475,7 +3475,7 @@
             "approval": "other",
             "log_event": "ticket.bulk_update",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "mailbox_create": {
             "action": "mailbox_create",

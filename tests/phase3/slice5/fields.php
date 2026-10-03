@@ -1,0 +1,38 @@
+<?php
+/** Proof — per-type custom fields (spec "Proof", 5): a field restricted to Incident appears when the type changes to Incident and not for Question; required_on_solve refuses the solve with the field's label in the sentence. */
+require __DIR__ . '/lib.php';
+$W = world();
+$marco = as_member(27); $owner = as_member(1);
+$incident = type_id('incident'); $question = type_id('question');
+[$c, $b] = act($owner, '/settings/fields/save.php', ['label' => 'SMOKE Root cause', 'field_type' => 'select', 'options' => ['hardware', 'software', 'user'], 'applies_to' => 'ticket', 'types' => [$incident], 'required_on_solve' => 'yes']);
+$fid = (int) ($b['record_id'] ?? 0);
+ok($c === 200 && $fid > 0, 'a Root cause select for incidents only, required to solve');
+[$c, $b] = act($owner, '/settings/fields/save.php', ['label' => 'SMOKE Asset tag', 'field_type' => 'text', 'applies_to' => 'ticket']);
+ok($c === 200, 'and an Asset tag for every type');
+$get = fn (string $qs) => req('GET', '/tickets/fields.php?' . $qs, ['jar' => $marco, 'headers' => ['HX-Request: true']]);
+$r = $get('type=' . $incident);
+ok($r['code'] === 200 && str_contains($r['body'], 'id="custom-fields"') && str_contains($r['body'], 'SMOKE Root cause') && str_contains($r['body'], 'SMOKE Asset tag') && str_contains($r['body'], '(needed to solve)'), 'the partial for Incident: Root cause (needed to solve) and Asset tag');
+$r = $get('type=' . $question);
+ok($r['code'] === 200 && !str_contains($r['body'], 'SMOKE Root cause') && str_contains($r['body'], 'SMOKE Asset tag'), 'for Question: Asset tag only');
+$t = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE incident needs a cause', 'body' => 'x', 'queue' => $W['it'], 'type' => $incident, 'custom' => ['smoke_asset_tag' => 'A-1']])[1]['record_id'];
+$r = $get('type=' . $incident . '&ticket=' . $t);
+ok($r['code'] === 200 && str_contains($r['body'], 'value="A-1"'), 'with ?ticket= the values come from the ticket');
+$body = page($marco, '/tickets/' . $t . '/edit')['body'];
+ok(str_contains($body, 'hx-get="/tickets/fields.php?ticket=' . $t . '"') && str_contains($body, 'hx-target="#custom-fields"') && str_contains($body, 'id="custom-fields"'), 'the form\'s type select reloads #custom-fields');
+act($marco, '/tickets/transition.php', ['ticket' => $t, 'status' => 'open']);
+[$c, $b] = act($marco, '/tickets/transition.php', ['ticket' => $t, 'status' => 'solved', 'resolution_code' => 'resolved']);
+ok($c === 422 && msg($b) === "'SMOKE Root cause' is required to solve this ticket.", 'solving without it: 422 with the label in the sentence');
+[$c, $b] = act($marco, '/tickets/fields.php', ['ticket' => $t, 'custom' => ['smoke_root_cause' => 'hardware']]);
+ok($c === 200, 'the cause set');
+[$c, $b] = act($marco, '/tickets/transition.php', ['ticket' => $t, 'status' => 'solved', 'resolution_code' => 'resolved']);
+ok($c === 200 && ticket_status($t) === 'solved', 'then it solves');
+$q = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE question solves freely', 'body' => 'x', 'queue' => $W['it'], 'type' => $question])[1]['record_id'];
+act($marco, '/tickets/transition.php', ['ticket' => $q, 'status' => 'open']);
+[$c, $b] = act($marco, '/tickets/transition.php', ['ticket' => $q, 'status' => 'solved', 'resolution_code' => 'resolved']);
+ok($c === 200, 'a Question (the field does not apply) solves without it');
+$cl = mkcanned($marco, ['title' => 'SMOKE solver', 'body' => 'Solved.', 'scope' => 'personal', 'side_effects' => ['status' => 'solved']]);
+$t2 = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE incident via canned', 'body' => 'x', 'queue' => $W['it'], 'type' => $incident])[1]['record_id'];
+act($marco, '/tickets/transition.php', ['ticket' => $t2, 'status' => 'open']);
+[$c, $b] = act($marco, '/canned/apply.php', ['ticket' => $t2, 'canned' => $cl, 'send' => 'yes']);
+ok($c === 200 && ticket_status($t2) === 'open' && str_contains((string) $b['did'], 'needs a resolution code'), 'a canned → Solved on it is skipped (the code first, as the table says) and named');
+finish();

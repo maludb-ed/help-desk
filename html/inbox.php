@@ -33,10 +33,10 @@ if (wants_json()) {
         'views' => array_map(static fn (array $v): array => ['system_key' => $v['system_key'], 'name' => $v['name'], 'layout' => $v['layout']], $views)]);
 }
 $data = ['views' => $views, 'view' => $view['system_key'] ?? '', 'saved' => $view, 'filters' => $filters, 'adhoc' => $adhoc, 'queues' => find_queues($pdo, ['mine' => !has_right('tickets.view_all')]), 'assignees' => find_assignable_members($pdo),
-         'rows' => $rows, 'page' => $page, 'more' => $more, 'query' => $query, 'here' => here_url(), 'tz' => member_timezone(), 'notice' => hd_notice($_GET['notice'] ?? null, ['deleted' => ['success', 'The ticket was deleted.']])];
+         'rows' => $rows, 'page' => $page, 'more' => $more, 'query' => $query, 'here' => here_url(), 'tz' => member_timezone(), 'bulk' => has_right('tickets.manage'), 'notice' => hd_notice($_GET['notice'] ?? null, ['deleted' => ['success', 'The ticket was deleted.']])];
 if (is_htmx_request() && ($_SERVER['HTTP_HX_TARGET'] ?? '') === 'ticket-list') {
     header('Vary: HX-Request');
-    echo view('tickets/partials/ticket-list.php', $data + ['base' => '/inbox']);
+    echo view('tickets/partials/ticket-list.php', $data + ['base' => '/inbox', 'bulk' => has_right('tickets.manage')]);
     exit;
 }
 render_screen('Inbox', view('tickets/inbox.php', $data), ['activeNav' => 'inbox', 'screen' => 'inbox', 'entity' => 'ticket']);

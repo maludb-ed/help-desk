@@ -64,6 +64,12 @@ function transition_ticket(PDO $pdo, int $ticketId, int $toStatusId, array $carr
             $after['resolution_code'] = $code;
         }
     }
+    if ($to['category'] === 'solved') {                                                   // slice 5: a field required to solve, by its label
+        $missing = custom_values_missing_on_solve($pdo, $ticketId);
+        if ($missing !== []) {
+            throw new DomainException("'" . reset($missing) . "' is required to solve this ticket.");
+        }
+    }
     if (in_array('hold_reason', $requires, true) || $to['category'] === 'on_hold') {
         $reason = (string) ($carry['hold_reason'] ?? '');
         if ($reason === '' && in_array('hold_reason', $requires, true)) {

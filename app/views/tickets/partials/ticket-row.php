@@ -1,5 +1,6 @@
-<?php /** One ticket as a table row (the desktop). Data: t, here, tz */ $id = (int) $t['ticket_id']; $sla = $t['sla_state'] ?? null; ?>
+<?php /** One ticket as a table row (the desktop). Data: t, here, tz, bulk? */ $id = (int) $t['ticket_id']; $sla = $t['sla_state'] ?? null; $bulk = $bulk ?? false; ?>
 <tr id="ticket-row-<?= $id ?>" class="sla-<?= e($sla ?? 'none') ?>">
+    <?php if ($bulk): ?><td><input type="checkbox" class="form-check-input" name="tickets[]" value="<?= $id ?>" id="ticket-row-<?= $id ?>-pick" aria-label="Select <?= e($t['number']) ?>"></td><?php endif; ?>
     <td class="text-nowrap"><?= hx_link(with_back('/tickets/' . $id, $here), e($t['number']), 'fw-semibold', 'id="ticket-row-' . $id . '-number"') ?></td>
     <td class="min-w-0"><div class="text-truncate" style="max-width: 28rem"><?= hx_link(with_back('/tickets/' . $id, $here), e($t['subject']), 'text-dark') ?><?php if ($t['needs_reply']): ?> <span class="badge bg-soft-warning text-warning"><i class="feather-corner-up-left"></i></span><?php endif; ?></div>
         <div class="fs-11 text-muted"><?php foreach (array_slice($t['tags'], 0, 3) as $g): ?><span class="badge bg-soft-secondary text-secondary me-1"><?= e($g) ?></span><?php endforeach; ?><?= count($t['tags']) > 3 ? '+' . (count($t['tags']) - 3) : '' ?></div></td>

@@ -1,0 +1,34 @@
+<?php
+/** Proof — JSON mode (spec "Proof", 6): canned_apply and tickets_bulk_update answer the contract under action tokens; the registry marks the agent pauses; send=no under a run token is a read. */
+require __DIR__ . '/lib.php';
+$W = world();
+$marco = ['X-Action-Token: ' . person_token(27)]; $lena = ['X-Action-Token: ' . person_token(28)];
+$cid = (int) act_token('/canned/save.php', ['title' => 'SMOKE token canned', 'body' => 'Re {{ticket.number}}: on it. {{agent.first_name}}', 'scope' => 'global', 'side_effects' => '{"priority":"urgent"}'], $lena)[1]['record_id'];
+ok($cid > 0 && json_decode(canned_row($cid)['side_effects'], true) === ['priority' => 'urgent'], 'canned_create by token with side_effects as JSON');
+$t = (int) act_token('/tickets/save.php', ['subject' => 'SMOKE json canned', 'body' => 'x', 'queue' => $W['it'], 'requester' => $W['jo']], $marco)[1]['record_id'];
+[$c, $b] = act_token('/canned/apply.php', ['ticket' => $t, 'canned' => $cid, 'send' => 'no'], $marco);
+ok($c === 200 && ($b['ok'] ?? false) && ($b['text'] ?? '') === 'Re ' . ticket_row($t)['number'] . ': on it. SMOKE' && ($b['side_effects'] ?? []) === ['↑ Urgent'] && !isset($b['location']), 'canned_apply send=no: {ok, text, side_effects}, no location');
+[$c, $b] = act_token('/canned/apply.php', ['ticket' => $t, 'canned' => $cid, 'send' => 'yes'], $marco);
+ok($c === 200 && ($b['ok'] ?? false) && ($b['record_id'] ?? 0) === $t && isset($b['message_id']) && ($b['side_effects']['applied'] ?? []) === ['↑ Urgent'] && str_starts_with((string) $b['location'], '/tickets/' . $t), 'send=yes: {ok, did, record_id, message_id, side_effects, location}');
+kernel_state(function ($s) { $s['facts']['305'] = ['valid' => true, 'is_agent' => true, 'member_id' => 40, 'run_id' => 305, 'request_id' => 'req-run-305', 'trigger' => 'duty', 'endpoints' => [['name' => 'Records MCP']]]; return $s; });
+[$tok, $relay] = run_token(40, 305);
+$n = count(messages_of($t));
+[$c, $b] = act_token('/canned/apply.php', ['ticket' => $t, 'canned' => $cid, 'send' => 'no'], ['X-Action-Token: ' . $tok, 'X-Action-Relay: ' . $relay]);
+ok($c === 200 && ($b['ok'] ?? false) && isset($b['text']) && count(messages_of($t)) === $n, 'an agent\'s send=no under a run token: the text, nothing written (a read; the kernel\'s hook pauses send=yes by action)');
+kernel_state(function ($s) { unset($s['facts']); return $s; });
+$reg = json_decode(file_get_contents(dirname(__DIR__, 3) . '/mcp/action_registry.json'), true);
+$find = function (string $key) use ($reg) { foreach ((array) $reg['actions'] as $k => $a) { if ((is_array($a) && ($a['key'] ?? $k) === $key)) { return $a; } } return null; };
+$apply = $find('canned_apply'); $del = $find('canned_delete'); $bulk = $find('tickets_bulk_update');
+ok($apply !== null && str_contains(json_encode($apply), 'external_send') && str_contains(json_encode($del), 'deletion') && str_contains(json_encode($bulk), 'other'), 'the registry marks canned_apply external_send, canned_delete deletion, tickets_bulk_update other');
+$t2 = (int) act_token('/tickets/save.php', ['subject' => 'SMOKE json bulk', 'body' => 'x', 'queue' => $W['it']], $marco)[1]['record_id'];
+[$c, $b] = act_token('/bulk/update.php', ['tickets' => $t . ',' . $t2, 'priority' => 'low', 'confirmed' => 'yes'], $lena);
+ok($c === 200 && ($b['ok'] ?? false) && ($b['changed'] ?? []) === [$t, $t2] && ($b['refused'] ?? null) === [] && ($b['location'] ?? '') === '/inbox', 'tickets_bulk_update by token: {ok, changed, refused, location}');
+[$c, $b] = act_token('/bulk/update.php', ['tickets' => $t . ',' . $t2, 'priority' => 'low'], $lena);
+ok($c === 422 && ($b['error']['code'] ?? '') === 'invalid' && msg($b) === 'Confirm the change to 2 tickets.', 'without confirmed: 422 invalid with the sentence');
+[$c, $b] = act_token('/canned/delete.php', ['canned' => $cid], $marco);
+ok($c === 403, 'canned_delete of a global one as support: 403');
+[$c, $b] = act_token('/canned/delete.php', ['canned' => $cid], $lena);
+ok($c === 200 && ($b['ok'] ?? false) && canned_row($cid)['archived_at'] !== null, 'as the lead: deleted');
+$r = req('GET', '/canned/', ['headers' => array_merge(JSONH, $marco)]);
+ok($r['code'] === 200 && isset(json_decode($r['body'], true)['data']['responses']), 'the list answers JSON under a token');
+finish();

@@ -26,7 +26,9 @@ $ccs = $work ? (request_list('cc') ?? []) : [];
 $then = $work ? (string) req_val('then_status') : '';
 $code = (string) req_val('resolution_code');
 $supportReply = $work && $t['requester_member_id'] !== $me;
-$r = hd_guard($pdo, static function () use ($pdo, $me, $t, $body, $attachments, $ccs, $then, $code, $supportReply): array {
+$canned = $work && request_integer('canned_id') !== null ? find_canned_one($pdo, (int) request_integer('canned_id')) : null;        // slice 5: the composer's canned pick
+$applyEffects = $canned !== null && hd_yes('apply_side_effects', false);
+$r = hd_guard($pdo, static function () use ($pdo, $me, $t, $body, $attachments, $ccs, $then, $code, $supportReply, $canned, $applyEffects): array {
     $pdo->beginTransaction();
     foreach ($ccs as $cc) {
         $rid = filter_var($cc, FILTER_VALIDATE_INT) !== false ? (int) $cc : (preg_match('/^[^@\s]+@[^@\s]+\.[^@\s]+$/', $cc) ? (int) one_value($pdo, 'SELECT hd_requester_for_email(:e)', ['e' => strtolower($cc)]) : null);
@@ -46,7 +48,13 @@ $r = hd_guard($pdo, static function () use ($pdo, $me, $t, $body, $attachments, 
         if (isset($rc['member_id']) && $rc['member_id'] === $me) { continue; }
         $n += notify($pdo, $rc, 'replied', $t['ticket_id'], 'Re: ' . $t['number'] . ' ' . $t['subject'], $body . "\n\n" . ($supportReply ? requester_link_words($t, null) : 'See it here: ' . app_url('/tickets/' . $t['ticket_id'])), $mid, 'replied:' . $mid) > 0 ? 1 : 0;
     }
-    ticket_log($pdo, $t, 'ticket.reply', ['after' => ['message_id' => $mid, 'kind' => 'public_reply', 'excerpt' => excerpt($body), 'attachments' => count($attachments), 'recipients' => $n]]);
+    ticket_log($pdo, $t, 'ticket.reply', ['after' => ['message_id' => $mid, 'kind' => 'public_reply', 'excerpt' => excerpt($body), 'attachments' => count($attachments), 'recipients' => $n] + ($canned !== null ? ['canned_id' => $canned['canned_id']] : [])]);
+    $effects = null;
+    if ($canned !== null) {
+        $effects = $applyEffects ? canned_side_effects($pdo, $canned, $t['ticket_id'], $me) : ['applied' => [], 'skipped' => []];
+        bump_canned_usage($pdo, $canned['canned_id']);
+        ticket_log($pdo, $t, 'canned.apply', ['after' => ['canned_id' => $canned['canned_id'], 'sent' => true, 'message_id' => $mid, 'side_effects' => $effects]]);
+    }
     $moved = null;
     if ($then !== '') {
         $to = status_by_key($pdo, $then) ?? throw new DomainException('That status is not here.');
@@ -54,6 +62,7 @@ $r = hd_guard($pdo, static function () use ($pdo, $me, $t, $body, $attachments, 
         ticket_log($pdo, $t, 'ticket.transition', ['before' => $moved['before'], 'after' => $moved['after']]);
     }
     $pdo->commit();
-    return ['message_id' => $mid, 'recipients' => $n, 'moved' => $moved];
+    return ['message_id' => $mid, 'recipients' => $n, 'moved' => $moved, 'effects' => $effects];
 });
-ticket_done($t, 'Replied on ' . $t['number'] . ($r['moved'] !== null ? ' and set it ' . $r['moved']['after']['status'] : ''), ['message_id' => $r['message_id'], 'record_id' => $r['message_id'], 'recipients' => $r['recipients']], 'sent');
+$effectWords = $r['effects'] === null ? '' : ($r['effects']['applied'] !== [] ? ' (' . implode(', ', $r['effects']['applied']) . ')' : '') . ($r['effects']['skipped'] !== [] ? ' — skipped ' . implode('; ', array_map(static fn (array $s): string => $s['effect'] . ': ' . $s['why'], $r['effects']['skipped'])) : '');
+ticket_done($t, 'Replied on ' . $t['number'] . ($r['moved'] !== null ? ' and set it ' . $r['moved']['after']['status'] : '') . $effectWords, ['message_id' => $r['message_id'], 'record_id' => $r['message_id'], 'recipients' => $r['recipients']] + ($r['effects'] !== null ? ['side_effects' => $r['effects']] : []), 'sent');

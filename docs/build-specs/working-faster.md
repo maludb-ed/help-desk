@@ -103,27 +103,45 @@ Schema: `canned_responses` (db/011), `custom_field_defs` (db/009), `tickets.cust
   reply (slice 7); the custom-field **definitions** screens (slice 2's vocabulary slice builds `fields-list` / `field-add`
   / `field-edit`); a canned response that sends an **article** (`article_send`, slice 9); templates with attachments (Later).
 
-## Proof (live as members; curl for JSON mode; headless Chromium at 375 × 740 and 1280 × 800)
-- **Scope and rights**: Marco's personal response is on his list and not on Dana's (a direct URL → 404 *"Canned response
-  not found."*); an IT-queue response shows to Marco and Sam (collaborator — read only, no Use button since no
-  `tickets.work`) and not to Dana; a global one to everyone with `tickets.work`; Priya (Requester) gets 403 on
-  `/canned/` with *"You may not work tickets here."*; Marco's `scope=global` save → 403.
-- **Rendering**: every placeholder of the list renders from fixture HD-1001 (grep the output for each value); an unknown
-  placeholder → 422 naming it; `{{agent.signature}}` falls back to the display name; the preview saves nothing (row count unchanged).
-- **Apply**: `send=0` returns the text and writes no message; `send=1` writes one public reply (`messages.kind =
-  'public_reply'`, `channel = 'web'`), applies `→ Pending` and `+hardware`, bumps `usage_count`, logs `canned.apply` and
-  `ticket.reply`; a side-effect status the table forbids (→ Closed from New) is **skipped** and named in `did`; an agent's
-  `canned_apply` with `send=1` is `pending_approval` (Phase 4 proves the hook; here the handler answers 202 under a run
-  token with a stubbed hook as txtSchedules' slice proofs did).
-- **Bulk**: three tickets, one of them closed: two change, the closed one is reported with *"…cannot move from Closed."*
-  and the others keep their change (per-ticket transactions); the note lands on the two; Priya's POST → 403; without
-  `confirmed` → 422 *"Confirm the change to 3 tickets."*.
-- **Per-type fields**: a field restricted to `incident` appears when the type select changes to Incident and not for
-  Question; `required_on_solve` refuses the solve with the field's label in the sentence.
-- **Composer**: the Canned button opens the picker under the composer (no modal), filters as you type, inserts at the
-  caret, shows side-effect chips; at 375 px the picker is full width and the buttons ≥ 44 px; no horizontal scroll at
-  375 and 1280.
-- JSON mode: `canned_apply` and `tickets_bulk_update` answer the contract; `php bin/build_action_registry.php --check` passes.
+## Proof (`tests/phase3/slice5/run.sh`: the scratch database, slice 3's world, members through dev hand-offs, curl with signed action and run tokens and HTMX-shaped posts, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-03: 100 checks green** (scope 22, render 12, apply 19, bulk 19, fields 11, json 10, browser 6, the registry); Phase 2's, slices 1–4's suites still green; the
+installer's `plan` clean.
+- [x] **Scope and rights.** Marco's personal response is on his list and not on Lena's (a direct URL → 404 *"Canned response not found."*); his `scope=global` → 403 *"Sharing with everyone
+  needs the Lead role."*, `scope=queue` for IT (he is no lead) → 403; Lena (IT's lead) saves a queue response for IT and is refused one for Facilities (422, she does not hold it); an IT-queue
+  response shows to Marco, a Facilities one to neither Marco nor Lena (`view_all` is not holding); a global one with side-effects as JSON (the agent's way); `canned_update` keeps the body it was
+  not sent and the log never carries a body; Priya → 403 *"You may not work tickets here."*; Colin (collaborator) → 403 (the view admits holders of `tickets.work` only); the page's groups
+  Mine · IT help · Everyone with Edit on one's own; the chips read → Pending, +hardware, ↑ High, assign me; search by words and by folder; support cannot change or delete a shared one;
+  the lead can; a delete archives, logs and lands on the list; empty says its sentence.
+- [x] **Rendering.** Every placeholder renders from the fixture ticket; nothing left unrendered; `send=no` answers `ok` with no location; with a mailbox signature on the queue
+  `{{agent.signature}}` is it, else the display name; `{{foo}}` → 422 *"{{foo}} is not a placeholder."* by field; the form's preview renders against the sample ticket with the chips and
+  warns about an unknown placeholder; the preview saves nothing and logs nothing; a ticket one cannot see → 404; another's private response → 404; the form lists the placeholders.
+- [x] **Apply.** `send=no` returns the text and the chips, no message; `send=yes` writes one public reply by Marco on the web channel with the rendered text, applies → Pending and +hardware,
+  bumps `usage_count`, logs `canned.apply` (canned id, sent, the side-effects applied) beside `ticket.reply`, `ticket.transition` (via canned) and `ticket.tag`, lands on the message, Jo is
+  told by email; → Closed from New is **skipped and named in `did`** while ↓ Low applies and the reply goes; `apply_side_effects=no` sends the reply only; `ticket_reply` with `canned_id` +
+  `apply_side_effects` applies the effects and logs `canned.apply`; the composer has the Canned button, the picker region and the effects region; the picker partial filters by words; the
+  HTMX answer is the textarea with the text at the caret plus the chips and the checkbox out-of-band; no modal anywhere.
+- [x] **Bulk.** Lena sees the four listed in the order given; Marco (support) and Priya → 403; the page lists them and asks to confirm; the inbox has the checkboxes and Change selected… for a
+  lead, not for support; without `confirmed` → 422 *"Confirm the change to 3 tickets."*; nothing to change → 422; three tickets, one closed: two change (status, priority, assignee, the note on
+  the two only), the closed one is refused with *"… cannot move from Closed."* and untouched (per-ticket transactions); one `ticket.bulk_update` row with the ids, the change keys, changed and
+  refused, plus the per-ticket rows (via bulk); the result page with ✓ or the sentence and `HX-Trigger: ticketChanged`; assigning to the agent in bulk dispatches each.
+- [x] **Per-type fields.** Root cause (a select, required to solve) for incidents only and Asset tag for every type: the partial for Incident shows both ("needed to solve"), for Question
+  only Asset tag; with `?ticket=` the values come from the ticket; the form's type select reloads `#custom-fields`; solving an incident without it → 422 *"'SMOKE Root cause' is required to
+  solve this ticket."*, with it → solved; a Question solves freely; a canned → Solved on it is skipped and named (the code first, as the table says).
+- [x] **JSON mode.** `canned_create` by token with side-effects as JSON; `canned_apply send=no` → `{ok, text, side_effects}` and no location; `send=yes` → `{ok, did, record_id, message_id,
+  side_effects, location}`; an agent's `send=no` under a run token is a read (nothing written — the kernel's hook pauses `send=yes` by action); the registry marks `canned_apply`
+  external_send, `canned_delete` deletion, `tickets_bulk_update` other; `tickets_bulk_update` → `{ok, changed, refused, location}` and 422 in the sentence without `confirmed`.
+- [x] **375 × 740 and 1280 × 800.** The list and the form within the width, every button ≥ 44 px; the preview renders as you type; a placeholder button inserts at the caret; the Canned
+  button opens the picker under the composer (no modal), full width on a phone, filters as you type, inserting at the caret with the chips and the checkbox, then closes; the inbox selection
+  opens `/bulk` with the two tickets and Apply shows the result page; the type select reloads the fields (Incident adds Root cause, Question drops it); the list renders with JavaScript off.
+
+**Decisions taken while building (2026-10-03):** the agent pause for `canned_apply send=yes`, `canned_delete` and `tickets_bulk_update` is the kernel hook's, by action key as the registry
+marks them — the app never fakes a 202 (`send=no` is a read: the text with `ok` and no location); a collaborator sees no canned responses at all (`mcp_canned_responses` admits `tickets.work`,
+never modified) — the spec's "read only" collaborator could not be honoured; `{{agent.signature}}` is the queue's active mailbox signature, else the display name (the open question stands);
+`html/tickets/fields.php` keeps slice 3's action on POST and answers the custom-fields partial on GET (one file, as the spec's name says); a field required to solve is checked after the
+table's own requirement (the resolution code first); the picker inserts at the caret through a hidden `caret` field the composer keeps (an outerHTML swap of the textarea carrying the merged
+text) and the chips travel with the reply as `canned_id` + `apply_side_effects`; a queue response needs the queue held and its lead flag or `tickets.manage`; a bulk assignment to an agent
+dispatches each ticket as the single assignment does; `remove_tags` works on a closed ticket (no move); the list partial is `ticket-list.php` (slice 3's name), the checkboxes a GET form around
+it that opens `/bulk`.
 
 ## Open questions
 - `{{agent.signature}}`: a per-person signature needs a column nowhere in the schema (`notification_prefs` has none).
