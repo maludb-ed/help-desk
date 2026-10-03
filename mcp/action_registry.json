@@ -1,0 +1,4269 @@
+{
+    "generated_from": "docs/business-os-action-manifest.md",
+    "generated_at": "2026-10-03T12:15:21+00:00",
+    "screens": {
+        "dashboard": {
+            "screen": "dashboard",
+            "url": "/",
+            "section": "Home, my tickets and settings",
+            "when": "their home: what needs them (support), their open tickets (anyone), a new request button, the knowledge base search",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "my-tickets": {
+            "screen": "my-tickets",
+            "url": "/my-tickets",
+            "section": "Home, my tickets and settings",
+            "when": "the tickets they asked for, filed, are cc'd on or follow, by state",
+            "params": [
+                "state"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "settings": {
+            "screen": "settings",
+            "url": "/settings/",
+            "section": "Home, my tickets and settings",
+            "when": "how they are told (email, text, which events)",
+            "params": [
+                "tab"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "tokens": {
+            "screen": "tokens",
+            "url": "/settings/tokens/",
+            "section": "Home, my tickets and settings",
+            "when": "their own access tokens for the two MCP servers",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "notifications": {
+            "screen": "notifications",
+            "url": "/notifications",
+            "section": "Home, my tickets and settings",
+            "when": "their in-app notifications, unread first",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "activity": {
+            "screen": "activity",
+            "url": "/activity",
+            "section": "Home, my tickets and settings",
+            "when": "their own recent activity, or one ticket's history",
+            "params": [
+                "ticket",
+                "period"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "general-settings": {
+            "screen": "general-settings",
+            "url": "/settings/general",
+            "section": "Home, my tickets and settings",
+            "when": "the business's Help Desk settings: numbering prefix, auto-close and reopen windows, secure-link life, the default queue, the request form on or off, organization visibility",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "agents": {
+            "screen": "agents",
+            "url": "/settings/agents",
+            "section": "Home, my tickets and settings",
+            "when": "which agents work here, their queues, their last dispatch and run (read-only; hiring and grants link to the kernel)",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "organizations-list": {
+            "screen": "organizations-list",
+            "url": "/organizations/",
+            "section": "Organizations and requesters",
+            "when": "the customer companies as cards with tier and open tickets",
+            "params": [
+                "q",
+                "tier"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "organization-add": {
+            "screen": "organization-add",
+            "url": "/organizations/new",
+            "section": "Organizations and requesters",
+            "when": "to add a customer company",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "organization-view": {
+            "screen": "organization-view",
+            "url": "/organizations/{id}",
+            "section": "Organizations and requesters",
+            "when": "one organization: domains, people, tickets, SLA, settings",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "organization-edit": {
+            "screen": "organization-edit",
+            "url": "/organizations/{id}/edit",
+            "section": "Organizations and requesters",
+            "when": "to change an organization",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "requesters-list": {
+            "screen": "requesters-list",
+            "url": "/requesters/",
+            "section": "Organizations and requesters",
+            "when": "the people who ask — externals, members, agents — as cards",
+            "params": [
+                "q",
+                "kind",
+                "organization"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "requester-view": {
+            "screen": "requester-view",
+            "url": "/requesters/{id}",
+            "section": "Organizations and requesters",
+            "when": "one requester: contact details, organization, their tickets, notes, their addresses",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "requester-edit": {
+            "screen": "requester-edit",
+            "url": "/requesters/{id}/edit",
+            "section": "Organizations and requesters",
+            "when": "to change a requester's details or organization",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "requester-add": {
+            "screen": "requester-add",
+            "url": "/requesters/new",
+            "section": "Organizations and requesters",
+            "when": "to add an external requester by hand",
+            "params": [
+                "organization"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "queues-list": {
+            "screen": "queues-list",
+            "url": "/settings/queues/",
+            "section": "Queues",
+            "when": "the queues as cards: department, members, open count, assignment method",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "queue-add": {
+            "screen": "queue-add",
+            "url": "/settings/queues/new",
+            "section": "Queues",
+            "when": "to add a queue",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "queue-view": {
+            "screen": "queue-view",
+            "url": "/settings/queues/{id}",
+            "section": "Queues",
+            "when": "one queue: its members and leads, defaults, mailbox, policy, hours",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "queue-edit": {
+            "screen": "queue-edit",
+            "url": "/settings/queues/{id}/edit",
+            "section": "Queues",
+            "when": "to change a queue",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "sla-list": {
+            "screen": "sla-list",
+            "url": "/settings/sla/",
+            "section": "Service levels and business hours",
+            "when": "the SLA policies in match order and the business-hours schedules",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "sla-policy-add": {
+            "screen": "sla-policy-add",
+            "url": "/settings/sla/new",
+            "section": "Service levels and business hours",
+            "when": "to add a policy",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "sla-policy-edit": {
+            "screen": "sla-policy-edit",
+            "url": "/settings/sla/{id}/edit",
+            "section": "Service levels and business hours",
+            "when": "to change a policy's conditions, targets or threshold",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "business-hours-edit": {
+            "screen": "business-hours-edit",
+            "url": "/settings/sla/hours",
+            "section": "Service levels and business hours",
+            "when": "to change a schedule's weekly hours and holidays",
+            "params": [
+                "schedule"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "statuses-list": {
+            "screen": "statuses-list",
+            "url": "/settings/statuses/",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "the statuses in board order with their category and clock, and the transitions matrix",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "status-add": {
+            "screen": "status-add",
+            "url": "/settings/statuses/new",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "to add a custom status inside open or pending or on hold or solved",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "status-edit": {
+            "screen": "status-edit",
+            "url": "/settings/statuses/{id}/edit",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "to rename or recolour a status, change its order, whether it is on the board, whether the clock runs",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "transitions": {
+            "screen": "transitions",
+            "url": "/settings/statuses/transitions",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "the matrix of allowed moves between categories and what each requires",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "vocabulary": {
+            "screen": "vocabulary",
+            "url": "/settings/vocabulary/",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "the ticket types, the categories tree with routing defaults, and the tags",
+            "params": [
+                "tab"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "category-add": {
+            "screen": "category-add",
+            "url": "/settings/vocabulary/categories/new",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "to add a category",
+            "params": [
+                "parent"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "category-edit": {
+            "screen": "category-edit",
+            "url": "/settings/vocabulary/categories/{id}/edit",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "to change a category's parent, defaults or visibility",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "fields-list": {
+            "screen": "fields-list",
+            "url": "/settings/fields/",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "the custom field definitions for tickets, organizations and requesters",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "field-add": {
+            "screen": "field-add",
+            "url": "/settings/fields/new",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "to add a custom field",
+            "params": [
+                "applies_to"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "field-edit": {
+            "screen": "field-edit",
+            "url": "/settings/fields/{id}/edit",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "when": "to change a custom field",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "inbox": {
+            "screen": "inbox",
+            "url": "/inbox",
+            "section": "Tickets",
+            "when": "the tickets of their queues as a list through a saved view or ad-hoc filters, with needs-reply and SLA",
+            "params": [
+                "view",
+                "q",
+                "status",
+                "queue",
+                "assignee",
+                "priority",
+                "sort"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "ticket-add": {
+            "screen": "ticket-add",
+            "url": "/tickets/new",
+            "section": "Tickets",
+            "when": "to file a ticket for themself, on behalf of someone, or from an email",
+            "params": [
+                "requester",
+                "queue",
+                "category",
+                "on_behalf_of",
+                "from_inbound"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "ticket-view": {
+            "screen": "ticket-view",
+            "url": "/tickets/{id}",
+            "section": "Tickets",
+            "when": "one ticket: the conversation and composer, the fields, the requester card, followers, links, time, SLA, the timeline",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "ticket-edit": {
+            "screen": "ticket-edit",
+            "url": "/tickets/{id}/edit",
+            "section": "Tickets",
+            "when": "to change a ticket's subject, requester, organization, type, category, custom fields or due date",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "ticket-merge": {
+            "screen": "ticket-merge",
+            "url": "/tickets/{id}/merge",
+            "section": "Tickets",
+            "when": "to merge this ticket into another",
+            "params": [
+                "into"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "board": {
+            "screen": "board",
+            "url": "/board",
+            "section": "Views and the board",
+            "when": "a saved view as columns — status by default — drag to change status, with WIP and swimlanes",
+            "params": [
+                "view",
+                "swimlane",
+                "assignee",
+                "priority",
+                "q"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "views-list": {
+            "screen": "views-list",
+            "url": "/views/",
+            "section": "Views and the board",
+            "when": "the saved views and boards they may open: standard, their own, their queues'",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "view-add": {
+            "screen": "view-add",
+            "url": "/views/new",
+            "section": "Views and the board",
+            "when": "to save the current filters as a view or a board",
+            "params": [
+                "layout",
+                "from"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "view-edit": {
+            "screen": "view-edit",
+            "url": "/views/{id}/edit",
+            "section": "Views and the board",
+            "when": "to change a view's filters, columns, layout or board settings",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "canned-list": {
+            "screen": "canned-list",
+            "url": "/canned/",
+            "section": "Working faster: canned responses and bulk changes",
+            "when": "the canned responses by folder: personal, their queues', global",
+            "params": [
+                "q",
+                "folder"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "canned-add": {
+            "screen": "canned-add",
+            "url": "/canned/new",
+            "section": "Working faster: canned responses and bulk changes",
+            "when": "to write a canned response with placeholders and side-effects",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "canned-edit": {
+            "screen": "canned-edit",
+            "url": "/canned/{id}/edit",
+            "section": "Working faster: canned responses and bulk changes",
+            "when": "to change a canned response",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "bulk-update": {
+            "screen": "bulk-update",
+            "url": "/bulk",
+            "section": "Working faster: canned responses and bulk changes",
+            "when": "to change several tickets at once from a list selection",
+            "params": [
+                "tickets"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "mailboxes-list": {
+            "screen": "mailboxes-list",
+            "url": "/settings/mailboxes/",
+            "section": "Email and the inbound queue",
+            "when": "the queues' mailboxes and their last poll",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "mailbox-add": {
+            "screen": "mailbox-add",
+            "url": "/settings/mailboxes/new",
+            "section": "Email and the inbound queue",
+            "when": "to add a mailbox for a queue",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "mailbox-edit": {
+            "screen": "mailbox-edit",
+            "url": "/settings/mailboxes/{id}/edit",
+            "section": "Email and the inbound queue",
+            "when": "to change a mailbox's queue, signature or polling",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "inbound-list": {
+            "screen": "inbound-list",
+            "url": "/settings/mailboxes/inbound",
+            "section": "Email and the inbound queue",
+            "when": "the inbound mail that failed, bounced or was ignored, to retry or dismiss",
+            "params": [
+                "status",
+                "mailbox"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "rules-list": {
+            "screen": "rules-list",
+            "url": "/settings/automation/",
+            "section": "Automation",
+            "when": "the rules as cards: kind, event, run count, last run, on or off",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "rule-add": {
+            "screen": "rule-add",
+            "url": "/settings/automation/new",
+            "section": "Automation",
+            "when": "to add a trigger or a time-based or an assignment rule",
+            "params": [
+                "kind"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "rule-edit": {
+            "screen": "rule-edit",
+            "url": "/settings/automation/{id}/edit",
+            "section": "Automation",
+            "when": "to change a rule's conditions or actions",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "rule-runs": {
+            "screen": "rule-runs",
+            "url": "/settings/automation/{id}/runs",
+            "section": "Automation",
+            "when": "what a rule did: the last 30 days of runs",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "kb-home": {
+            "screen": "kb-home",
+            "url": "/kb/",
+            "section": "Knowledge base",
+            "when": "the knowledge base: sections and a search; public to everyone, internal articles to members with kb.read",
+            "params": [
+                "q"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "kb-section": {
+            "screen": "kb-section",
+            "url": "/kb/s/{slug}",
+            "section": "Knowledge base",
+            "when": "one section's articles",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "kb-article": {
+            "screen": "kb-article",
+            "url": "/kb/{slug}",
+            "section": "Knowledge base",
+            "when": "one article; a public article needs no session",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "kb-admin": {
+            "screen": "kb-admin",
+            "url": "/kb/admin/",
+            "section": "Knowledge base",
+            "when": "every article by status with its counts, and the sections, for editors",
+            "params": [
+                "status",
+                "section"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "article-add": {
+            "screen": "article-add",
+            "url": "/kb/admin/new",
+            "section": "Knowledge base",
+            "when": "to write an article",
+            "params": [
+                "section",
+                "from_ticket"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "article-edit": {
+            "screen": "article-edit",
+            "url": "/kb/admin/{id}/edit",
+            "section": "Knowledge base",
+            "when": "to change an article",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "csat-settings": {
+            "screen": "csat-settings",
+            "url": "/settings/csat",
+            "section": "Requesters' replies, ratings and surveys",
+            "when": "the satisfaction survey: on or off, scale, question, delay, window, bad-rating reasons, which queues",
+            "params": [],
+            "built": false,
+            "stub": false
+        },
+        "ratings-list": {
+            "screen": "ratings-list",
+            "url": "/ratings/",
+            "section": "Requesters' replies, ratings and surveys",
+            "when": "the ratings received, bad ones first, with reason and comment",
+            "params": [
+                "score",
+                "queue",
+                "period"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "queue-dashboard": {
+            "screen": "queue-dashboard",
+            "url": "/reports/",
+            "section": "Reports",
+            "when": "the queues now: backlog by status and priority, aging, at risk, unassigned, workload",
+            "params": [
+                "queue"
+            ],
+            "built": false,
+            "stub": false
+        },
+        "reports": {
+            "screen": "reports",
+            "url": "/reports/{report}",
+            "section": "Reports",
+            "when": "one report as a table and a CSV: volume, first response, resolution, SLA attainment, reopen rate, CSAT, workload, aging, by queue or category or organization",
+            "params": [
+                "queue",
+                "from",
+                "to",
+                "group_by",
+                "format"
+            ],
+            "built": false,
+            "stub": false
+        }
+    },
+    "actions": {
+        "prefs_save": {
+            "action": "prefs_save",
+            "section": "Home, my tickets and settings",
+            "endpoint": "/settings/prefs.php",
+            "params": [
+                {
+                    "name": "email_enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "text_enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "kinds",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "the events to be told about"
+                },
+                {
+                    "name": "text_kinds",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "the events to be texted about"
+                },
+                {
+                    "name": "digest",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "prefs.save",
+            "who": "own",
+            "built": false
+        },
+        "token_mint": {
+            "action": "token_mint",
+            "section": "Home, my tickets and settings",
+            "endpoint": "/settings/tokens/mint.php",
+            "params": [
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "scope",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "mcp or api"
+                }
+            ],
+            "undo": "revoke it",
+            "confirm": false,
+            "approval": null,
+            "log_event": "token.mint",
+            "who": "own",
+            "built": false
+        },
+        "token_revoke": {
+            "action": "token_revoke",
+            "section": "Home, my tickets and settings",
+            "endpoint": "/settings/tokens/revoke.php",
+            "params": [
+                {
+                    "name": "token",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "token.revoke",
+            "who": "own",
+            "built": false
+        },
+        "notification_read": {
+            "action": "notification_read",
+            "section": "Home, my tickets and settings",
+            "endpoint": "/settings/notifications/read.php",
+            "params": [
+                {
+                    "name": "notification",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "empty marks all read"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "notification.read",
+            "who": "own",
+            "built": false
+        },
+        "settings_save": {
+            "action": "settings_save",
+            "section": "Home, my tickets and settings",
+            "endpoint": "/settings/general.php",
+            "params": [
+                {
+                    "name": "ticket_prefix",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "capital letters and digits up to 8"
+                },
+                {
+                    "name": "auto_close_days",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "0 to 365"
+                },
+                {
+                    "name": "reopen_window_days",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "0 to 365"
+                },
+                {
+                    "name": "secure_link_days",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 to 3650"
+                },
+                {
+                    "name": "default_queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "request_form_enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "org_visibility_default",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "timezone",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "settings.save",
+            "who": "admin",
+            "built": false
+        },
+        "organization_create": {
+            "action": "organization_create",
+            "section": "Organizations and requesters",
+            "endpoint": "/organizations/save.php",
+            "params": [
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "support_tier",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "domains",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "email domains that claim new requesters"
+                },
+                {
+                    "name": "policy",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an SLA override"
+                },
+                {
+                    "name": "members_see_each_other",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no or empty for the default"
+                },
+                {
+                    "name": "notes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "tags",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": "organization_archive",
+            "confirm": false,
+            "approval": null,
+            "log_event": "organization.create",
+            "who": "queue",
+            "built": false
+        },
+        "organization_update": {
+            "action": "organization_update",
+            "section": "Organizations and requesters",
+            "endpoint": "/organizations/save.php",
+            "params": [
+                {
+                    "name": "organization",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "support_tier",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "domains",
+                    "repeated": true,
+                    "hint": "email domains that claim new requesters"
+                },
+                {
+                    "required": false,
+                    "name": "policy",
+                    "repeated": false,
+                    "hint": "an SLA override"
+                },
+                {
+                    "required": false,
+                    "name": "members_see_each_other",
+                    "repeated": false,
+                    "hint": "yes or no or empty for the default"
+                },
+                {
+                    "required": false,
+                    "name": "notes",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "tags",
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "organization.update",
+            "who": "queue",
+            "built": false,
+            "partial": true
+        },
+        "organization_archive": {
+            "action": "organization_archive",
+            "section": "Organizations and requesters",
+            "endpoint": "/organizations/archive.php",
+            "params": [
+                {
+                    "name": "organization",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": null,
+            "log_event": "organization.archive",
+            "who": "manage",
+            "built": false
+        },
+        "requester_create": {
+            "action": "requester_create",
+            "section": "Organizations and requesters",
+            "endpoint": "/requesters/save.php",
+            "params": [
+                {
+                    "name": "display_name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "email",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "phone",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "organization",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "locale",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "timezone",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "notes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "requester.create",
+            "who": "queue",
+            "built": false
+        },
+        "requester_update": {
+            "action": "requester_update",
+            "section": "Organizations and requesters",
+            "endpoint": "/requesters/save.php",
+            "params": [
+                {
+                    "name": "requester",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "display_name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "email",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "phone",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "organization",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "locale",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "timezone",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "notes",
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "requester.update",
+            "who": "queue",
+            "built": false,
+            "partial": true
+        },
+        "requester_email_add": {
+            "action": "requester_email_add",
+            "section": "Organizations and requesters",
+            "endpoint": "/requesters/email.php",
+            "params": [
+                {
+                    "name": "requester",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "email",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "requester_email_remove",
+            "confirm": false,
+            "approval": null,
+            "log_event": "requester.email_add",
+            "who": "queue",
+            "built": false
+        },
+        "requester_email_remove": {
+            "action": "requester_email_remove",
+            "section": "Organizations and requesters",
+            "endpoint": "/requesters/email-remove.php",
+            "params": [
+                {
+                    "name": "requester",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "email",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "requester_email_add",
+            "confirm": true,
+            "approval": null,
+            "log_event": "requester.email_remove",
+            "who": "queue",
+            "built": false
+        },
+        "requester_merge": {
+            "action": "requester_merge",
+            "section": "Organizations and requesters",
+            "endpoint": "/requesters/merge.php",
+            "params": [
+                {
+                    "name": "requester",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the one that goes away"
+                },
+                {
+                    "name": "into",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the one that stays"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "other",
+            "log_event": "requester.merge",
+            "who": "manage",
+            "built": false
+        },
+        "queue_create": {
+            "action": "queue_create",
+            "section": "Queues",
+            "endpoint": "/settings/queues/save.php",
+            "params": [
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "key",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "letters and underscores or empty to derive it"
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "department",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a kernel department whose members join the queue"
+                },
+                {
+                    "name": "include_department",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "assignment_method",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "manual or round_robin or least_loaded or default_assignee"
+                },
+                {
+                    "name": "default_assignee",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a person or an agent"
+                },
+                {
+                    "name": "schedule",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a business-hours schedule"
+                },
+                {
+                    "name": "policy",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "an SLA policy"
+                },
+                {
+                    "name": "email_address",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "queue_archive",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "queue.create",
+            "who": "admin",
+            "built": false
+        },
+        "queue_update": {
+            "action": "queue_update",
+            "section": "Queues",
+            "endpoint": "/settings/queues/save.php",
+            "params": [
+                {
+                    "name": "queue",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "key",
+                    "repeated": false,
+                    "hint": "letters and underscores or empty to derive it"
+                },
+                {
+                    "required": false,
+                    "name": "description",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "department",
+                    "repeated": false,
+                    "hint": "a kernel department whose members join the queue"
+                },
+                {
+                    "required": false,
+                    "name": "include_department",
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "required": false,
+                    "name": "assignment_method",
+                    "repeated": false,
+                    "hint": "manual or round_robin or least_loaded or default_assignee"
+                },
+                {
+                    "required": false,
+                    "name": "default_assignee",
+                    "repeated": false,
+                    "hint": "a person or an agent"
+                },
+                {
+                    "required": false,
+                    "name": "schedule",
+                    "repeated": false,
+                    "hint": "a business-hours schedule"
+                },
+                {
+                    "required": false,
+                    "name": "policy",
+                    "repeated": false,
+                    "hint": "an SLA policy"
+                },
+                {
+                    "required": false,
+                    "name": "email_address",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "sort_order",
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "queue.update",
+            "who": "admin",
+            "built": false,
+            "partial": true
+        },
+        "queue_archive": {
+            "action": "queue_archive",
+            "section": "Queues",
+            "endpoint": "/settings/queues/archive.php",
+            "params": [
+                {
+                    "name": "queue",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "its open tickets move to the default queue"
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "queue.archive",
+            "who": "admin",
+            "built": false
+        },
+        "queue_member_add": {
+            "action": "queue_member_add",
+            "section": "Queues",
+            "endpoint": "/settings/queues/member.php",
+            "params": [
+                {
+                    "name": "queue",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "member",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a person or an agent"
+                },
+                {
+                    "name": "is_lead",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "queue_member_remove",
+            "confirm": false,
+            "approval": null,
+            "log_event": "queue.member_add",
+            "who": "lead",
+            "built": false
+        },
+        "queue_member_remove": {
+            "action": "queue_member_remove",
+            "section": "Queues",
+            "endpoint": "/settings/queues/member-remove.php",
+            "params": [
+                {
+                    "name": "queue",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "member",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "queue_member_add",
+            "confirm": true,
+            "approval": null,
+            "log_event": "queue.member_remove",
+            "who": "lead",
+            "built": false
+        },
+        "queue_presence_set": {
+            "action": "queue_presence_set",
+            "section": "Queues",
+            "endpoint": "/settings/queues/presence.php",
+            "params": [
+                {
+                    "name": "availability",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "online or away or offline"
+                },
+                {
+                    "name": "capacity",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "max open tickets or empty"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "queue.presence",
+            "who": "own",
+            "built": false
+        },
+        "sla_policy_create": {
+            "action": "sla_policy_create",
+            "section": "Service levels and business hours",
+            "endpoint": "/settings/sla/save.php",
+            "params": [
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "lower matches first"
+                },
+                {
+                    "name": "organizations",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "match these organizations or any"
+                },
+                {
+                    "name": "queues",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "match these queues or any"
+                },
+                {
+                    "name": "types",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "match these types or any"
+                },
+                {
+                    "name": "priorities",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "match these priorities or any"
+                },
+                {
+                    "name": "tags",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "match tickets carrying any of these"
+                },
+                {
+                    "name": "targets",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "per priority the minutes for first_response and next_response and resolution as JSON"
+                },
+                {
+                    "name": "schedule",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "business hours or empty for calendar time"
+                },
+                {
+                    "name": "warning_percent",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 to 99"
+                }
+            ],
+            "undo": "sla_policy_archive",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "sla_policy.create",
+            "who": "admin",
+            "built": false
+        },
+        "sla_policy_update": {
+            "action": "sla_policy_update",
+            "section": "Service levels and business hours",
+            "endpoint": "/settings/sla/save.php",
+            "params": [
+                {
+                    "name": "policy",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "description",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "sort_order",
+                    "repeated": false,
+                    "hint": "lower matches first"
+                },
+                {
+                    "required": false,
+                    "name": "organizations",
+                    "repeated": true,
+                    "hint": "match these organizations or any"
+                },
+                {
+                    "required": false,
+                    "name": "queues",
+                    "repeated": true,
+                    "hint": "match these queues or any"
+                },
+                {
+                    "required": false,
+                    "name": "types",
+                    "repeated": true,
+                    "hint": "match these types or any"
+                },
+                {
+                    "required": false,
+                    "name": "priorities",
+                    "repeated": true,
+                    "hint": "match these priorities or any"
+                },
+                {
+                    "required": false,
+                    "name": "tags",
+                    "repeated": true,
+                    "hint": "match tickets carrying any of these"
+                },
+                {
+                    "required": false,
+                    "name": "targets",
+                    "repeated": false,
+                    "hint": "per priority the minutes for first_response and next_response and resolution as JSON"
+                },
+                {
+                    "required": false,
+                    "name": "schedule",
+                    "repeated": false,
+                    "hint": "business hours or empty for calendar time"
+                },
+                {
+                    "required": false,
+                    "name": "warning_percent",
+                    "repeated": false,
+                    "hint": "1 to 99"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "sla_policy.update",
+            "who": "admin",
+            "built": false,
+            "partial": true
+        },
+        "sla_policy_archive": {
+            "action": "sla_policy_archive",
+            "section": "Service levels and business hours",
+            "endpoint": "/settings/sla/archive.php",
+            "params": [
+                {
+                    "name": "policy",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "sla_policy.archive",
+            "who": "admin",
+            "built": false
+        },
+        "business_hours_save": {
+            "action": "business_hours_save",
+            "section": "Service levels and business hours",
+            "endpoint": "/settings/sla/hours.php",
+            "params": [
+                {
+                    "name": "schedule",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                },
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "timezone",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "intervals",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "weekday and opens and closes as JSON"
+                },
+                {
+                    "name": "is_default",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "business_hours.save",
+            "who": "admin",
+            "built": false
+        },
+        "holiday_add": {
+            "action": "holiday_add",
+            "section": "Service levels and business hours",
+            "endpoint": "/settings/sla/holiday.php",
+            "params": [
+                {
+                    "name": "schedule",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "holiday",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a date"
+                },
+                {
+                    "name": "name",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "holiday_remove",
+            "confirm": false,
+            "approval": null,
+            "log_event": "business_hours.holiday_add",
+            "who": "admin",
+            "built": false
+        },
+        "holiday_remove": {
+            "action": "holiday_remove",
+            "section": "Service levels and business hours",
+            "endpoint": "/settings/sla/holiday-remove.php",
+            "params": [
+                {
+                    "name": "schedule",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "holiday",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a date"
+                }
+            ],
+            "undo": "holiday_add",
+            "confirm": false,
+            "approval": null,
+            "log_event": "business_hours.holiday_remove",
+            "who": "admin",
+            "built": false
+        },
+        "status_save": {
+            "action": "status_save",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/statuses/save.php",
+            "params": [
+                {
+                    "name": "status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                },
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "category",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "open or pending or on_hold or solved for a new one"
+                },
+                {
+                    "name": "color",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "primary or secondary or success or info or warning or danger or dark"
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "on_board",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "clock_runs",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "status.save",
+            "who": "admin",
+            "built": false
+        },
+        "status_archive": {
+            "action": "status_archive",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/statuses/archive.php",
+            "params": [
+                {
+                    "name": "status",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a custom one with no open tickets"
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "status.archive",
+            "who": "admin",
+            "built": false
+        },
+        "transition_save": {
+            "action": "transition_save",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/statuses/transition.php",
+            "params": [
+                {
+                    "name": "from_category",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "to_category",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "allowed",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "requires",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "resolution_code or hold_reason"
+                },
+                {
+                    "name": "may_carry",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "pending_until or assignee"
+                },
+                {
+                    "name": "needs_right",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "tickets.work or tickets.manage"
+                },
+                {
+                    "name": "label",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "transition.save",
+            "who": "admin",
+            "built": false
+        },
+        "type_save": {
+            "action": "type_save",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/vocabulary/type.php",
+            "params": [
+                {
+                    "name": "type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                },
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "type.save",
+            "who": "admin",
+            "built": false
+        },
+        "type_archive": {
+            "action": "type_archive",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/vocabulary/type-archive.php",
+            "params": [
+                {
+                    "name": "type",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "type.archive",
+            "who": "admin",
+            "built": false
+        },
+        "category_save": {
+            "action": "category_save",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/vocabulary/category.php",
+            "params": [
+                {
+                    "name": "category",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                },
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "parent",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "default_queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "default_type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "default_priority",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "low or normal or high or urgent"
+                },
+                {
+                    "name": "policy",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "requester_visible",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "category.save",
+            "who": "admin",
+            "built": false
+        },
+        "category_archive": {
+            "action": "category_archive",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/vocabulary/category-archive.php",
+            "params": [
+                {
+                    "name": "category",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "category.archive",
+            "who": "admin",
+            "built": false
+        },
+        "tag_save": {
+            "action": "tag_save",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/vocabulary/tag.php",
+            "params": [
+                {
+                    "name": "tag",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to rename an existing one"
+                },
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "slug",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "tag.save",
+            "who": "lead",
+            "built": false
+        },
+        "tag_delete": {
+            "action": "tag_delete",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/vocabulary/tag-delete.php",
+            "params": [
+                {
+                    "name": "tag",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "removed from every ticket"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "tag.delete",
+            "who": "admin",
+            "built": false
+        },
+        "field_save": {
+            "action": "field_save",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/fields/save.php",
+            "params": [
+                {
+                    "name": "field",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                },
+                {
+                    "name": "label",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "key",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "letters and underscores or empty to derive it"
+                },
+                {
+                    "name": "field_type",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "text or number or date or select or multi_select or checkbox"
+                },
+                {
+                    "name": "options",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "for select and multi_select"
+                },
+                {
+                    "name": "applies_to",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "ticket or organization or requester"
+                },
+                {
+                    "name": "types",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "show for these ticket types only"
+                },
+                {
+                    "name": "required_on_solve",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "requester_visible",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "field.save",
+            "who": "admin",
+            "built": false
+        },
+        "field_archive": {
+            "action": "field_archive",
+            "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
+            "endpoint": "/settings/fields/archive.php",
+            "params": [
+                {
+                    "name": "field",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "field.archive",
+            "who": "admin",
+            "built": false
+        },
+        "ticket_create": {
+            "action": "ticket_create",
+            "section": "Tickets",
+            "endpoint": "/tickets/save.php",
+            "params": [
+                {
+                    "name": "subject",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the first message"
+                },
+                {
+                    "name": "requester",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a requester or an email or empty for the caller"
+                },
+                {
+                    "name": "on_behalf_of",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a member the ticket is for"
+                },
+                {
+                    "name": "queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "empty routes by category then the default"
+                },
+                {
+                    "name": "category",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "priority",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "low or normal or high or urgent"
+                },
+                {
+                    "name": "tags",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "custom",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "field values as JSON"
+                },
+                {
+                    "name": "due_at",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "external_id",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a monitoring system's own key"
+                },
+                {
+                    "name": "cc",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "addresses or requesters"
+                },
+                {
+                    "name": "as_note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes files the body as an internal note"
+                }
+            ],
+            "undo": "ticket_delete",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.create",
+            "who": "member",
+            "built": false
+        },
+        "ticket_update": {
+            "action": "ticket_update",
+            "section": "Tickets",
+            "endpoint": "/tickets/save.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "subject",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "requester",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "organization",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "category",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "due_at",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "custom",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "field values as JSON"
+                },
+                {
+                    "name": "external_id",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.update",
+            "who": "work",
+            "built": false
+        },
+        "ticket_reply": {
+            "action": "ticket_reply",
+            "section": "Tickets",
+            "endpoint": "/tickets/reply.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "attachments",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "attachment ids uploaded first"
+                },
+                {
+                    "name": "cc",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "add these to the ticket"
+                },
+                {
+                    "name": "then_status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "pending or solved or open after sending"
+                },
+                {
+                    "name": "resolution_code",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "when then_status is solved"
+                }
+            ],
+            "undo": "— (a sent reply cannot be unsent)",
+            "confirm": false,
+            "approval": "external_send",
+            "log_event": "ticket.reply",
+            "who": "work or own (the requester replies on their own)",
+            "built": false
+        },
+        "ticket_note": {
+            "action": "ticket_note",
+            "section": "Tickets",
+            "endpoint": "/tickets/note.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "mentions",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "members named"
+                },
+                {
+                    "name": "attachments",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.note",
+            "who": "note or work",
+            "built": false
+        },
+        "ticket_transition": {
+            "action": "ticket_transition",
+            "section": "Tickets",
+            "endpoint": "/tickets/transition.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "status",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a status allowed from where it is"
+                },
+                {
+                    "name": "resolution_code",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "resolved or workaround or no_action or duplicate or spam or cannot_reproduce when moving to solved"
+                },
+                {
+                    "name": "hold_reason",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "awaiting_requester or awaiting_third_party or awaiting_internal or awaiting_problem when moving to on hold"
+                },
+                {
+                    "name": "pending_until",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "when snoozing"
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.transition",
+            "who": "work",
+            "built": false
+        },
+        "ticket_assign": {
+            "action": "ticket_assign",
+            "section": "Tickets",
+            "endpoint": "/tickets/assign.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "assignee",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a person or an agent or me or none"
+                },
+                {
+                    "name": "queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "move it to another queue"
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.assign",
+            "who": "work",
+            "built": false
+        },
+        "ticket_set_fields": {
+            "action": "ticket_set_fields",
+            "section": "Tickets",
+            "endpoint": "/tickets/fields.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "priority",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "low or normal or high or urgent"
+                },
+                {
+                    "name": "type",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "category",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "due_at",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "custom",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "field values as JSON"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.set_fields",
+            "who": "work",
+            "built": false
+        },
+        "ticket_add_tags": {
+            "action": "ticket_add_tags",
+            "section": "Tickets",
+            "endpoint": "/tickets/tags.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "tags",
+                    "required": true,
+                    "repeated": true,
+                    "hint": ""
+                }
+            ],
+            "undo": "ticket_remove_tag",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.tag",
+            "who": "work",
+            "built": false
+        },
+        "ticket_remove_tag": {
+            "action": "ticket_remove_tag",
+            "section": "Tickets",
+            "endpoint": "/tickets/untag.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "tag",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "ticket_add_tags",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.untag",
+            "who": "work",
+            "built": false
+        },
+        "ticket_follow": {
+            "action": "ticket_follow",
+            "section": "Tickets",
+            "endpoint": "/tickets/follow.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "member",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "empty follows it oneself"
+                }
+            ],
+            "undo": "ticket_unfollow",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.follow",
+            "who": "note or member on their own",
+            "built": false
+        },
+        "ticket_unfollow": {
+            "action": "ticket_unfollow",
+            "section": "Tickets",
+            "endpoint": "/tickets/unfollow.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "member",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "empty is oneself"
+                }
+            ],
+            "undo": "ticket_follow",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.unfollow",
+            "who": "own",
+            "built": false
+        },
+        "ticket_cc_add": {
+            "action": "ticket_cc_add",
+            "section": "Tickets",
+            "endpoint": "/tickets/cc.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "cc",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "an email or a requester"
+                }
+            ],
+            "undo": "ticket_cc_remove",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.cc_add",
+            "who": "work or own",
+            "built": false
+        },
+        "ticket_cc_remove": {
+            "action": "ticket_cc_remove",
+            "section": "Tickets",
+            "endpoint": "/tickets/cc-remove.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "cc",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "ticket_cc_add",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.cc_remove",
+            "who": "work",
+            "built": false
+        },
+        "ticket_link": {
+            "action": "ticket_link",
+            "section": "Tickets",
+            "endpoint": "/tickets/link.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "other_ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "parent_child or related or duplicate_of or blocks or follow_up_of"
+                }
+            ],
+            "undo": "ticket_unlink",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.link",
+            "who": "work",
+            "built": false
+        },
+        "ticket_unlink": {
+            "action": "ticket_unlink",
+            "section": "Tickets",
+            "endpoint": "/tickets/unlink.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "other_ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "ticket_link",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.unlink",
+            "who": "work",
+            "built": false
+        },
+        "ticket_merge": {
+            "action": "ticket_merge",
+            "section": "Tickets",
+            "endpoint": "/tickets/merge.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the one that goes away"
+                },
+                {
+                    "name": "merge_into",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the one that stays"
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "other",
+            "log_event": "ticket.merge",
+            "who": "manage",
+            "built": false
+        },
+        "ticket_close": {
+            "action": "ticket_close",
+            "section": "Tickets",
+            "endpoint": "/tickets/close.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "resolution_code",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "when it is not solved yet"
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "ticket_reopen",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "ticket.close",
+            "who": "manage",
+            "built": false
+        },
+        "ticket_reopen": {
+            "action": "ticket_reopen",
+            "section": "Tickets",
+            "endpoint": "/tickets/reopen.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.reopen",
+            "who": "work or own (within the window)",
+            "built": false
+        },
+        "ticket_confirm": {
+            "action": "ticket_confirm",
+            "section": "Tickets",
+            "endpoint": "/tickets/confirm.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the requester confirms it is resolved"
+                }
+            ],
+            "undo": "ticket_reopen",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.confirm",
+            "who": "own",
+            "built": false
+        },
+        "ticket_spam": {
+            "action": "ticket_spam",
+            "section": "Tickets",
+            "endpoint": "/tickets/spam.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "solved as spam and the requester's address suppressed"
+                }
+            ],
+            "undo": "ticket_reopen",
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "ticket.spam",
+            "who": "manage",
+            "built": false
+        },
+        "ticket_delete": {
+            "action": "ticket_delete",
+            "section": "Tickets",
+            "endpoint": "/tickets/delete.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "gone for good with its messages"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "ticket.delete",
+            "who": "admin",
+            "built": false
+        },
+        "ticket_log_time": {
+            "action": "ticket_log_time",
+            "section": "Tickets",
+            "endpoint": "/tickets/time.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "minutes",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "1 to 1440"
+                },
+                {
+                    "name": "billable",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "worked_on",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "a date"
+                }
+            ],
+            "undo": "time_entry_delete",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.log_time",
+            "who": "work",
+            "built": false
+        },
+        "time_entry_delete": {
+            "action": "time_entry_delete",
+            "section": "Tickets",
+            "endpoint": "/tickets/time-delete.php",
+            "params": [
+                {
+                    "name": "entry",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "ticket.time_delete",
+            "who": "own or manage",
+            "built": false
+        },
+        "attachment_add": {
+            "action": "attachment_add",
+            "section": "Tickets",
+            "endpoint": "/tickets/attachments/save.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "file",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "multipart"
+                },
+                {
+                    "name": "message",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to attach to an existing message"
+                }
+            ],
+            "undo": "attachment_delete",
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.attach",
+            "who": "work or own",
+            "built": false
+        },
+        "attachment_delete": {
+            "action": "attachment_delete",
+            "section": "Tickets",
+            "endpoint": "/tickets/attachments/delete.php",
+            "params": [
+                {
+                    "name": "attachment",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "ticket.attachment_delete",
+            "who": "manage",
+            "built": false
+        },
+        "secure_link_rotate": {
+            "action": "secure_link_rotate",
+            "section": "Tickets",
+            "endpoint": "/tickets/secure-link.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a new link for the requester and the old one dead"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "ticket.secure_link_rotate",
+            "who": "work",
+            "built": false
+        },
+        "ticket_dispatch": {
+            "action": "ticket_dispatch",
+            "section": "Tickets",
+            "endpoint": "/tickets/dispatch.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "handed again to its agent assignee for one turn"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "ticket.dispatch",
+            "who": "work",
+            "built": false
+        },
+        "view_create": {
+            "action": "view_create",
+            "section": "Views and the board",
+            "endpoint": "/views/save.php",
+            "params": [
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "scope",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "personal or queue or global"
+                },
+                {
+                    "name": "queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "for a queue view"
+                },
+                {
+                    "name": "filters",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "JSON over the bounded vocabulary"
+                },
+                {
+                    "name": "sort_by",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "sort_dir",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "asc or desc"
+                },
+                {
+                    "name": "columns",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "layout",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "list or board"
+                },
+                {
+                    "name": "board",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "column_field and swimlane and wip and solved_days as JSON"
+                }
+            ],
+            "undo": "view_delete",
+            "confirm": false,
+            "approval": null,
+            "log_event": "view.create",
+            "who": "`views.personal` or lead for shared",
+            "built": false
+        },
+        "view_update": {
+            "action": "view_update",
+            "section": "Views and the board",
+            "endpoint": "/views/save.php",
+            "params": [
+                {
+                    "name": "view",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "scope",
+                    "repeated": false,
+                    "hint": "personal or queue or global"
+                },
+                {
+                    "required": false,
+                    "name": "queue",
+                    "repeated": false,
+                    "hint": "for a queue view"
+                },
+                {
+                    "required": false,
+                    "name": "filters",
+                    "repeated": false,
+                    "hint": "JSON over the bounded vocabulary"
+                },
+                {
+                    "required": false,
+                    "name": "sort_by",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "sort_dir",
+                    "repeated": false,
+                    "hint": "asc or desc"
+                },
+                {
+                    "required": false,
+                    "name": "columns",
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "layout",
+                    "repeated": false,
+                    "hint": "list or board"
+                },
+                {
+                    "required": false,
+                    "name": "board",
+                    "repeated": false,
+                    "hint": "column_field and swimlane and wip and solved_days as JSON"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "view.update",
+            "who": "own or lead for shared",
+            "built": false,
+            "partial": true
+        },
+        "view_delete": {
+            "action": "view_delete",
+            "section": "Views and the board",
+            "endpoint": "/views/delete.php",
+            "params": [
+                {
+                    "name": "view",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "never a standard one"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "log_event": "view.delete",
+            "who": "own or lead for shared",
+            "built": false
+        },
+        "board_move_card": {
+            "action": "board_move_card",
+            "section": "Views and the board",
+            "endpoint": "/views/board/move.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "column",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the status or other column value to drop into"
+                },
+                {
+                    "name": "position",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the rank within the column"
+                },
+                {
+                    "name": "resolution_code",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "hold_reason",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "pending_until",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "board.move",
+            "who": "work",
+            "built": false
+        },
+        "board_reorder": {
+            "action": "board_reorder",
+            "section": "Views and the board",
+            "endpoint": "/views/board/reorder.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "position",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the rank within its column"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "board.reorder",
+            "who": "work",
+            "built": false
+        },
+        "canned_create": {
+            "action": "canned_create",
+            "section": "Working faster: canned responses and bulk changes",
+            "endpoint": "/canned/save.php",
+            "params": [
+                {
+                    "name": "title",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "folder",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "scope",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "personal or queue or global"
+                },
+                {
+                    "name": "queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "for a queue response"
+                },
+                {
+                    "name": "side_effects",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "status and priority and assign and add_tags as JSON"
+                }
+            ],
+            "undo": "canned_delete",
+            "confirm": false,
+            "approval": null,
+            "log_event": "canned.create",
+            "who": "work for personal; lead for queue and global",
+            "built": false
+        },
+        "canned_update": {
+            "action": "canned_update",
+            "section": "Working faster: canned responses and bulk changes",
+            "endpoint": "/canned/save.php",
+            "params": [
+                {
+                    "name": "canned",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "title",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "body",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "folder",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "scope",
+                    "repeated": false,
+                    "hint": "personal or queue or global"
+                },
+                {
+                    "required": false,
+                    "name": "queue",
+                    "repeated": false,
+                    "hint": "for a queue response"
+                },
+                {
+                    "required": false,
+                    "name": "side_effects",
+                    "repeated": false,
+                    "hint": "status and priority and assign and add_tags as JSON"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "canned.update",
+            "who": "own or lead",
+            "built": false,
+            "partial": true
+        },
+        "canned_delete": {
+            "action": "canned_delete",
+            "section": "Working faster: canned responses and bulk changes",
+            "endpoint": "/canned/delete.php",
+            "params": [
+                {
+                    "name": "canned",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "canned.delete",
+            "who": "own or lead",
+            "built": false
+        },
+        "canned_apply": {
+            "action": "canned_apply",
+            "section": "Working faster: canned responses and bulk changes",
+            "endpoint": "/canned/apply.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "canned",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "send",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes sends it as a public reply and no returns the rendered text"
+                },
+                {
+                    "name": "apply_side_effects",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": "external_send",
+            "log_event": "canned.apply",
+            "who": "work",
+            "built": false
+        },
+        "tickets_bulk_update": {
+            "action": "tickets_bulk_update",
+            "section": "Working faster: canned responses and bulk changes",
+            "endpoint": "/bulk/update.php",
+            "params": [
+                {
+                    "name": "tickets",
+                    "required": true,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "assignee",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "queue",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "priority",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "add_tags",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "remove_tags",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "note",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "ticket.bulk_update",
+            "who": "manage",
+            "built": false
+        },
+        "mailbox_create": {
+            "action": "mailbox_create",
+            "section": "Email and the inbound queue",
+            "endpoint": "/settings/mailboxes/save.php",
+            "params": [
+                {
+                    "name": "address",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "display_name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "queue",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "webhook_secret_ref",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the env key holding the webhook secret"
+                },
+                {
+                    "name": "signature",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "poll_enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "mailbox_archive",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "mailbox.create",
+            "who": "admin",
+            "built": false
+        },
+        "mailbox_update": {
+            "action": "mailbox_update",
+            "section": "Email and the inbound queue",
+            "endpoint": "/settings/mailboxes/save.php",
+            "params": [
+                {
+                    "name": "mailbox",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "address",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "display_name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "queue",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "webhook_secret_ref",
+                    "repeated": false,
+                    "hint": "the env key holding the webhook secret"
+                },
+                {
+                    "required": false,
+                    "name": "signature",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "poll_enabled",
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "mailbox.update",
+            "who": "admin",
+            "built": false,
+            "partial": true
+        },
+        "mailbox_archive": {
+            "action": "mailbox_archive",
+            "section": "Email and the inbound queue",
+            "endpoint": "/settings/mailboxes/archive.php",
+            "params": [
+                {
+                    "name": "mailbox",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": "other",
+            "log_event": "mailbox.archive",
+            "who": "admin",
+            "built": false
+        },
+        "mailbox_poll_now": {
+            "action": "mailbox_poll_now",
+            "section": "Email and the inbound queue",
+            "endpoint": "/settings/mailboxes/poll.php",
+            "params": [
+                {
+                    "name": "mailbox",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "mailbox.poll",
+            "who": "admin",
+            "built": false
+        },
+        "inbound_retry": {
+            "action": "inbound_retry",
+            "section": "Email and the inbound queue",
+            "endpoint": "/settings/mailboxes/inbound/retry.php",
+            "params": [
+                {
+                    "name": "inbound",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a failed message processed again"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "mail.inbound_retry",
+            "who": "admin",
+            "built": false
+        },
+        "inbound_ignore": {
+            "action": "inbound_ignore",
+            "section": "Email and the inbound queue",
+            "endpoint": "/settings/mailboxes/inbound/ignore.php",
+            "params": [
+                {
+                    "name": "inbound",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "reason",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "mail.inbound_ignore",
+            "who": "admin",
+            "built": false
+        },
+        "rule_create": {
+            "action": "rule_create",
+            "section": "Automation",
+            "endpoint": "/settings/automation/save.php",
+            "params": [
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "trigger or time_based or assignment"
+                },
+                {
+                    "name": "event",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "ticket.create or ticket.update or ticket.reply or ticket.note for a trigger"
+                },
+                {
+                    "name": "conditions",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "JSON over the bounded vocabulary"
+                },
+                {
+                    "name": "actions",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "JSON over the bounded vocabulary"
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "active",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "rule_delete",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "rule.create",
+            "who": "admin",
+            "built": false
+        },
+        "rule_update": {
+            "action": "rule_update",
+            "section": "Automation",
+            "endpoint": "/settings/automation/save.php",
+            "params": [
+                {
+                    "name": "rule",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "name",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "kind",
+                    "repeated": false,
+                    "hint": "trigger or time_based or assignment"
+                },
+                {
+                    "required": false,
+                    "name": "event",
+                    "repeated": false,
+                    "hint": "ticket.create or ticket.update or ticket.reply or ticket.note for a trigger"
+                },
+                {
+                    "required": false,
+                    "name": "conditions",
+                    "repeated": false,
+                    "hint": "JSON over the bounded vocabulary"
+                },
+                {
+                    "required": false,
+                    "name": "actions",
+                    "repeated": false,
+                    "hint": "JSON over the bounded vocabulary"
+                },
+                {
+                    "required": false,
+                    "name": "sort_order",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "active",
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "rule.update",
+            "who": "admin",
+            "built": false,
+            "partial": true
+        },
+        "rule_toggle": {
+            "action": "rule_toggle",
+            "section": "Automation",
+            "endpoint": "/settings/automation/toggle.php",
+            "params": [
+                {
+                    "name": "rule",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "active",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "rule.toggle",
+            "who": "admin",
+            "built": false
+        },
+        "rule_delete": {
+            "action": "rule_delete",
+            "section": "Automation",
+            "endpoint": "/settings/automation/delete.php",
+            "params": [
+                {
+                    "name": "rule",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "rule.delete",
+            "who": "admin",
+            "built": false
+        },
+        "rule_run_now": {
+            "action": "rule_run_now",
+            "section": "Automation",
+            "endpoint": "/settings/automation/run.php",
+            "params": [
+                {
+                    "name": "rule",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a time-based rule run once now"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "other",
+            "log_event": "rule.run_now",
+            "who": "admin",
+            "built": false
+        },
+        "section_save": {
+            "action": "section_save",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/section.php",
+            "params": [
+                {
+                    "name": "section",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "to change an existing one"
+                },
+                {
+                    "name": "name",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "slug",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "parent",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "description",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "visibility",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "public or internal"
+                },
+                {
+                    "name": "sort_order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "section.save",
+            "who": "lead",
+            "built": false
+        },
+        "section_archive": {
+            "action": "section_archive",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/section-archive.php",
+            "params": [
+                {
+                    "name": "section",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": null,
+            "log_event": "section.archive",
+            "who": "lead",
+            "built": false
+        },
+        "article_create": {
+            "action": "article_create",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/save.php",
+            "params": [
+                {
+                    "name": "title",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "body",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "section",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "slug",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "visibility",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "public or internal"
+                },
+                {
+                    "name": "tags",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "from_ticket",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the ticket it was written from"
+                }
+            ],
+            "undo": "article_delete",
+            "confirm": false,
+            "approval": null,
+            "log_event": "article.create",
+            "who": "lead",
+            "built": false
+        },
+        "article_update": {
+            "action": "article_update",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/save.php",
+            "params": [
+                {
+                    "name": "article",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "title",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "body",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "section",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "slug",
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "visibility",
+                    "repeated": false,
+                    "hint": "public or internal"
+                },
+                {
+                    "required": false,
+                    "name": "tags",
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "required": false,
+                    "name": "from_ticket",
+                    "repeated": false,
+                    "hint": "the ticket it was written from"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "article.update",
+            "who": "lead",
+            "built": false,
+            "partial": true
+        },
+        "article_publish": {
+            "action": "article_publish",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/publish.php",
+            "params": [
+                {
+                    "name": "article",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "published",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes publishes and no returns it to draft"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "log_event": "article.publish",
+            "who": "lead",
+            "built": false
+        },
+        "article_archive": {
+            "action": "article_archive",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/archive.php",
+            "params": [
+                {
+                    "name": "article",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore",
+            "confirm": true,
+            "approval": null,
+            "log_event": "article.archive",
+            "who": "lead",
+            "built": false
+        },
+        "article_delete": {
+            "action": "article_delete",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/delete.php",
+            "params": [
+                {
+                    "name": "article",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": "deletion",
+            "log_event": "article.delete",
+            "who": "admin",
+            "built": false
+        },
+        "article_suggest": {
+            "action": "article_suggest",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/link.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "article",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "noted on the ticket as a suggestion"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "article.suggest",
+            "who": "work",
+            "built": false
+        },
+        "article_send": {
+            "action": "article_send",
+            "section": "Knowledge base",
+            "endpoint": "/kb/admin/send.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "article",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "a public reply with the article's link and summary"
+                },
+                {
+                    "name": "body",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "words before the link"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": "external_send",
+            "log_event": "article.send",
+            "who": "work",
+            "built": false
+        },
+        "rating_submit": {
+            "action": "rating_submit",
+            "section": "Requesters' replies, ratings and surveys",
+            "endpoint": "/ratings/save.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "score",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "1 to 5"
+                },
+                {
+                    "name": "bad_reason",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "comment",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": null,
+            "log_event": "rating.submit",
+            "who": "own",
+            "built": false
+        },
+        "survey_send": {
+            "action": "survey_send",
+            "section": "Requesters' replies, ratings and surveys",
+            "endpoint": "/ratings/send.php",
+            "params": [
+                {
+                    "name": "ticket",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the survey mailed now instead of after the delay"
+                }
+            ],
+            "undo": null,
+            "confirm": false,
+            "approval": "external_send",
+            "log_event": "survey.send",
+            "who": "work",
+            "built": false
+        },
+        "csat_settings_save": {
+            "action": "csat_settings_save",
+            "section": "Requesters' replies, ratings and surveys",
+            "endpoint": "/settings/csat.php",
+            "params": [
+                {
+                    "name": "enabled",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "yes or no"
+                },
+                {
+                    "name": "scale",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "good_bad or five_point"
+                },
+                {
+                    "name": "question",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "send_delay_minutes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "0 to 10080"
+                },
+                {
+                    "name": "response_window_days",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 to 90"
+                },
+                {
+                    "name": "bad_reasons",
+                    "required": false,
+                    "repeated": true,
+                    "hint": ""
+                },
+                {
+                    "name": "queues",
+                    "required": false,
+                    "repeated": true,
+                    "hint": "survey these queues or all"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": "other",
+            "log_event": "csat_settings.save",
+            "who": "admin",
+            "built": false
+        }
+    }
+}

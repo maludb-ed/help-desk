@@ -111,16 +111,45 @@
       "hired_on_install": true,
       "tool_grants": {
         "Records MCP": [
-          "find_tickets", "get_ticket", "ticket_conversation", "ticket_transitions", "my_queue", "triage_queue", "sla_at_risk",
-          "find_requesters", "requester_history", "similar_tickets", "search_canned_responses", "search_articles", "find_organizations",
-          "ticket_counts", "get_vocabulary", "ticket_viewers", "find_queues", "agent_workload", "stale_tickets", "find_views", "board_snapshot",
+          "find_tickets",
+          "get_ticket",
+          "ticket_conversation",
+          "ticket_transitions",
+          "my_queue",
+          "triage_queue",
+          "sla_at_risk",
+          "find_requesters",
+          "requester_history",
+          "similar_tickets",
+          "search_canned_responses",
+          "search_articles",
+          "find_organizations",
+          "ticket_counts",
+          "get_vocabulary",
+          "ticket_viewers",
+          "find_members",
+          "find_queues",
+          "agent_workload",
+          "stale_tickets",
+          "find_views",
+          "board_snapshot",
           "records_search"
         ],
         "Activity MCP": [
-          "ticket_history", "actor_timeline", "who_touched", "activity_search"
+          "ticket_history",
+          "actor_timeline",
+          "who_touched",
+          "activity_search"
         ],
         "Actions MCP": [
-          "ticket_create", "ticket_reply", "ticket_note", "ticket_set_fields", "ticket_add_tags", "ticket_transition", "canned_apply", "ticket_follow"
+          "ticket_create",
+          "ticket_reply",
+          "ticket_note",
+          "ticket_set_fields",
+          "ticket_add_tags",
+          "ticket_transition",
+          "canned_apply",
+          "ticket_follow"
         ]
       },
       "skills": [
@@ -134,17 +163,35 @@
       "job_description": "os/triage.md",
       "access_capability": "write",
       "hired_on_install": true,
-      "duty": { "name": "Triage the queue", "schedule_cron": "*/5 * * * *" },
+      "duty": {
+        "name": "Triage the queue",
+        "schedule_cron": "*/5 * * * *"
+      },
       "tool_grants": {
         "Records MCP": [
-          "triage_queue", "get_ticket", "ticket_conversation", "similar_tickets", "search_articles", "get_vocabulary", "find_queues",
-          "agent_workload", "requester_history", "find_organizations", "records_search"
+          "triage_queue",
+          "get_ticket",
+          "ticket_conversation",
+          "similar_tickets",
+          "search_articles",
+          "get_vocabulary",
+          "find_members",
+          "find_queues",
+          "agent_workload",
+          "requester_history",
+          "find_organizations",
+          "records_search"
         ],
         "Activity MCP": [
           "ticket_history"
         ],
         "Actions MCP": [
-          "ticket_set_fields", "ticket_add_tags", "ticket_assign", "ticket_link", "ticket_note", "ticket_transition"
+          "ticket_set_fields",
+          "ticket_add_tags",
+          "ticket_assign",
+          "ticket_link",
+          "ticket_note",
+          "ticket_transition"
         ]
       },
       "skills": [
@@ -158,17 +205,34 @@
       "job_description": "os/frontline.md",
       "access_capability": "write",
       "hired_on_install": true,
-      "duty": { "name": "Work my queue", "schedule_cron": "*/10 * * * *" },
+      "duty": {
+        "name": "Work my queue",
+        "schedule_cron": "*/10 * * * *"
+      },
       "tool_grants": {
         "Records MCP": [
-          "my_queue", "get_ticket", "ticket_conversation", "ticket_transitions", "search_articles", "search_canned_responses",
-          "requester_history", "find_queues", "get_vocabulary", "records_search"
+          "my_queue",
+          "get_ticket",
+          "ticket_conversation",
+          "ticket_transitions",
+          "search_articles",
+          "search_canned_responses",
+          "requester_history",
+          "find_members",
+          "find_queues",
+          "get_vocabulary",
+          "records_search"
         ],
         "Activity MCP": [
           "ticket_history"
         ],
         "Actions MCP": [
-          "ticket_reply", "ticket_note", "ticket_transition", "ticket_assign", "canned_apply"
+          "ticket_reply",
+          "ticket_note",
+          "ticket_transition",
+          "ticket_assign",
+          "canned_apply",
+          "article_send"
         ]
       },
       "skills": [
@@ -180,23 +244,165 @@
     }
   ],
   "approvals": [
-    { "action": "ticket_reply", "category": "external_send" },
-    { "action": "ticket_merge", "category": "other" },
-    { "action": "requester_merge", "category": "other" },
-    { "action": "ticket_close", "category": "other" },
-    { "action": "tickets_bulk_update", "category": "other" },
-    { "action": "ticket_spam", "category": "deletion" },
-    { "action": "ticket_delete", "category": "deletion" },
-    { "action": "article_delete", "category": "deletion" },
-    { "action": "canned_delete", "category": "deletion" },
-    { "action": "queue_save", "category": "other" },
-    { "action": "status_save", "category": "other" },
-    { "action": "transition_save", "category": "other" },
-    { "action": "sla_policy_save", "category": "other" },
-    { "action": "business_hours_save", "category": "other" },
-    { "action": "rule_save", "category": "other" },
-    { "action": "mailbox_save", "category": "other" },
-    { "action": "csat_settings_save", "category": "other" },
-    { "action": "settings_save", "category": "other" }
+    {
+      "action": "article_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "article_send",
+      "category": "external_send"
+    },
+    {
+      "action": "attachment_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "business_hours_save",
+      "category": "other"
+    },
+    {
+      "action": "canned_apply",
+      "category": "external_send"
+    },
+    {
+      "action": "canned_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "category_archive",
+      "category": "other"
+    },
+    {
+      "action": "category_save",
+      "category": "other"
+    },
+    {
+      "action": "csat_settings_save",
+      "category": "other"
+    },
+    {
+      "action": "field_archive",
+      "category": "other"
+    },
+    {
+      "action": "field_save",
+      "category": "other"
+    },
+    {
+      "action": "mailbox_archive",
+      "category": "other"
+    },
+    {
+      "action": "mailbox_create",
+      "category": "other"
+    },
+    {
+      "action": "mailbox_update",
+      "category": "other"
+    },
+    {
+      "action": "queue_archive",
+      "category": "other"
+    },
+    {
+      "action": "queue_create",
+      "category": "other"
+    },
+    {
+      "action": "queue_update",
+      "category": "other"
+    },
+    {
+      "action": "requester_merge",
+      "category": "other"
+    },
+    {
+      "action": "rule_create",
+      "category": "other"
+    },
+    {
+      "action": "rule_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "rule_run_now",
+      "category": "other"
+    },
+    {
+      "action": "rule_toggle",
+      "category": "other"
+    },
+    {
+      "action": "rule_update",
+      "category": "other"
+    },
+    {
+      "action": "settings_save",
+      "category": "other"
+    },
+    {
+      "action": "sla_policy_archive",
+      "category": "other"
+    },
+    {
+      "action": "sla_policy_create",
+      "category": "other"
+    },
+    {
+      "action": "sla_policy_update",
+      "category": "other"
+    },
+    {
+      "action": "status_archive",
+      "category": "other"
+    },
+    {
+      "action": "status_save",
+      "category": "other"
+    },
+    {
+      "action": "survey_send",
+      "category": "external_send"
+    },
+    {
+      "action": "tag_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "ticket_close",
+      "category": "other"
+    },
+    {
+      "action": "ticket_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "ticket_merge",
+      "category": "other"
+    },
+    {
+      "action": "ticket_reply",
+      "category": "external_send"
+    },
+    {
+      "action": "ticket_spam",
+      "category": "deletion"
+    },
+    {
+      "action": "tickets_bulk_update",
+      "category": "other"
+    },
+    {
+      "action": "transition_save",
+      "category": "other"
+    },
+    {
+      "action": "type_archive",
+      "category": "other"
+    },
+    {
+      "action": "type_save",
+      "category": "other"
+    }
   ]
 }
