@@ -367,6 +367,10 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Phase 1 — APPROVED by the owner 2026-10-03** (one word, "Approved"; silence on the ten questions = every proposal stands: spam mark-only,
+follow-up tickets never reopens, plain-text composer, the mailbox's signature, tables-only reports, 5/20 form limits, a queue lead sees their
+queue's dashboard, KB noindex + vote counts, silent auto-close, `feather-life-buoy`). Phase 2 began the same day.
+
 **Phase 1 — written 2026-10-03, for the checkpoint.** The tool surface (36 + 6 tools, the resolve table, the log-payload
 rules), the action manifest (65 screens, 96 actions in 14 sections; 40 actions carry an approval category: every public
 reply, canned reply, article sent and survey as `external_send`; merges, early closes, bulk changes and every settings save

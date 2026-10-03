@@ -68,12 +68,11 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-03): Phase 0 BUILT and proven; Phase 1 WRITTEN, awaiting the checkpoint** — the schema db/001–016 (`db/proof/phase0_proof.sql`,
-  81 checks; db/016 = the Phase 1 review's additions), the kit (`tests/phase0/run.sh`, 15 checks), `docs/helpdesk-mcp-tool-surface.md` (36 + 6 tools),
-  `docs/helpdesk-action-manifest.md` (65 screens, 96 actions, 40 pausing) → `mcp/action_registry.json`, eleven specs in `docs/build-specs/`
-  (`sso-shell` = Phase 2; `tickets-core` = THE EXEMPLAR), `maludb-os.json`, `os/`, six skills, `deploy/` + `ROOT_STEPS.sh`; the installer's `plan` clean.
-  The record, the review's decisions and the ten checkpoint questions: `docs/helpdesk-design.md` §15. **Next: the owner approves Phase 1; then Phase 2
-  (`sso-shell.md`), then slices 1–10 in order — no feature PHP before the approval.**
+- **State (2026-10-03): Phase 0 BUILT and proven; Phase 1 APPROVED (the owner, 2026-10-03 — every one of the ten proposals stands); Phase 2 IN PROGRESS** —
+  the schema db/001–016 (`db/proof/phase0_proof.sql`, 81 checks; db/016 = the Phase 1 review's additions), the kit (`tests/phase0/run.sh`, 15 checks),
+  `docs/helpdesk-mcp-tool-surface.md` (36 + 6 tools), `docs/helpdesk-action-manifest.md` (65 screens, 96 actions, 40 pausing) → `mcp/action_registry.json`,
+  eleven specs in `docs/build-specs/` (`sso-shell` = Phase 2; `tickets-core` = THE EXEMPLAR), `maludb-os.json`, `os/`, six skills, `deploy/` + `ROOT_STEPS.sh`;
+  the installer's `plan` clean. The record and the approval: `docs/helpdesk-design.md` §15. **Next: Phase 2 (`sso-shell.md`), then slices 1–10 in order.**
 - Proofs: `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
   `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.
 - The shell's menu table is `app/features/shell/nav.php` (the bootstrap requires it; Phase 2 builds the shell around it). `app/activity.php`
