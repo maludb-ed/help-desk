@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T15:56:23+00:00",
+    "generated_at": "2026-10-03T16:29:46+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -69,7 +69,7 @@
             "section": "Home, my tickets and settings",
             "when": "the business's Help Desk settings: numbering prefix, auto-close and reopen windows, secure-link life, the default queue, the request form on or off, organization visibility",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "agents": {
@@ -78,8 +78,8 @@
             "section": "Home, my tickets and settings",
             "when": "which agents work here, their queues, their last dispatch and run (read-only; hiring and grants link to the kernel)",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "organizations-list": {
             "screen": "organizations-list",
@@ -90,8 +90,8 @@
                 "q",
                 "tier"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "organization-add": {
             "screen": "organization-add",
@@ -99,7 +99,7 @@
             "section": "Organizations and requesters",
             "when": "to add a customer company",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "organization-view": {
@@ -108,7 +108,7 @@
             "section": "Organizations and requesters",
             "when": "one organization: domains, people, tickets, SLA, settings",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "organization-edit": {
@@ -117,7 +117,7 @@
             "section": "Organizations and requesters",
             "when": "to change an organization",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "requesters-list": {
@@ -130,8 +130,8 @@
                 "kind",
                 "organization"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "requester-view": {
             "screen": "requester-view",
@@ -139,7 +139,7 @@
             "section": "Organizations and requesters",
             "when": "one requester: contact details, organization, their tickets, notes, their addresses",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "requester-edit": {
@@ -148,7 +148,7 @@
             "section": "Organizations and requesters",
             "when": "to change a requester's details or organization",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "requester-add": {
@@ -159,7 +159,7 @@
             "params": [
                 "organization"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "queues-list": {
@@ -168,8 +168,8 @@
             "section": "Queues",
             "when": "the queues as cards: department, members, open count, assignment method",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "queue-add": {
             "screen": "queue-add",
@@ -177,7 +177,7 @@
             "section": "Queues",
             "when": "to add a queue",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "queue-view": {
@@ -186,7 +186,7 @@
             "section": "Queues",
             "when": "one queue: its members and leads, defaults, mailbox, policy, hours",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "queue-edit": {
@@ -195,7 +195,7 @@
             "section": "Queues",
             "when": "to change a queue",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "sla-list": {
@@ -204,8 +204,8 @@
             "section": "Service levels and business hours",
             "when": "the SLA policies in match order and the business-hours schedules",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "sla-policy-add": {
             "screen": "sla-policy-add",
@@ -213,7 +213,7 @@
             "section": "Service levels and business hours",
             "when": "to add a policy",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "sla-policy-edit": {
@@ -222,7 +222,7 @@
             "section": "Service levels and business hours",
             "when": "to change a policy's conditions, targets or threshold",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "business-hours-edit": {
@@ -233,7 +233,7 @@
             "params": [
                 "schedule"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "statuses-list": {
@@ -833,7 +833,7 @@
             "approval": "other",
             "log_event": "settings.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "organization_create": {
             "action": "organization_create",
@@ -888,7 +888,7 @@
             "approval": null,
             "log_event": "organization.create",
             "who": "queue",
-            "built": false
+            "built": true
         },
         "organization_update": {
             "action": "organization_update",
@@ -949,7 +949,7 @@
             "approval": null,
             "log_event": "organization.update",
             "who": "queue",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "organization_archive": {
@@ -969,7 +969,7 @@
             "approval": null,
             "log_event": "organization.archive",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "requester_create": {
             "action": "requester_create",
@@ -1024,7 +1024,7 @@
             "approval": null,
             "log_event": "requester.create",
             "who": "queue",
-            "built": false
+            "built": true
         },
         "requester_update": {
             "action": "requester_update",
@@ -1085,7 +1085,7 @@
             "approval": null,
             "log_event": "requester.update",
             "who": "queue",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "requester_email_add": {
@@ -1111,7 +1111,7 @@
             "approval": null,
             "log_event": "requester.email_add",
             "who": "queue",
-            "built": false
+            "built": true
         },
         "requester_email_remove": {
             "action": "requester_email_remove",
@@ -1136,7 +1136,7 @@
             "approval": null,
             "log_event": "requester.email_remove",
             "who": "queue",
-            "built": false
+            "built": true
         },
         "requester_merge": {
             "action": "requester_merge",
@@ -1161,7 +1161,7 @@
             "approval": "other",
             "log_event": "requester.merge",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "queue_create": {
             "action": "queue_create",
@@ -1240,7 +1240,7 @@
             "approval": "other",
             "log_event": "queue.create",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "queue_update": {
             "action": "queue_update",
@@ -1325,7 +1325,7 @@
             "approval": "other",
             "log_event": "queue.update",
             "who": "admin",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "queue_archive": {
@@ -1345,7 +1345,7 @@
             "approval": "other",
             "log_event": "queue.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "queue_member_add": {
             "action": "queue_member_add",
@@ -1376,7 +1376,7 @@
             "approval": null,
             "log_event": "queue.member_add",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "queue_member_remove": {
             "action": "queue_member_remove",
@@ -1401,7 +1401,7 @@
             "approval": null,
             "log_event": "queue.member_remove",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "queue_presence_set": {
             "action": "queue_presence_set",
@@ -1426,7 +1426,7 @@
             "approval": null,
             "log_event": "queue.presence",
             "who": "own",
-            "built": false
+            "built": true
         },
         "sla_policy_create": {
             "action": "sla_policy_create",
@@ -1505,7 +1505,7 @@
             "approval": "other",
             "log_event": "sla_policy.create",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "sla_policy_update": {
             "action": "sla_policy_update",
@@ -1590,7 +1590,7 @@
             "approval": "other",
             "log_event": "sla_policy.update",
             "who": "admin",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "sla_policy_archive": {
@@ -1610,7 +1610,7 @@
             "approval": "other",
             "log_event": "sla_policy.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "business_hours_save": {
             "action": "business_hours_save",
@@ -1653,7 +1653,7 @@
             "approval": "other",
             "log_event": "business_hours.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "holiday_add": {
             "action": "holiday_add",
@@ -1684,7 +1684,7 @@
             "approval": null,
             "log_event": "business_hours.holiday_add",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "holiday_remove": {
             "action": "holiday_remove",
@@ -1709,7 +1709,7 @@
             "approval": null,
             "log_event": "business_hours.holiday_remove",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "status_save": {
             "action": "status_save",

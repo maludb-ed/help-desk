@@ -1,5 +1,16 @@
 <?php
 declare(strict_types=1);
-/** Placeholder (Phase 2): the screen is built by slice 1 (queues and people) — this file is replaced then. The registry builder reads render_nav_stub() as unbuilt. */
+/** /settings/agents — which OS agents work here (screen `agents`, read-only; settings.manage): their queues and their last dispatch. Hiring and grants are the kernel's. */
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
-render_nav_stub('agents', 'slice 1 (queues and people)', 'settings.manage');
+require_once dirname(__DIR__, 2) . '/app/features/settings/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/settings/present.php';
+require_right('settings.manage');
+require_human();
+$pdo = db();
+$agents = find_agents_here($pdo);
+log_screen_view($pdo, 'agents');
+if (wants_json()) {
+    respond_screen(['agents' => array_map('present_agent_here', $agents)]);
+}
+render_screen('Agents', view('settings/agents.php', ['agents' => $agents, 'osUrl' => rtrim((string) env('OS_LAUNCHER_URL', '/'), '/') . '/launcher', 'tz' => member_timezone()]),
+    ['activeNav' => 'agents', 'screen' => 'agents', 'entity' => 'member']);

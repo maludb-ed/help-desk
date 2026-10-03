@@ -132,14 +132,34 @@ Schema: `app_settings`, `organizations`, `organization_domains` (db/005); `reque
 Tickets and anything on a requester's or organization's page that lists them (3); mailboxes (7); the kernel-side grants of roles (the kernel's); hiring an agent (the kernel's).
 
 ## Proof (`tests/phase3/slice1/run.sh`, scratch database, `php -S` + headless Chromium at 375 × 740 and 1280 × 800)
-- [ ] Rights: a requester-only member → 403 on every screen here with the right's sentence (*"You may not see this queue's tickets."* for requesters, *"…change Help Desk's settings."* for settings); support sees organizations and requesters with emails; a collaborator sees them without notes? — no: `tickets.view_queue` shows notes (db/015) — proved as the view says.
-- [ ] Queues: create with a department → the department's members appear "through IT" and `hd_held_queue_ids()` lists the queue for them; `include_department` off removes them; a named member stays; archive the default → refused; archive another with two open tickets → both in General, two `ticket.assign` rows.
-- [ ] A default assignee that is an **agent** saves and shows with its kind chip; method Default assignee without one → 422.
-- [ ] Organizations: a duplicate domain → 422 naming the owner; an organization's domain claims a new external at `hd_requester_for_email()` (SQL) and the card's count follows.
-- [ ] Requesters: adding a known address → 422 with the link; a member's row refuses a name change (the form has no field; a forced POST ignores it); merge moves tickets, emails and ratings and dates `merged_into_id`; a member into an external → refused.
-- [ ] SLA: the targets grid round-trips to `targets` jsonb; the preview line equals `hd_business_add_minutes()`; a schedule with no open day marked default → 422; Standard cannot be archived.
-- [ ] JSON mode: every handler answers `{ok, location}` to an action token and 422 `{error:{fields}}` on a bad form; a create's `record_id` parses from `location`.
-- [ ] `php bin/build_action_registry.php --check` passes and the 21 actions read as built; every screen at 375 and 1280 with `scrollWidth` = viewport.
+**Built and proven 2026-10-03: 211 checks green** (rights 12, queues 34, organizations 21, requesters 31, sla 30, settings 17, json 15, browser 50, the registry check); the Phase 2
+suite still green after it (250); the installer's `plan` 60 steps, no stop.
+- [x] Rights: a requester-only member → 403 on every screen here with the right's sentence (*"You may not see this queue's tickets."* for requesters, *"…change Help Desk's settings."* for settings);
+  support and a collaborator see organizations and requesters with emails and notes (the view's rule, `tickets.view_queue`); a lead reaches the queues list but not the add form; SLA is the admin's.
+- [x] Queues: create with a department → the department's members appear "Through IT" and `hd_held_queue_ids()` lists the queue for them; `include_department` off removes them; a named member stays;
+  the queue's lead (no `queues.members`) may add and remove; archive the default → refused; archive another with two open tickets → both in General, two `ticket.assign` rows (`via queue_archive`).
+- [x] A default assignee that is an **agent** saves and shows with its kind chip ("Goes to SMOKE Frontline"); method Default assignee without one → 422 with the field error; the key is derived and immutable.
+- [x] Organizations: a duplicate domain → 422 naming the owner; an organization's domain claims a new external at `hd_requester_for_email()` and the card's counts follow; the domain set is replaced whole;
+  archive refused while open tickets exist (*"Solve or move its 1 open ticket first."*).
+- [x] Requesters: adding a known address → 422 *"That address belongs to <name> — open them instead."* (with `record_id` for the link); a member's row refuses a name change and has no address form
+  (*"Managed by the OS."*); never the last address, the primary moves; merge moves tickets, a cc and a rating, re-points the addresses and dates `merged_into_id`; a member into an external → refused.
+- [x] SLA: the targets grid round-trips to `targets` jsonb (blanks dropped) and an agent's JSON lands the same way; the matches to `conditions`; the preview line equals `hd_business_add_minutes()`
+  and skips a holiday; a schedule with no open day marked default → 422; un-defaulting the only default → 422; Standard cannot be archived; Move up / Move down swap `sort_order`.
+- [x] Settings: `settings_save` logs before/after of the changed keys only; "Nothing changed" logs nothing; the prefix numbers new tickets; the agents screen lists the Frontline agent with its queues;
+  My settings carries the presence card for `tickets.work` and the admin's link to the business's settings.
+- [x] JSON mode: every handler answers `{ok, did, record_id, location}` to an action token and 422 `{error: {code: invalid, errors[], fields{}}}` on a bad form; a create's `record_id` parses from
+  `location`; the kernel's `_partial=1` fills the base row; a run token's rows are source `agent` with the run's request id and the rights hold.
+- [x] `php bin/build_action_registry.php --check` passes and the 21 actions read as built (25 with Phase 2's); every screen at 375 and 1280 with `scrollWidth` = viewport; every button 44 px; the flows
+  through the real screens; a refused save lands in `#flash` and keeps the form; JavaScript off the forms post and land.
+
+**Decisions taken while building (2026-10-03):** the shared handler kit is `app/handler.php` (required by the bootstrap: `hd_handler_begin()`, `req_val()`, `request_list()`, `hd_yes()`, `hd_int()`,
+`hd_ref()`, `hd_guard()`, `hd_refuse_fields()`, `hd_done()`, `hd_diff()`, `require_any_right()`, `find_assignable_members()`, `find_live_departments()`) — every CRUD slice copies its shape; a handler keeps
+what it is not sent from the current row (and the kernel's `_partial` fills the base row too); a refusal that points at a record carries `record_id` in its action status (the known address → its owner);
+the merge page is `GET /requesters/merge.php?requester=&q=&into=` (search, then confirm) and its POST the action; the policy cards' Move up / Move down are `sla_policy_update` with `move=up|down`;
+`business_hours_save` takes the grid (`intervals[weekday][i][opens|closes]`) or JSON `[{weekday, opens, closes}]`, the targets grid `targets[priority][metric]` or JSON; the preview is
+`GET /settings/sla/hours?preview=1&schedule=&from=&minutes=`; a token's scope may be `api` as the manifest says; the queues list is `settings.manage|queues.members` (a queue's lead by flag alone opens the
+queue through its page, not the list); `/settings/` gained the presence card and the admin's link to `/settings/general`; the "Organizations and requesters" screens are support's (`tickets.view_queue`),
+archive and merge the lead's.
 
 ## Open questions
 - `queue_presence_set` lives under `/settings/queues/presence.php` in the manifest though it is the person's own setting; the spec keeps the path and links it from `/settings/`.

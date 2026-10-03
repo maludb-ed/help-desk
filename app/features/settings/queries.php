@@ -130,3 +130,51 @@ function revoke_token(PDO $pdo, int $memberId, int $tokenId): bool
     $st->execute(['id' => $tokenId, 'm' => $memberId]);
     return $st->fetchColumn() !== false;
 }
+
+// ---- the business's settings (slice 1: general-settings / settings_save) --------------------------------------------
+const SETTINGS_FIELDS = ['ticket_prefix', 'auto_close_days', 'reopen_window_days', 'secure_link_days', 'default_queue_id', 'request_form_enabled', 'org_visibility_default', 'timezone'];
+
+function find_settings(PDO $pdo): array
+{
+    $r = $pdo->query('SELECT s.ticket_prefix, s.auto_close_days, s.reopen_window_days, s.secure_link_days, s.default_queue_id, q.name AS default_queue_name, s.request_form_enabled, s.org_visibility_default, s.timezone, s.updated_at
+                        FROM app_settings s LEFT JOIN queues q ON q.id = s.default_queue_id WHERE s.id = 1')->fetch();
+    foreach (['auto_close_days', 'reopen_window_days', 'secure_link_days', 'default_queue_id'] as $k) {
+        $r[$k] = $r[$k] === null ? null : (int) $r[$k];
+    }
+    $r['request_form_enabled'] = (bool) $r['request_form_enabled'];
+    $r['org_visibility_default'] = (bool) $r['org_visibility_default'];
+    return $r;
+}
+
+/** Save the settings ($fields: any of SETTINGS_FIELDS). Answers ['before' => …, 'after' => …] of the changed keys only. */
+function save_settings(PDO $pdo, array $fields): array
+{
+    $before = array_intersect_key(find_settings($pdo), array_flip(SETTINGS_FIELDS));
+    $after = array_intersect_key($fields, $before) + $before;
+    $d = hd_diff($before, $after);
+    if ($d['after'] === []) {
+        return $d;
+    }
+    $pdo->prepare('UPDATE app_settings SET ticket_prefix = :p, auto_close_days = :ac, reopen_window_days = :rw, secure_link_days = :sl, default_queue_id = :dq, request_form_enabled = :rf, org_visibility_default = :ov, timezone = :tz WHERE id = 1')
+        ->execute(['p' => $after['ticket_prefix'], 'ac' => $after['auto_close_days'], 'rw' => $after['reopen_window_days'], 'sl' => $after['secure_link_days'], 'dq' => $after['default_queue_id'],
+                   'rf' => $after['request_form_enabled'] ? 't' : 'f', 'ov' => $after['org_visibility_default'] ? 't' : 'f', 'tz' => $after['timezone']]);
+    return $d;
+}
+
+/** The OS agents the mirror admits here, with their queues and their last dispatch (mcp_agent_dispatches). */
+function find_agents_here(PDO $pdo): array
+{
+    $rows = $pdo->query("SELECT member_id, display_name, job_title, roles FROM mcp_members WHERE member_kind = 'agent' AND capability IS NOT NULL ORDER BY display_name")->fetchAll();
+    foreach ($rows as &$a) {
+        $a['member_id'] = (int) $a['member_id'];
+        $a['roles'] = pg_text_array((string) $a['roles']);
+        $q = $pdo->prepare("SELECT q.queue_id, q.name, m.is_lead FROM mcp_queue_members m JOIN mcp_queues q ON q.queue_id = m.queue_id WHERE m.member_id = :m ORDER BY q.name");
+        $q->execute(['m' => $a['member_id']]);
+        $a['queues'] = $q->fetchAll();
+        $d = $pdo->prepare('SELECT dispatch_id, ticket_id, kind, via, status, created_at, answered_at FROM mcp_agent_dispatches WHERE agent_member_id = :m ORDER BY created_at DESC LIMIT 1');
+        $d->execute(['m' => $a['member_id']]);
+        $a['last_dispatch'] = $d->fetch() ?: null;
+    }
+    unset($a);
+    return $rows;
+}

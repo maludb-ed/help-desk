@@ -68,14 +68,14 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED (the owner, 2026-10-03 — every one of the ten proposals stands); Phase 2 BUILT and proven** —
-  the schema db/001–016 (`db/proof/phase0_proof.sql`, 81 checks), the kit (`tests/phase0/run.sh`, 15), `docs/helpdesk-mcp-tool-surface.md` (36 + 6 tools),
-  `docs/helpdesk-action-manifest.md` (65 screens, 96 actions, 40 pausing) → `mcp/action_registry.json` (6 screens + 4 actions built, 18 placeholders), eleven specs
-  in `docs/build-specs/` (`tickets-core` = THE EXEMPLAR), the shell (`app/views/layout.php`, `shared/`, `app/features/shell/nav.php` with `render_nav_stub()`,
-  `hx_link()`, `back_link()`, `role_badge()`), the Phase 2 screens and handlers, `html/assets/` (the design system + `app-overrides.css`), `maludb-os.json`, `os/`,
-  six skills, `deploy/` + `ROOT_STEPS.sh`. **Proof:** `tests/phase2/run.sh` (250 checks; `HD_APP=apache` runs them against the rendered vhost) — green 2026-10-03;
-  the installer's `plan` 60 steps, no stop. The record: `docs/helpdesk-design.md` §15. **Next: slice 1 (`docs/build-specs/queues-people.md`), then 2–10 in order;
-  a slice's first step is deleting its placeholder's `render_nav_stub()` call.** Owed: the live launch (▲) after the owner's `apply`.
+- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; slice 1 (queues and people, THE CRUD EXEMPLAR for workers) BUILT and proven** —
+  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (24 screens + 25 actions built, 13 placeholders),
+  the shell (Phase 2), slice 1's queues / organizations / requesters / SLA and hours / general settings / agents (`app/features/{queues,organizations,requesters,sla,settings}/`,
+  `html/settings/queues/`, `html/organizations/`, `html/requesters/`, `html/settings/sla/`, `html/settings/{general,agents}.php`), the shared handler kit `app/handler.php`
+  (every later CRUD slice copies slice 1's shape: `hd_handler_begin()` → read with `req_val()`/`request_list()`/`hd_yes()`/`hd_int()`/`hd_ref()` keeping what is not sent → `hd_refuse_fields()` →
+  `hd_guard()` around one transaction with `log_activity()` of the changed fields → `hd_done()`). **Proofs:** `tests/phase2/run.sh` (250) and `tests/phase3/slice1/run.sh` (211) — green 2026-10-03;
+  the installer's `plan` 60 steps, no stop. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: slice 2 (`docs/build-specs/vocabulary.md`), then 3–10 in order.**
+  Owed: the live launch (▲) after the owner's `apply`.
 - Proofs: `tests/phase2/run.sh` is the regression (sso, gates, sync, ingest, kernel_compat, vhost, browser.mjs, the registry check; the fakes `tests/fake_kernel.php`, `tests/fake_maludb.php`; ports 8291–8297). `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
   `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.
 - The shell's menu table is `app/features/shell/nav.php` (the bootstrap requires it; Phase 2 builds the shell around it). `app/activity.php`

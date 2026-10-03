@@ -41,6 +41,13 @@ function activity_sentence(array $r): string
         'member.sign_on' => 'signed on', 'member.sign_out' => 'signed out', 'directory.sync' => 'refreshed the directory',
         'token.mint' => 'made an access token', 'token.revoke' => 'revoked an access token', 'assistant.ask' => 'asked the assistant',
         'prefs.save' => 'changed how they are told', 'notification.read' => 'read their notifications',
+        'queue.create' => 'added a queue', 'queue.update' => 'changed a queue', 'queue.archive' => 'archived a queue', 'queue.member_add' => 'added someone to a queue',
+        'queue.member_remove' => 'removed someone from a queue', 'queue.presence' => 'changed their availability', 'organization.create' => 'added a customer company',
+        'organization.update' => 'changed a customer company', 'organization.archive' => 'archived a customer company', 'requester.create' => 'added a requester',
+        'requester.update' => 'changed a requester', 'requester.email_add' => 'added an address to a requester', 'requester.email_remove' => 'removed an address from a requester',
+        'requester.merge' => 'merged two requesters', 'sla_policy.create' => 'added an SLA policy', 'sla_policy.update' => 'changed an SLA policy', 'sla_policy.archive' => 'archived an SLA policy',
+        'business_hours.save' => 'changed a business-hours schedule', 'business_hours.holiday_add' => 'added a holiday', 'business_hours.holiday_remove' => 'removed a holiday',
+        'settings.save' => 'changed Help Desk\'s settings', 'ticket.assign' => 'moved a ticket',
     ];
     if ($r['action'] === 'screen.view') {
         return $who . ' opened a screen';

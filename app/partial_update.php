@@ -9,8 +9,11 @@ declare(strict_types=1);
 
 /** endpoint → [table, the form's id field, read view, the view's id column] */
 const PARTIAL_UPDATE_TARGETS = [
-    // the manifest (Phase 1) adds each *_update action's handler here, e.g.
-    // '/organizations/save.php' => ['organizations', 'organization', 'mcp_organizations', 'organization_id'],
+    // slice 1 (the handlers also keep what they are not sent, from the current row; this fills the base row for the manifest's `any field of`)
+    '/settings/queues/save.php' => ['queues', 'queue', 'mcp_queues', 'queue_id'],
+    '/organizations/save.php'   => ['organizations', 'organization', 'mcp_organizations', 'organization_id'],
+    '/requesters/save.php'      => ['requesters', 'requester', 'mcp_requesters', 'requester_id'],
+    '/settings/sla/save.php'    => ['sla_policies', 'policy', 'mcp_sla_policies', 'policy_id'],
 ];
 
 function partial_update_prefill(PDO $pdo): void

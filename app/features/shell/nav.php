@@ -140,7 +140,8 @@ function back_link(): ?array
     $path = parse_url($back, PHP_URL_PATH) ?: '/';
     $labels = ['/' => 'Home', '/my-tickets' => 'My tickets', '/inbox' => 'Inbox', '/board' => 'Board', '/requesters/' => 'Requesters',
                '/organizations/' => 'Organizations', '/canned/' => 'Canned responses', '/reports/' => 'Reports', '/kb/' => 'Knowledge base',
-               '/notifications' => 'Notifications', '/activity' => 'Activity', '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens'];
+               '/notifications' => 'Notifications', '/activity' => 'Activity', '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens',
+               '/settings/general' => 'Help Desk settings', '/settings/agents' => 'Agents', '/settings/sla/' => 'SLA and hours', '/settings/queues/' => 'Queues'];
     foreach ($labels as $p => $label) {
         if ($path === $p) {
             return [$back, $label];
@@ -153,8 +154,10 @@ function back_link(): ?array
             }
         }
     }
-    if (preg_match('#^/tickets/\d+$#', $path)) {
-        return [$back, 'the ticket'];
+    foreach (['tickets' => 'the ticket', 'settings/queues' => 'the queue', 'organizations' => 'the organization', 'requesters' => 'the requester'] as $dir => $label) {
+        if (preg_match('#^/' . $dir . '/\d+$#', $path)) {
+            return [$back, $label];
+        }
     }
     return null;
 }

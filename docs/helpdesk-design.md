@@ -367,6 +367,12 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 1 (queues and people, the CRUD exemplar) — BUILT and proven 2026-10-03** (`docs/build-specs/queues-people.md`): queues (cards, view with members and leads, add/edit, archive moving
+open tickets, members, presence), organizations (cards, view with domains and people, add/edit, archive), requesters (cards, view with addresses, add by hand through `hd_requester_for_email()`,
+edit, merge), SLA policies (cards in match order, the targets grid, move up/down, archive) and schedules (the weekly grid, holidays, the preview by `hd_business_add_minutes()`), the business's
+settings and the agents screen; 21 actions, 18 screens; the shared handler kit `app/handler.php`. **Proof:** `tests/phase3/slice1/run.sh` — 211 checks green; Phase 2's 250 still green; the
+installer's `plan` 60 steps, no stop. Next: slice 2 (`vocabulary.md`).
+
 **Phase 2 — BUILT and proven 2026-10-03** (`docs/build-specs/sso-shell.md`): the nxl shell phone first (the tab bar Home · My tickets · New · Knowledge · More,
 the sidebar from 992 px with the groups Help / Work / Settings / Me shown by right, the role badge, the bell, the command bar through the kernel's chat
 endpoint), the dashboard's three regions as empty states, My tickets and Notifications as empty shapes, My settings (how I am told: `prefs_save`), Tokens
