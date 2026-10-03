@@ -41,6 +41,9 @@ require_once dirname(__DIR__) . '/automation/assign.php';
 require_once dirname(__DIR__) . '/automation/triggers.php';
 require_once dirname(__DIR__) . '/automation/queries.php';
 require_once dirname(__DIR__) . '/automation/present.php';
+require_once dirname(__DIR__) . '/kb/queries.php';
+require_once dirname(__DIR__) . '/kb/search.php';
+require_once dirname(__DIR__) . '/kb/present.php';
 
 /** The ticket a request names (`ticket`, `ticket_id`, `id`), visible to the caller — else 404 "Ticket not found." */
 function ticket_from_request(PDO $pdo, string ...$fields): array

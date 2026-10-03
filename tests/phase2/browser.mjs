@@ -135,9 +135,9 @@ const groupsOf = async (page) => (await page.locator('.nxl-navbar .nxl-caption l
   ok(bar.x >= nav.width - 1 && bar.y + bar.height >= 780, `the command bar sits at the bottom, right of the sidebar (x ${Math.round(bar.x)}, sidebar ${Math.round(nav.width)})`);
   ok((await page.locator('#header-role-badge').innerText()).includes('Super-admin'), 'the badge reads Super-admin');
   await page.screenshot({ path: `${SHOTS}/desktop-dashboard.png` });
-  await page.click('#nav-kb .nxl-link');                          // a placeholder until slice 9 (the inbox, the board and canned responses are built)
+  await page.click('#nav-kb .nxl-link');                          // the knowledge base (slice 9) — HTMX navigation pushes its URL
   await page.waitForURL(BASE + '/kb/');
-  await page.waitForSelector('#kb-coming');
+  await page.waitForSelector('#kb-home-content');
   ok((await page.title()).startsWith('Knowledge'), 'HTMX navigation: /kb/ pushed, title "' + (await page.title()) + '"');
   await page.screenshot({ path: `${SHOTS}/desktop-placeholder.png` });
   await page.goBack();

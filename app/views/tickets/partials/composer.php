@@ -1,7 +1,19 @@
-<?php /** The composer: Reply (work, or the ticket's own requester) and Note (note+). Data: t, facts, moves, work, own, note, pending, members, here */ $id = (int) $facts['ticket_id']; $canReply = $work || $own; $closed = $facts['status_category'] === 'closed'; ?>
+<?php /** The composer: Reply (work, or the ticket's own requester) and Note (note+). Data: t, facts, moves, work, own, note, pending, members, here, articles (slice 9: the linked articles, for work) */ $id = (int) $facts['ticket_id']; $articles = $articles ?? []; $extRequester = ($facts['requester_kind'] ?? '') === 'external'; $canReply = $work || $own; $closed = $facts['status_category'] === 'closed'; ?>
 <div class="card" id="ticket-composer">
     <?php if ($closed): ?><div class="card-body text-muted fs-12" id="ticket-composer-closed">This ticket is closed. <?= $own ? 'A new request mentions ' . e($facts['number']) . '.' : 'A follow-up is a new ticket.' ?></div>
     <?php else: ?>
+    <?php $suggested = array_values(array_filter($articles, static fn (array $l): bool => $l['kind'] === 'suggested')); if ($work && $suggested !== []): ?>
+    <div class="card-body border-bottom py-2" id="ticket-suggested-articles">
+        <div class="fs-12 fw-semibold mb-1"><i class="feather-book-open me-1"></i>Suggested articles</div>
+        <?php foreach ($suggested as $l): $aid = (int) $l['article_id']; $cannot = $extRequester && $l['visibility'] === 'internal'; ?>
+        <div class="d-flex align-items-center gap-2 flex-wrap py-1" id="ticket-suggested-article-<?= $aid ?>">
+            <a href="/kb/<?= e($l['slug']) ?>" class="fw-semibold fs-12 flex-grow-1"><?= e($l['title']) ?><?= $l['visibility'] === 'internal' ? ' <span class="badge bg-soft-secondary text-secondary">Internal</span>' : '' ?></a>
+            <form method="post" action="/kb/admin/send.php" hx-post="/kb/admin/send.php" hx-target="#flash" class="mb-0"><?= csrf_field() ?><input type="hidden" name="ticket" value="<?= $id ?>"><input type="hidden" name="article" value="<?= $aid ?>"><input type="hidden" name="return_to" value="<?= e($here) ?>"><button type="submit" class="btn btn-primary btn-sm btn-touch" id="ticket-suggested-article-<?= $aid ?>-send" <?= $cannot || $closed ? 'disabled' : '' ?> title="<?= $cannot ? 'Internal — cannot be sent to an outside requester' : 'Send as a reply' ?>">Send</button></form>
+            <form method="post" action="/kb/admin/link.php" hx-post="/kb/admin/link.php" hx-target="#flash" class="mb-0"><?= csrf_field() ?><input type="hidden" name="ticket" value="<?= $id ?>"><input type="hidden" name="article" value="<?= $aid ?>"><input type="hidden" name="remove" value="1"><input type="hidden" name="return_to" value="<?= e($here) ?>"><button type="submit" class="btn btn-light btn-sm btn-touch" id="ticket-suggested-article-<?= $aid ?>-dismiss">Dismiss</button></form>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
     <?php if ($pending !== []): ?><div class="card-body border-bottom py-2 fs-12" id="ticket-composer-pending"><i class="feather-paperclip me-1"></i>Attached to your next message: <?php foreach ($pending as $a): ?><span class="badge bg-soft-secondary text-secondary"><?= e($a['filename']) ?></span> <?php endforeach; ?></div><?php endif; ?>
     <?php if ($canReply): ?>
     <details class="card-body border-bottom" id="ticket-composer-reply" open>
@@ -21,11 +33,13 @@
             </div>
             <?php endif; ?>
             <div class="d-flex gap-2">
-                <?php if ($work): ?><button type="button" class="btn btn-light btn-touch" id="ticket-reply-canned-btn" hx-get="/canned/?picker=1&amp;ticket=<?= $id ?>" hx-target="#canned-picker" hx-swap="innerHTML"><i class="feather-file-text me-1"></i>Canned ▾</button><?php endif; ?>
+                <?php if ($work): ?><button type="button" class="btn btn-light btn-touch" id="ticket-reply-canned-btn" hx-get="/canned/?picker=1&amp;ticket=<?= $id ?>" hx-target="#canned-picker" hx-swap="innerHTML"><i class="feather-file-text me-1"></i>Canned ▾</button>
+                <button type="button" class="btn btn-light btn-touch" id="ticket-reply-article-btn" hx-get="/kb/?picker=1&amp;ticket=<?= $id ?>" hx-target="#article-picker" hx-swap="innerHTML" title="Suggest or send an article"><i class="feather-book-open me-1"></i>Article ▾</button><?php endif; ?>
                 <button type="submit" class="btn btn-primary btn-touch flex-grow-1" id="ticket-reply-form-send-btn"><i class="feather-send me-1"></i>Send reply</button>
             </div>
         </form>
         <div id="canned-picker"></div>
+        <div id="article-picker"></div>
         <script>(function () { var ta = document.getElementById('ticket-reply-form-field-body'), c = document.getElementById('ticket-reply-caret'); if (!ta || !c) return; ['keyup', 'click', 'select', 'blur'].forEach(function (ev) { ta.addEventListener(ev, function () { c.value = ta.selectionStart; }); }); })();</script>
     </details>
     <?php endif; ?>

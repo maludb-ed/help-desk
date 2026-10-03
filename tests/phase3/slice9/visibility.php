@@ -1,0 +1,44 @@
+<?php
+/** Proof — visibility (spec "Proof", 1): a visitor reads a public published article bare and gets the same 404 sentence for an internal one, a draft and an archived one; kb.read reads internal; an external does not; drafts for editors only; search never returns what the caller may not open. */
+require __DIR__ . '/lib.php';
+$W = world();
+$owner = as_member(1); $lena = as_member(28); $marco = as_member(27); $priya = as_member(26); $ext = as_member(31);
+echo "1. The articles\n";
+$pubSec = mk_section($owner, 'SMOKE Getting started', 'public', ['description' => 'SMOKE first steps']);
+$intSec = mk_section($owner, 'SMOKE Staff only', 'internal');
+[$pub, $pubSlug] = mk_article($owner, 'SMOKE VPN access', ['section' => $pubSec, 'body' => 'SMOKE Connect to the VPN with the zebra client.', 'tags' => 'vpn, remote']);
+[$int, $intSlug] = mk_article($owner, 'SMOKE Server room door code', ['section' => $intSec, 'visibility' => 'internal', 'body' => 'SMOKE The door code is in the giraffe safe.']);
+[$draft, $draftSlug] = mk_article($owner, 'SMOKE Draft printer guide', ['status' => 'draft', 'body' => 'SMOKE The printer loves the pelican tray.']);
+[$arch, $archSlug] = mk_article($owner, 'SMOKE Old wifi name', ['body' => 'SMOKE The old wifi was called walrus.']);
+act($owner, '/kb/admin/archive.php', ['article' => $arch]);
+ok($pub > 0 && $int > 0 && $draft > 0 && article_row($arch)['status'] === 'archived' && article_row($draft)['status'] === 'draft' && article_row($pub)['status'] === 'published', 'four articles: public, internal, a draft, an archived one');
+echo "2. A visitor\n";
+$r = req('GET', '/kb/' . $pubSlug);
+ok($r['code'] === 200 && is_bare($r['body']) && str_contains($r['body'], 'id="article-body"') && str_contains($r['body'], 'zebra'), 'a visitor reads the public article (200, the bare layout: no sidebar, no command bar)');
+$codes = []; $sentences = [];
+foreach ([$intSlug, $draftSlug, $archSlug] as $slug) { $x = req('GET', '/kb/' . $slug); $codes[] = $x['code']; $sentences[] = str_contains(words($x['body']), 'Article not found.'); }
+ok($codes === [404, 404, 404] && $sentences === [true, true, true], 'the internal one, the draft and the archived one: 404 "Article not found." — the same sentence');
+$r = req('GET', '/kb/');
+ok($r['code'] === 200 && is_bare($r['body']) && str_contains($r['body'], 'kb-section-card-' . $pubSec) && !str_contains($r['body'], 'kb-section-card-' . $intSec), 'the public home lists the public section only');
+$r = req('GET', '/kb/?q=giraffe');
+ok($r['code'] === 200 && str_contains($r['body'], 'id="kb-results-empty"') && !str_contains($r['body'], $intSlug), "a visitor's search for the internal article's word finds nothing");
+$r = req('GET', '/kb/?q=zebra');
+ok($r['code'] === 200 && str_contains($r['body'], 'id="article-row-' . $pub . '"'), 'and finds the public one');
+ok(str_contains(words(req('GET', '/kb/?q=nothinghere')['body']), "Nothing matches 'nothinghere'. Try another word, or file a request."), 'no results: the sentence with the link to file a request');
+ok(req('GET', '/kb/s/' . q('SELECT slug FROM kb_sections WHERE id = :s', ['s' => $intSec])[0]['slug'])['code'] === 404, 'the internal section to a visitor: 404');
+echo "3. Members\n";
+$r = page($priya, '/kb/' . $intSlug);
+ok($r['code'] === 200 && !is_bare($r['body']) && str_contains($r['body'], 'giraffe'), 'Priya (kb.read) reads the internal article in the shell');
+ok(page($priya, '/kb/' . $draftSlug)['code'] === 404 && page($marco, '/kb/' . $draftSlug)['code'] === 404 && page($marco, '/kb/' . $archSlug)['code'] === 404, 'a draft and an archived one to readers (Priya, Marco): 404');
+$r = page($ext, '/kb/' . $intSlug);
+ok($r['code'] === 404 && is_bare(page($ext, '/kb/' . $pubSlug)['body']), 'the external member: the internal one is 404 and the public one comes bare');
+ok(str_contains(page($priya, '/kb/?q=giraffe')['body'], 'id="article-row-' . $int . '"'), "Priya's search finds the internal article");
+ok(!str_contains(page($marco, '/kb/?q=pelican')['body'], 'article-row-' . $draft) && !str_contains(page($lena, '/kb/?q=pelican')['body'], 'article-row-' . $draft), 'search never returns a draft — not even to an editor');
+$r = page($lena, '/kb/' . $draftSlug);
+ok($r['code'] === 200 && str_contains($r['body'], 'id="article-edit-link"'), 'Lena (kb.edit) opens the draft with Edit');
+$r = page($lena, '/kb/admin/?status=draft');
+ok($r['code'] === 200 && str_contains($r['body'], 'id="kb-admin-row-' . $draft . '"') && !str_contains($r['body'], 'id="kb-admin-row-' . $pub . '"'), "the editors' Drafts tab lists the draft and not the published one");
+$r = page($lena, '/kb/admin/?status=archived');
+ok(str_contains($r['body'], 'id="kb-admin-row-' . $arch . '"'), 'the Archived tab lists the archived one');
+ok(leaks(req('GET', '/kb/')['body']) === [] && leaks(req('GET', '/kb/' . $pubSlug)['body']) === [], 'the public pages leak no address and no token');
+exit($GLOBALS['fails'] === 0 ? 0 : 1);

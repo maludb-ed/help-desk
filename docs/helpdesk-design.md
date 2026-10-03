@@ -367,6 +367,13 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 9 (the knowledge base) — BUILT and proven 2026-10-03** (`docs/build-specs/knowledge-base.md`): sections and Markdown articles (`app/features/kb/markdown.php`, a
+whitelist renderer, no library; `body_html` cached on save), public ones with no session on the bare layout (`/kb/`, `/kb/s/{slug}`, `/kb/{slug}`, feedback, a public article's file),
+internal ones for `kb.read`, drafts and the desk (`/kb/admin/`) for `kb.edit`; one visibility rule `kb_visible_filter()` over the base tables; suggest and send from the composer
+(a public reply through `add_message()`, the internal-to-external refusal), an article written `?from_ticket=`; the pg_trgm search; 9 actions, 6 screens + the public door. **Proof:**
+`tests/phase3/slice9/run.sh` — 160 checks green; Phase 2 (250), slices 1 (211), 2 (129), 3 (223), 4 (114), 5 (116), 6 (130), 7 (134) and 8 (110) still green; the installer's `plan`
+clean. Next: slice 10 (`reports-settings.md`), the last.
+
 **Slice 8 (automation and the worker) — BUILT and proven 2026-10-03** (`docs/build-specs/automation-worker.md`): `bin/worker.php` — one advisory-locked pass of nine steps every
 minute (send, mail, sla, snooze, auto_close, rules, survey, dispatch, housekeeping), each its own try, logged once as `worker.pass`, the clock fakeable outside production; the rules
 engine (`app/features/automation/engine.php`: the bounded vocabulary, `rule_evaluate()` over base-table facts, `rule_apply()` through slice 3's write functions under savepoints with a

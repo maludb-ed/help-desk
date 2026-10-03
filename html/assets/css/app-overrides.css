@@ -223,3 +223,13 @@ details > summary::-webkit-details-marker { display: none; }
 .public-body { background: var(--bs-light, #f5f6fa); }
 .public-main { max-width: 720px; margin: 0 auto; padding: 1rem 16px 2rem; }
 .public-main .card { border-radius: .75rem; }
+
+/* Slice 9 — the knowledge base: an article's body renders from Markdown; code blocks scroll inside, never the page. */
+.article-body { overflow-wrap: anywhere; }
+.article-body pre { overflow-x: auto; max-width: 100%; background: #f4f5f7; padding: .75rem; border-radius: .375rem; font-size: .8125rem; }
+.article-body code { word-break: break-word; }
+.article-body img { max-width: 100%; height: auto; }
+.article-body blockquote { border-left: 3px solid #d9dce3; padding-left: .75rem; color: #6c757d; }
+.article-body h2 { font-size: 1.25rem; margin-top: 1.25rem; }
+.article-body h3 { font-size: 1.1rem; margin-top: 1rem; }
+.article-body h4 { font-size: 1rem; margin-top: .75rem; }

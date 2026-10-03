@@ -57,7 +57,8 @@
                         <input type="search" name="q" id="home-kb-search-field" class="form-control btn-touch" placeholder="Search for an answer…" aria-label="Search the knowledge base" maxlength="120">
                         <button type="submit" class="btn btn-light btn-touch" id="home-kb-search-btn" aria-label="Search"><i class="feather-search"></i></button>
                     </form>
-                    <div class="fs-12 text-muted" id="home-kb-empty">Articles that answer the common questions appear here when the knowledge base is written.</div>
+                    <?php if (($kbArticles ?? []) === []): ?><div class="fs-12 text-muted" id="home-kb-empty">Articles that answer the common questions appear here when the knowledge base is written.</div>
+                    <?php else: ?><div class="list-group list-group-flush" id="home-kb-articles"><?php foreach ($kbArticles as $a): ?><a href="/kb/<?= e($a['slug']) ?>" class="list-group-item list-group-item-action px-0 py-2 fs-12 btn-touch" id="home-kb-article-<?= (int) $a['article_id'] ?>"><i class="feather-file-text me-2 text-muted"></i><?= e($a['title']) ?></a><?php endforeach; ?></div><?php endif; ?>
                 </div>
             </div>
         </div>

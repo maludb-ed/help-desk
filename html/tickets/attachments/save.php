@@ -1,10 +1,28 @@
 <?php
 declare(strict_types=1);
-/** Action `attachment_add` (log `ticket.attach`: filename, byte_size, mime_type): work, or the ticket's requester; file (multipart), message (attach to an existing message of this ticket). */
+/** Action `attachment_add` (log `ticket.attach`: filename, byte_size, mime_type): work, or the ticket's requester; file (multipart), message (attach to an existing message of this ticket).
+ *  With `article` instead of `ticket` (slice 9): a file on an article, kb.edit, the same checks; log `article.update` (after.attachment_id); lands on the edit page. */
 require_once dirname(__DIR__, 3) . '/app/features/tickets/handler.php';
 hd_handler_begin();
 $pdo = db();
 $me = (int) current_member_id();
+if (request_integer('article') !== null) {
+    require_right('kb.edit');
+    $art = find_article_any($pdo, (int) request_integer('article')) ?? refuse(404, 'Article not found.');
+    $file = $_FILES['file'] ?? null;
+    if (!is_array($file)) {
+        hd_refuse_fields(['file' => 'Choose a file.']);
+    }
+    $aid = hd_guard($pdo, static function () use ($pdo, $me, $art, $file): int {
+        $pdo->beginTransaction();
+        $aid = store_article_attachment($pdo, $art['article_id'], $file, $me);
+        $row = $pdo->prepare('SELECT filename, byte_size, mime_type FROM attachments WHERE id = :id'); $row->execute(['id' => $aid]); $f = $row->fetch();
+        log_activity($pdo, 'article.update', 'article', $art['article_id'], ['after' => ['attachment_id' => $aid, 'filename' => $f['filename'], 'byte_size' => (int) $f['byte_size'], 'mime_type' => $f['mime_type']]]);
+        $pdo->commit();
+        return $aid;
+    });
+    hd_done('Attached ' . $file['name'] . ' to ' . $art['title'], $aid, hd_land(return_path('/kb/admin/' . $art['article_id'] . '/edit'), 'saved'), 'articleChanged', ['attachment_id' => $aid, 'article_id' => $art['article_id'], 'url' => '/kb/attachment.php?id=' . $aid]);
+}
 $t = ticket_from_request($pdo);
 if (!can_work_ticket($t['ticket_id']) && !is_own_ticket($pdo, $t)) {
     refuse(403, 'You are not in this ticket\'s queue.');

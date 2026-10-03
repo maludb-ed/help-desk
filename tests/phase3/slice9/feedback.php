@@ -1,0 +1,34 @@
+<?php
+/** Proof — feedback and views (spec "Proof", 5): Yes once per visitor per day (a second POST answers "Thanks — you already told us."), counts move, logged portal; a view counts once per session, never an editor's. */
+require __DIR__ . '/lib.php';
+$owner = as_member(1); $priya = as_member(26);
+[$id, $slug] = mk_article($owner, 'SMOKE Helpful article', ['body' => 'SMOKE It helps.']);
+echo "1. Views\n";
+$v = visitor();
+req('GET', '/kb/' . $slug, ['jar' => $v]); req('GET', '/kb/' . $slug, ['jar' => $v]);
+ok((int) article_row($id)['view_count'] === 1, 'two visits in one session count one view');
+page($owner, '/kb/' . $slug);
+ok((int) article_row($id)['view_count'] === 1, "an editor's visit never counts");
+page($priya, '/kb/' . $slug); page($priya, '/kb/' . $slug);
+ok((int) article_row($id)['view_count'] === 2, "a member's visit counts once");
+echo "2. Feedback\n";
+$since = last_activity_id();
+[$c, $b, $h, $loc] = public_post($v, '/kb/feedback.php', ['article' => $id, 'helpful' => 'yes']);
+ok(in_array($c, [302, 303], true) && str_contains($loc, '/kb/' . $slug . '?notice=thanks') && (int) article_row($id)['helpful_count'] === 1, 'Yes: counted, back to the article with thanks');
+$r = req('GET', $loc, ['jar' => $v]);
+ok(str_contains($r['body'], 'id="article-feedback-thanks"') && !str_contains($r['body'], 'id="article-feedback-yes"'), 'the thanks line replaces the buttons');
+$rows = activity('article.feedback', $since);
+ok(count($rows) === 1 && $rows[0]['source'] === 'portal' && json_decode($rows[0]['after'], true)['helpful'] === true && $rows[0]['actor_member_id'] === null, 'article.feedback logged with source portal, nobody as actor');
+[$c, $b, $h, $loc] = public_post($v, '/kb/feedback.php', ['article' => $id, 'helpful' => 'no']);
+ok(str_contains($loc, 'notice=already') && (int) article_row($id)['helpful_count'] === 1 && (int) article_row($id)['unhelpful_count'] === 0, 'a second vote the same day: "already", nothing counted');
+ok(str_contains(words(req('GET', $loc, ['jar' => $v])['body']), 'Thanks — you already told us.'), 'and the page says "Thanks — you already told us."');
+$v2 = visitor();
+public_post($v2, '/kb/feedback.php', ['article' => $id, 'helpful' => 'no']);
+ok((int) article_row($id)['unhelpful_count'] === 1, 'another visitor votes No: unhelpful counts');
+[$c] = public_post($v2, '/kb/feedback.php', ['article' => $id, 'helpful' => 'yes'], [], false);
+ok($c === 403, 'no CSRF token: 403');
+[$int] = mk_article($owner, 'SMOKE Internal only', ['visibility' => 'internal']);
+[$c] = public_post($v2, '/kb/feedback.php', ['article' => $int, 'helpful' => 'yes']);
+ok($c === 404, 'a vote on an article the visitor may not read: 404');
+ok(count(activity('article.feedback', $since)) === 2, 'two votes logged in all');
+exit($GLOBALS['fails'] === 0 ? 0 : 1);

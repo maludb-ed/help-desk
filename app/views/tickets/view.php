@@ -35,7 +35,7 @@ $id = (int) $facts['ticket_id']; $sla = $t['sla_state']; $isNew = $facts['status
     <div class="row g-3">
         <div class="col-lg-7">
             <?= view('tickets/partials/conversation.php', ['conversation' => $conversation, 'internals' => $internals, 'tz' => $tz, 'here' => $here]) ?>
-            <?= view('tickets/partials/composer.php', ['t' => $t, 'facts' => $facts, 'moves' => $moves, 'work' => $work, 'own' => $own, 'note' => $note, 'pending' => $pending, 'members' => $members, 'here' => $here]) ?>
+            <?= view('tickets/partials/composer.php', ['t' => $t, 'facts' => $facts, 'moves' => $moves, 'work' => $work, 'own' => $own, 'note' => $note, 'pending' => $pending, 'members' => $members, 'here' => $here, 'articles' => $articles ?? []]) ?>
         </div>
         <div class="col-lg-5">
             <?php if ($work): ?><?= view('tickets/partials/fields-panel.php', ['t' => $t, 'facts' => $facts, 'moves' => $moves, 'assignees' => $assignees, 'queues' => $queues, 'types' => $types, 'categories' => $categories, 'fieldDefs' => $fieldDefs, 'tz' => $tz, 'here' => $here]) ?>

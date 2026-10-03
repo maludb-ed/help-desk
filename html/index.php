@@ -8,7 +8,7 @@ $pdo = db();
 $me = (int) current_member_id();
 log_screen_view($pdo, 'dashboard');
 $data = ['needsMe' => has_right('tickets.view_queue') ? home_needs_me($pdo, $me) : [], 'myTickets' => home_my_tickets($pdo, $me),
-         'canCreate' => has_right('tickets.create'), 'canQueue' => has_right('tickets.view_queue'), 'canKb' => has_right('kb.read'), 'tz' => member_timezone()];
+         'canCreate' => has_right('tickets.create'), 'canQueue' => has_right('tickets.view_queue'), 'canKb' => has_right('kb.read'), 'kbArticles' => array_slice(find_articles($pdo, kb_visible_filter(current_member())), 0, 5), 'tz' => member_timezone()];
 if (wants_json()) {
     respond_screen(['needs_me' => array_map(static fn (array $t): array => present_ticket_brief($t) + ['reason' => $t['reason']], $data['needsMe']), 'my_tickets' => array_map('present_ticket_brief', $data['myTickets']),
         'can_create' => $data['canCreate'], 'sees_queues' => $data['canQueue'], 'knowledge_base' => $data['canKb']]);

@@ -65,14 +65,47 @@ images only for `/kb/attachment.php?id=` URLs, horizontal rules. Everything else
 ## Out of scope for this slice
 - Article versions and review dates; translations; a public article feedback **table** (counts only in v1); "convert this reply into an article" beyond `?from_ticket=`; the frontline agent's grounding (Phase 4 gives it the tool; the skill `answer-from-the-knowledge-base` says how).
 
-## Proof (scratch database; curl with no cookie, as an external by secure link, as members; headless Chromium at 375 × 740 and 1280 × 800)
-- **Visibility**: a visitor with no session reads a public published article (200, bare layout, no sidebar, no command bar) and gets 404 *"Article not found."* for an internal one, a draft and an archived one — the same sentence; Priya (`kb.read`) reads internal; a member without `kb.read` (roles `{}` with capability write would have it — use an agent granted nothing) does not; drafts appear for Lena (`kb.edit`) in admin only; search never returns what the caller may not open.
-- **Markdown**: a body with a script tag, an `onclick`, a `javascript:` link and raw HTML renders escaped; headings, lists, code, a safe link render; the preview equals the saved render.
-- **From a ticket**: `?from_ticket=HD-1042` prefills from public replies only (the fixture's note text is absent), names requesters by first name; saving writes `created_from` and a note on the ticket.
-- **Send**: an internal article to an external requester → 422 *"That article is internal."*; a public one → a public reply with the link and the 300-character summary, mailed by the outbox, `ticket.reply` + `article.send` rows, `article_links (sent)`; the agent's `article_send` → `pending_approval` against the stubbed hook; suggest → the link row and the note, dismiss removes the row.
-- **Feedback**: Yes once per IP per day (a second POST answers *"Thanks — you already told us."*), counts move, logged `portal`.
-- **Slugs**: two articles titled *VPN access* → `vpn-access`, `vpn-access-2`; renaming keeps the slug unless edited; a slug clash on edit → 422.
-- **Rights and JSON**: support → 403 on admin screens with *"You may not write articles."*; delete without `settings.manage` → 403; JSON mode on every handler; `bin/build_action_registry.php --check` OK; 375 px: the article's code blocks scroll inside, the page never sideways.
+## Proof (`tests/phase3/slice9/run.sh`: the scratch database, slice 3's world, curl with no cookie as the visitor, members through dev hand-offs and action tokens, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-03: 160 checks green** (visibility 17, markdown 13, ticket 15, send 14, feedback 12, screens 42, json 18, browser 28, the registry); Phase 2's and slices
+1–8's suites still green (Phase 2's placeholder checks moved to Reports, the last placeholder; its vhost check now expects an unknown slug to be 404); the installer's `plan` clean.
+- [x] **Visibility.** A visitor reads a public published article bare (no sidebar, no command bar) and gets 404 *"Article not found."* — the same sentence — for an internal one, a draft and
+  an archived one; the public home lists the public section only; a visitor's search never finds the internal article's word, finds the public one, and says *"Nothing matches 'x'. Try another
+  word, or file a request."*; the internal section is 404 to a visitor; Priya (`kb.read`) reads internal in the shell; a draft and an archived one are 404 to readers; the external member sees
+  the public one bare and the internal one as 404; search never returns a draft, not even to an editor; Lena (`kb.edit`) opens the draft with Edit and the desk's Drafts and Archived tabs list
+  them; the public pages leak no address and no token.
+- [x] **Markdown.** A script tag, HTML with handlers, `javascript:` and `data:` links render as escaped text; `#`/`##`/`###` → h2/h3/h4; bold, italic, code; both lists; a blockquote, a fenced
+  block (escaped inside) and a rule; http and mailto links with `rel="noopener"`; an image only from `/kb/attachment.php?id=`; `body_text` is the source, `body_html` the cached render;
+  the Preview tab renders the same HTML and saves nothing; the public page shows the raw tag as text.
+- [x] **From a ticket.** `?from_ticket=HD-1001` prefills the title from the subject and the body from the public replies only (the fixture's note is absent), authors by first name; saving
+  writes `article_links (created_from)`, a note naming the article on the ticket and `article.create` with the ticket and `from_ticket`.
+- [x] **Suggest and send.** Suggest → the `suggested` row, the note with the admin link, `article.suggest`; the ticket page shows the suggestion with Send and Dismiss; the picker searches and
+  offers both; dismiss removes the row; a requester who may not see the ticket gets 404, a collaborator 403; an internal article may be suggested. Send: an internal article to an external
+  requester → 422 *"That article is internal."*; a draft cannot be sent; a public one → a public reply by the sender = the words, the title, the absolute link and the 300-character summary cut
+  at a word, mailed to the requester (the outbox), `ticket.reply` + `article.send` (ticket and queue on the row), `article_links (sent)`, the first response met; an internal article goes to a
+  member requester; the registry marks `article_send` external_send and `article_delete` deletion (the kernel's hook pauses an agent by key); delete while sent → 422 *"This article was
+  sent on 1 ticket — archive it instead."*; archived instead: gone from the public.
+- [x] **Feedback and views.** Two visits in one session count one view; an editor's visit never counts; a member's counts once. Yes: counted, back to the article with thanks, the thanks line
+  replaces the buttons, `article.feedback` with source portal and nobody as actor; a second vote the same day → *"Thanks — you already told us."*, nothing counted; another visitor's No counts;
+  no CSRF → 403; a vote on an article the visitor may not read → 404.
+- [x] **Rights, slugs, sections, publishing, attachments.** Support → 403 *"You may not write articles."* on the desk, the form and every handler; delete without `settings.manage` → 403;
+  two articles titled the same → `smoke-slug-test`, `smoke-slug-test-2`; renaming keeps the slug; a clash on edit → 422 *"That address is taken."*; a malformed slug → 422; an edited slug is
+  honoured; validation by field (title, visibility, section). A section and a child (`section.save` twice); a child under a child → 422; inline edit keeps what was not sent; the home nests the
+  child; the section page lists under the parent's crumb; archiving a section leaves its articles under No section (reachable by slug; the section page gone; the desk filters No section).
+  A draft has no `published_at`; publish sets it and `article.publish` logs; unpublish keeps it; "Save and publish" on a draft publishes without resetting it; an editor sees Edit · Unpublish ·
+  Archive. `attachment_add` with `article` stores on the article and answers the url; a visitor fetches a public article's file; made internal, the file is 404 to a visitor and served to
+  `kb.read`; support may not attach; the edit page lists the file with its Markdown; delete removes the article, its file and logs `article.delete`.
+- [x] **JSON mode.** `section_save`, `article_create` (`{ok, record_id, slug, location, url}`), `article_update` keeps what it was not sent, 422 by field, `article_publish` (`{ok, published}`,
+  left out = yes), `article_suggest`, `article_send` (record_id = the ticket, as `ticket_reply` answers), support → 403, `article_archive`, `article_delete`, `section_archive`; the screens
+  kb-home (sections, results, may.edit), kb-article with the body, kb-admin, article-edit, article-add with `from_ticket`, kb-section; ticket-view's JSON carries the linked articles.
+- [x] **375 × 740 and 1280 × 800.** A visitor's article: bare, the long code line scrolls inside its block, no sideways scroll; the public home's search is a plain form (Enter lists the
+  match — the bare layout has no HTMX); in the shell typing searches as you type and pushes `?q=`; the desk, the form's Preview tab rendering in place, the ticket's article picker; no console errors.
+
+**Decisions taken while building (2026-10-03):** the base tables are read everywhere through `kb_visible_filter()` (a visitor has no member and the views are empty to them); an
+external member is a visitor to the knowledge base (public only, the bare layout); an archived article is 404 to everyone but an editor; `article_update` only moves TO published
+(unpublishing is `article_publish`); `published_at` is set once and kept; the vote and the view are remembered in PHP's session (no table — the open question stands); a visitor's 404
+for a section is *"Section not found."*; the dashboard's Knowledge base card lists the five newest articles the caller may read; an article's file is uploaded through slice 3's
+`attachment_add` with `article` and served by `/kb/attachment.php` under the article's own visibility; the first-name rule takes the first word of a display name; `record_view()` never
+counts an editor; `record_id` of `article_send` is the ticket, as every ticket action answers.
 
 ## Open questions
 - A `kb_feedback` table (per vote, with IP hash and day) instead of counts only — an additive migration if the owner wants the "who said no" question answered.

@@ -1,0 +1,21 @@
+<?php /** One article (screen `kb-article`). Data: a, attachments, public, canEdit, voted (null|yes|no), notice */ $id = (int) $a['article_id']; ?>
+<?php if (!$public): ?><?= view('shared/header.php', ['id' => 'kb-article', 'title' => $a['title'], 'crumbs' => array_values(array_filter([['Home', '/'], ['Knowledge base', '/kb/'], $a['section_id'] ? [$a['section_name'], '/kb/s/' . $a['section_slug']] : null, [$a['title'], null]])), 'back' => ['/kb/', 'Knowledge base'],
+    'action' => $canEdit ? '<div class="d-flex gap-1 flex-wrap justify-content-end">' . hx_link('/kb/admin/' . $id . '/edit', '<i class="feather-edit-2"></i><span class="d-none d-md-inline ms-1">Edit</span>', 'btn btn-light btn-touch', 'id="article-edit-link" title="Edit"')
+        . ($a['status'] === 'published' ? '<form method="post" action="/kb/admin/publish.php" hx-post="/kb/admin/publish.php" hx-target="#flash" class="mb-0">' . csrf_field() . '<input type="hidden" name="article" value="' . $id . '"><input type="hidden" name="published" value="no"><button type="submit" class="btn btn-light btn-touch" id="article-unpublish-btn">Unpublish</button></form>' : '')
+        . '<form method="post" action="/kb/admin/archive.php" hx-post="/kb/admin/archive.php" hx-target="#flash" hx-confirm="Archive ' . e($a['title']) . '?" class="mb-0">' . csrf_field() . '<input type="hidden" name="article" value="' . $id . '"><button type="submit" class="btn btn-light btn-touch" id="article-archive-btn">Archive</button></form></div>' : '']) ?><?php endif; ?>
+<div class="<?= $public ? '' : 'main-content' ?>" id="kb-article-content">
+    <?= view('shared/notice.php', ['notice' => $notice]) ?>
+    <?php if ($public): ?><div class="fs-12 text-muted mb-1"><a href="/kb/">Knowledge base</a><?= $a['section_id'] ? ' › <a href="/kb/s/' . e($a['section_slug']) . '">' . e($a['section_name']) . '</a>' : '' ?></div><h3 class="mb-1" id="article-title"><?= e($a['title']) ?></h3><?php else: ?><h4 class="mb-1" id="article-title"><?= e($a['title']) ?><?= $a['visibility'] === 'internal' ? ' <span class="badge bg-soft-secondary text-secondary fs-11">Internal</span>' : '' ?><?= $a['status'] !== 'published' ? ' <span class="badge bg-warning fs-11">' . e(ARTICLE_STATUSES[$a['status']]) . '</span>' : '' ?></h4><?php endif; ?>
+    <div class="fs-12 text-muted mb-3" id="article-meta"><?= e(updated_words($a['updated_at'])) ?><?= $a['author_name'] ? ' · ' . e(trim((string) strtok($a['author_name'], ' '))) : '' ?></div>
+    <div class="card mb-3"><div class="card-body article-body" id="article-body"><?= $a['body_html'] ?? md_render((string) $a['body_text']) ?></div></div>
+    <?php if ($attachments !== []): ?><div class="d-flex flex-wrap gap-1 mb-3" id="article-attachments"><?php foreach ($attachments as $f): ?><a class="badge bg-soft-secondary text-secondary text-decoration-none" href="/kb/attachment.php?id=<?= (int) $f['attachment_id'] ?>" id="article-attachment-<?= (int) $f['attachment_id'] ?>"><i class="feather-paperclip"></i> <?= e($f['filename']) ?></a><?php endforeach; ?></div><?php endif; ?>
+    <?php if ($a['tags'] !== []): ?><div class="d-flex flex-wrap gap-1 mb-3" id="article-tags"><?php foreach ($a['tags'] as $g): ?><span class="badge bg-soft-secondary text-secondary"><?= e($g) ?></span><?php endforeach; ?></div><?php endif; ?>
+    <div class="card" id="article-feedback"><div class="card-body d-flex align-items-center gap-2 flex-wrap">
+        <?php if ($voted !== null): ?><span class="fs-12 text-muted" id="article-feedback-thanks">Thanks — you told us this was <?= $voted === 'yes' ? 'helpful' : 'not helpful' ?>.</span>
+        <?php else: ?><span class="fs-12 fw-semibold">Was this helpful?</span>
+            <form method="post" action="/kb/feedback.php" class="mb-0 d-flex gap-1" id="article-feedback-form"><?= csrf_field() ?><input type="hidden" name="article" value="<?= $id ?>">
+                <button type="submit" name="helpful" value="yes" class="btn btn-light btn-touch" id="article-feedback-yes"><i class="feather-thumbs-up me-1"></i>Yes</button>
+                <button type="submit" name="helpful" value="no" class="btn btn-light btn-touch" id="article-feedback-no"><i class="feather-thumbs-down me-1"></i>No</button></form>
+        <?php endif; ?>
+    </div></div>
+</div>

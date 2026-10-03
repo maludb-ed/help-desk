@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T19:52:27+00:00",
+    "generated_at": "2026-10-03T20:22:19+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -564,8 +564,8 @@
             "params": [
                 "q"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "kb-section": {
             "screen": "kb-section",
@@ -594,7 +594,7 @@
                 "status",
                 "section"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "article-add": {
@@ -606,7 +606,7 @@
                 "section",
                 "from_ticket"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "article-edit": {
@@ -615,7 +615,7 @@
             "section": "Knowledge base",
             "when": "to change an article",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "csat-settings": {
@@ -3897,7 +3897,7 @@
             "approval": null,
             "log_event": "section.save",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "section_archive": {
             "action": "section_archive",
@@ -3916,7 +3916,7 @@
             "approval": null,
             "log_event": "section.archive",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "article_create": {
             "action": "article_create",
@@ -3971,7 +3971,7 @@
             "approval": null,
             "log_event": "article.create",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "article_update": {
             "action": "article_update",
@@ -4032,7 +4032,7 @@
             "approval": null,
             "log_event": "article.update",
             "who": "lead",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "article_publish": {
@@ -4058,7 +4058,7 @@
             "approval": null,
             "log_event": "article.publish",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "article_archive": {
             "action": "article_archive",
@@ -4077,7 +4077,7 @@
             "approval": null,
             "log_event": "article.archive",
             "who": "lead",
-            "built": false
+            "built": true
         },
         "article_delete": {
             "action": "article_delete",
@@ -4096,7 +4096,7 @@
             "approval": "deletion",
             "log_event": "article.delete",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "article_suggest": {
             "action": "article_suggest",
@@ -4121,7 +4121,7 @@
             "approval": null,
             "log_event": "article.suggest",
             "who": "work",
-            "built": false
+            "built": true
         },
         "article_send": {
             "action": "article_send",
@@ -4152,7 +4152,7 @@
             "approval": "external_send",
             "log_event": "article.send",
             "who": "work",
-            "built": false
+            "built": true
         },
         "rating_submit": {
             "action": "rating_submit",
