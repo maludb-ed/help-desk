@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T16:29:46+00:00",
+    "generated_at": "2026-10-03T16:51:52+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -242,8 +242,8 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "the statuses in board order with their category and clock, and the transitions matrix",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "status-add": {
             "screen": "status-add",
@@ -251,7 +251,7 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "to add a custom status inside open or pending or on hold or solved",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "status-edit": {
@@ -260,7 +260,7 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "to rename or recolour a status, change its order, whether it is on the board, whether the clock runs",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "transitions": {
@@ -269,7 +269,7 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "the matrix of allowed moves between categories and what each requires",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "vocabulary": {
@@ -280,8 +280,8 @@
             "params": [
                 "tab"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "category-add": {
             "screen": "category-add",
@@ -291,7 +291,7 @@
             "params": [
                 "parent"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "category-edit": {
@@ -300,7 +300,7 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "to change a category's parent, defaults or visibility",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "fields-list": {
@@ -309,8 +309,8 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "the custom field definitions for tickets, organizations and requesters",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "field-add": {
             "screen": "field-add",
@@ -320,7 +320,7 @@
             "params": [
                 "applies_to"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "field-edit": {
@@ -329,7 +329,7 @@
             "section": "The vocabulary: statuses, transitions, types, categories, tags, custom fields",
             "when": "to change a custom field",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "inbox": {
@@ -1764,7 +1764,7 @@
             "approval": "other",
             "log_event": "status.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "status_archive": {
             "action": "status_archive",
@@ -1783,7 +1783,7 @@
             "approval": "other",
             "log_event": "status.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "transition_save": {
             "action": "transition_save",
@@ -1838,7 +1838,7 @@
             "approval": "other",
             "log_event": "transition.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "type_save": {
             "action": "type_save",
@@ -1875,7 +1875,7 @@
             "approval": "other",
             "log_event": "type.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "type_archive": {
             "action": "type_archive",
@@ -1894,7 +1894,7 @@
             "approval": "other",
             "log_event": "type.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "category_save": {
             "action": "category_save",
@@ -1967,7 +1967,7 @@
             "approval": "other",
             "log_event": "category.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "category_archive": {
             "action": "category_archive",
@@ -1986,7 +1986,7 @@
             "approval": "other",
             "log_event": "category.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "tag_save": {
             "action": "tag_save",
@@ -2017,7 +2017,7 @@
             "approval": null,
             "log_event": "tag.save",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "tag_delete": {
             "action": "tag_delete",
@@ -2036,7 +2036,7 @@
             "approval": "deletion",
             "log_event": "tag.delete",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "field_save": {
             "action": "field_save",
@@ -2109,7 +2109,7 @@
             "approval": "other",
             "log_event": "field.save",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "field_archive": {
             "action": "field_archive",
@@ -2128,7 +2128,7 @@
             "approval": "other",
             "log_event": "field.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "ticket_create": {
             "action": "ticket_create",

@@ -47,7 +47,9 @@ function activity_sentence(array $r): string
         'requester.update' => 'changed a requester', 'requester.email_add' => 'added an address to a requester', 'requester.email_remove' => 'removed an address from a requester',
         'requester.merge' => 'merged two requesters', 'sla_policy.create' => 'added an SLA policy', 'sla_policy.update' => 'changed an SLA policy', 'sla_policy.archive' => 'archived an SLA policy',
         'business_hours.save' => 'changed a business-hours schedule', 'business_hours.holiday_add' => 'added a holiday', 'business_hours.holiday_remove' => 'removed a holiday',
-        'settings.save' => 'changed Help Desk\'s settings', 'ticket.assign' => 'moved a ticket',
+        'settings.save' => 'changed Help Desk\'s settings', 'ticket.assign' => 'moved a ticket', 'status.save' => 'changed a status', 'status.archive' => 'archived a status',
+        'transition.save' => 'changed which moves are allowed', 'type.save' => 'changed a ticket type', 'type.archive' => 'archived a ticket type', 'category.save' => 'changed a category',
+        'category.archive' => 'archived a category', 'tag.save' => 'changed a tag', 'tag.delete' => 'deleted a tag', 'field.save' => 'changed a custom field', 'field.archive' => 'archived a custom field',
     ];
     if ($r['action'] === 'screen.view') {
         return $who . ' opened a screen';

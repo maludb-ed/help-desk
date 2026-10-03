@@ -367,6 +367,11 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 2 (the vocabulary) — BUILT and proven 2026-10-03** (`docs/build-specs/vocabulary.md`): statuses in board order with the database's guard, the 6 × 6 transitions matrix editing the
+same table `hd_transition()` reads, types (inline), the categories tree with routing defaults, tags (inline, a lead may rename), custom fields for tickets / organizations / requesters with the
+validator `app/features/fields/validate.php` (`fields_for()`, `custom_values_validate()`, `custom_values_missing_on_solve()`) and the one input renderer slice 3 reuses; 11 actions, 10 screens.
+**Proof:** `tests/phase3/slice2/run.sh` — 129 checks green; Phase 2's 250 and slice 1's 211 still green; the installer's `plan` clean. Next: slice 3 (`tickets-core.md`, THE EXEMPLAR).
+
 **Slice 1 (queues and people, the CRUD exemplar) — BUILT and proven 2026-10-03** (`docs/build-specs/queues-people.md`): queues (cards, view with members and leads, add/edit, archive moving
 open tickets, members, presence), organizations (cards, view with domains and people, add/edit, archive), requesters (cards, view with addresses, add by hand through `hd_requester_for_email()`,
 edit, merge), SLA policies (cards in match order, the targets grid, move up/down, archive) and schedules (the weekly grid, holidays, the preview by `hd_business_add_minutes()`), the business's

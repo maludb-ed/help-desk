@@ -103,14 +103,29 @@ each configuration row with `before`/`after` of the changed fields only, for `co
 Setting a ticket's status, type, category, tags or custom values (3 — through the validator and `hd_transition()`); the board's columns (4); category routing at create (3 reads `default_*`).
 
 ## Proof (`tests/phase3/slice2/run.sh`, scratch database, `php -S` + headless Chromium at 375 × 740 and 1280 × 800)
-- [ ] The guard: a new status with category `new` or `closed` → 422 in the database's sentence; changing a built-in's category → 422; a second default → refused by the unique index (422 in words).
-- [ ] Archive: a custom status holding 2 open tickets → 422 naming the count; empty → archived and gone from forms, still named by the view; a built-in → refused.
-- [ ] The matrix: turning `open → solved` off deletes the row and `hd_transition(open, solved)` answers nothing; turning it back on with `requires = {resolution_code}` restores it; `closed →` anything cannot be saved; a cell in the same category is not shown (always allowed).
-- [ ] Categories: a cycle → 422; the tree renders paths ("Billing › Refunds") equal to `mcp_categories.path`; `requester_visible = false` hides it from `mcp_categories` for a requester-only member (SQL as records_ro).
-- [ ] Tags: delete untags N tickets and returns N; a duplicate slug → 422; `tag_by_slug_or_create('Hard Ware')` → slug `hard-ware`, reused on the second call.
-- [ ] Fields: `custom_values_validate('ticket', {...}, incidentTypeId)` drops a field restricted to problems, refuses a bad date and an unknown option, booleans a checkbox; `custom_values_missing_on_solve()` names the required-on-solve fields a ticket lacks (fixture by SQL).
-- [ ] Rights: support → 403 on every screen (*"You may not change Help Desk's settings."*); a lead may `tag_save` and not `tag_delete`.
-- [ ] JSON mode on every handler; `php bin/build_action_registry.php --check` passes and the 11 actions read as built; 375 and 1280 clean.
+**Built and proven 2026-10-03: 129 checks green** (statuses 31, vocabulary 29, fields 23, rights_json 15, browser 31, the registry check); Phase 2's 250 and slice 1's 211 still green;
+the installer's `plan` 60 steps, no stop.
+- [x] The guard: a new status with category `new` or `closed` → 422 in the database's sentence; changing a built-in's category → 422 *"A built-in status keeps its category."*; renaming one is fine;
+  the key is derived and numbered on a clash; a colour off the seven → 422; Move up / Move down re-save the board order.
+- [x] Archive: a custom status holding 2 tickets → 422 *"2 tickets are in … — move them first."*; empty → archived and gone from the list, still named by the view, refused by `hd_transition()`;
+  a built-in → *"A built-in status is renamed, never archived."*
+- [x] The matrix: turning `open → solved` off deletes the row and `hd_transition(open, solved)` answers nothing; turning it back on with `requires = {resolution_code}` restores it (`assignee`
+  stored as `assignee_member_id`); `closed →` anything and a same-category cell → 422; a new move (pending → closed) is added; the JSON lists every move in words.
+- [x] Categories: a cycle → 422 *"A category cannot sit under itself."*; the tree renders depth and the path equal to `mcp_categories.path`; `requester_visible = false` hides it from
+  `mcp_categories` for a requester-only member as `helpdesk_records_ro`; archiving takes the branch; the ticket keeps `category_id` and the view still names it; a new child of an archived parent → 422.
+- [x] Types: a built-in is renamed, never archived; a custom type with an open ticket → 422 naming it.
+- [x] Tags: delete untags 2 tickets and returns 2; a duplicate slug → 422; `tag_by_slug_or_create('Hard Ware')` → `hard-ware`, reused by slug or label; a lead may `tag_save` and not `tag_delete`.
+- [x] Fields: `custom_values_validate('ticket', …, incident)` drops the problems-only field, refuses a bad date, an unknown option and an unknown key, booleans a checkbox; an archived field is dropped;
+  `custom_values_missing_on_solve()` names what a ticket lacks and ignores a field for other types; `applies_to` immutable; a key clash → 422 *"A field with that key already exists for tickets."*
+- [x] Rights: support → 403 on every screen and write (*"You may not change Help Desk's settings."*); a requester does not reach the tags tab.
+- [x] JSON mode on every handler ({ok, did, record_id, location}; 422 with field errors; the guard's sentence reaches a token caller); the registry reads the 11 actions and 10 screens as built;
+  375 and 1280 clean; the flows through the real screens; JavaScript off the type form posts and lands.
+
+**Decisions taken while building (2026-10-03):** the matrix cell is a `<details>` per move with its own form (the phone keeps one column per category, the table scrolling inside its card);
+`assignee` in the manifest's `may_carry` is stored as the column name `assignee_member_id` (what db/009 seeds); archiving a category archives everything under it (a live child of an
+archived parent would otherwise hang off the root); the tags tab opens to `settings.manage|tickets.manage` so a lead reaches `tag_save`; `derive_key()` (shared by statuses and types) numbers
+a clash (`waiting_on_vendor_2`); `fields/validate.php` loads the kit itself so a worker or a test may call it without the bootstrap; the inline type rows and the tag chips are forms of their own
+(no modal). The two open questions below stand as this spec reads them.
 
 ## Open questions
 - The manifest's `tag_save` says Who = `lead` but no right named "tags" exists in db/004; this spec gates it on `tickets.manage` (a lead holds it). Confirm or add a right.

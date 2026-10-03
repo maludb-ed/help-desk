@@ -1,5 +1,16 @@
 <?php
 declare(strict_types=1);
-/** Placeholder (Phase 2): the screen is built by slice 2 (the vocabulary) — this file is replaced then. The registry builder reads render_nav_stub() as unbuilt. */
+/** /settings/statuses/ — the statuses in board order (screen `statuses-list`; settings.manage). */
 require_once dirname(__DIR__, 3) . '/app/bootstrap.php';
-render_nav_stub('statuses', 'slice 2 (the vocabulary)', 'settings.manage');
+require_once dirname(__DIR__, 3) . '/app/features/statuses/queries.php';
+require_once dirname(__DIR__, 3) . '/app/features/statuses/present.php';
+require_right('settings.manage');
+require_human();
+$pdo = db();
+$rows = find_statuses($pdo);
+log_screen_view($pdo, 'statuses-list');
+if (wants_json()) {
+    respond_screen(['statuses' => array_map('present_status', $rows)]);
+}
+$notices = ['saved' => ['success', 'Saved the status.'], 'moved' => ['success', 'Moved.'], 'archived' => ['success', 'Archived the status.']];
+render_screen('Statuses', view('statuses/list.php', ['rows' => $rows, 'here' => here_url(), 'notice' => hd_notice($_GET['notice'] ?? null, $notices)]), ['activeNav' => 'statuses', 'screen' => 'statuses-list', 'entity' => 'ticket_status']);

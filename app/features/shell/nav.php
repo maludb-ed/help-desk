@@ -141,7 +141,8 @@ function back_link(): ?array
     $labels = ['/' => 'Home', '/my-tickets' => 'My tickets', '/inbox' => 'Inbox', '/board' => 'Board', '/requesters/' => 'Requesters',
                '/organizations/' => 'Organizations', '/canned/' => 'Canned responses', '/reports/' => 'Reports', '/kb/' => 'Knowledge base',
                '/notifications' => 'Notifications', '/activity' => 'Activity', '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens',
-               '/settings/general' => 'Help Desk settings', '/settings/agents' => 'Agents', '/settings/sla/' => 'SLA and hours', '/settings/queues/' => 'Queues'];
+               '/settings/general' => 'Help Desk settings', '/settings/agents' => 'Agents', '/settings/sla/' => 'SLA and hours', '/settings/queues/' => 'Queues',
+               '/settings/statuses/' => 'Statuses', '/settings/statuses/transitions' => 'Transitions', '/settings/vocabulary/' => 'Types, categories, tags', '/settings/fields/' => 'Custom fields'];
     foreach ($labels as $p => $label) {
         if ($path === $p) {
             return [$back, $label];
