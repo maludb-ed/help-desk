@@ -26,6 +26,9 @@ require_once dirname(__DIR__) . '/canned/queries.php';
 require_once dirname(__DIR__) . '/canned/present.php';
 require_once dirname(__DIR__) . '/canned/render.php';
 require_once dirname(__DIR__) . '/bulk/handler.php';
+require_once dirname(__DIR__) . '/ratings/queries.php';
+require_once dirname(__DIR__) . '/ratings/present.php';
+require_once dirname(__DIR__) . '/public/secure.php';
 
 /** The ticket a request names (`ticket`, `ticket_id`, `id`), visible to the caller — else 404 "Ticket not found." */
 function ticket_from_request(PDO $pdo, string ...$fields): array

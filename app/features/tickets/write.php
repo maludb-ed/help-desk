@@ -27,7 +27,7 @@ function body_to_html(string $text): string
  * File a ticket. $f: subject, body, as_note, requester_id, submitter_member_id, queue_id, category_id, type_id, priority, tags[], custom (validated),
  * due_at, cc_requester_ids[], external_id, channel, assign (apply the queue's default assignee). Answers ['id', 'number', 'raw_link', 'assignee_member_id', 'assignee_kind'].
  */
-function create_ticket(PDO $pdo, array $f, int $actorMemberId): array
+function create_ticket(PDO $pdo, array $f, ?int $actorMemberId): array
 {
     $st = $pdo->prepare('INSERT INTO tickets (subject, requester_id, submitter_member_id, queue_id, status_id, priority, type_id, category_id, channel, custom_values, due_at, external_id, created_by)
                          VALUES (:s, :r, :sub, :q, (SELECT id FROM ticket_statuses WHERE is_default), :p, :t, :c, :ch, CAST(:cv AS jsonb), :d, :e, :by) RETURNING id, number');
@@ -36,7 +36,7 @@ function create_ticket(PDO $pdo, array $f, int $actorMemberId): array
     $row = $st->fetch();
     $id = (int) $row['id'];
     foreach ($f['cc_requester_ids'] ?? [] as $rid) {
-        add_follower($pdo, $id, 'cc', null, (int) $rid, $actorMemberId);
+        add_follower($pdo, $id, 'cc', null, (int) $rid, (int) $actorMemberId);
     }
     foreach ($f['tags'] ?? [] as $slug) {
         $tagId = tag_by_slug_or_create($pdo, (string) $slug);
@@ -52,7 +52,7 @@ function create_ticket(PDO $pdo, array $f, int $actorMemberId): array
         } elseif ($reqMember !== null && $reqMember !== false) {
             add_message($pdo, $id, 'public_reply', $f['body'], ['author_member_id' => (int) $reqMember, 'channel' => $f['channel'] === 'agent' ? 'agent' : 'web']);
         } else {
-            add_message($pdo, $id, 'public_reply', $f['body'], ['author_requester_id' => $f['requester_id'], 'channel' => 'web']);
+            add_message($pdo, $id, 'public_reply', $f['body'], ['author_requester_id' => $f['requester_id'], 'channel' => $f['channel'] === 'form' ? 'portal' : 'web']);
         }
     }
     $raw = (string) $pdo->query('SELECT hd_secure_link_mint(' . $id . ')')->fetchColumn();

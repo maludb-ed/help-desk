@@ -57,6 +57,7 @@ function activity_sentence(array $r): string
         'ticket.secure_link_rotate' => 'rotated a secure link', 'ticket.dispatch' => 'handed a ticket to an agent',
         'view.create' => 'saved a view', 'view.update' => 'changed a view', 'view.delete' => 'deleted a view', 'board.move' => 'moved a card on the board', 'board.reorder' => 'reordered a card on the board',
         'canned.create' => 'wrote a canned response', 'canned.update' => 'changed a canned response', 'canned.delete' => 'deleted a canned response', 'canned.apply' => 'used a canned response', 'ticket.bulk_update' => 'changed several tickets at once',
+        'rating.submit' => 'rated a ticket', 'survey.send' => 'sent a satisfaction survey', 'csat_settings.save' => 'changed the survey settings', 'report.export' => 'exported a report', 'request_form.rate_limited' => 'was rate-limited on the request form', 'request_form.honeypot' => 'tripped the request form\'s honeypot',
     ];
     if ($r['action'] === 'screen.view') {
         return $who . ' opened a screen';

@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T18:29:46+00:00",
+    "generated_at": "2026-10-03T18:51:08+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -624,8 +624,8 @@
             "section": "Requesters' replies, ratings and surveys",
             "when": "the satisfaction survey: on or off, scale, question, delay, window, bad-rating reasons, which queues",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "ratings-list": {
             "screen": "ratings-list",
@@ -637,7 +637,7 @@
                 "queue",
                 "period"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "queue-dashboard": {
@@ -4189,7 +4189,7 @@
             "approval": null,
             "log_event": "rating.submit",
             "who": "own",
-            "built": false
+            "built": true
         },
         "survey_send": {
             "action": "survey_send",
@@ -4208,7 +4208,7 @@
             "approval": "external_send",
             "log_event": "survey.send",
             "who": "work",
-            "built": false
+            "built": true
         },
         "csat_settings_save": {
             "action": "csat_settings_save",
@@ -4263,7 +4263,7 @@
             "approval": "other",
             "log_event": "csat_settings.save",
             "who": "admin",
-            "built": false
+            "built": true
         }
     }
 }

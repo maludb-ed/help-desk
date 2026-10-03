@@ -1,0 +1,64 @@
+<?php
+/** Proof — the link is the authority (spec "Proof", 2): the mailed token opens the ticket; malformed, unknown, rotated and expired → one dead-link page, 404, identical bytes; last_used_at moves; the page holds no note, CC, assignee surname, SLA, tag or custom value; another ticket's attachment by id → 404. */
+require __DIR__ . '/lib.php';
+$W = world();
+marco_in_general();
+$owner = as_member(1); $marco = as_member(27);
+$v = visitor();
+$txt = need('HD_DEV_STATE') . '/public.txt'; file_put_contents($txt, 'SMOKE public attachment');
+[$c, $b, $num] = file_request($v, 'linked@customer.invalid', 'SMOKE the linked one', [], [$txt]);
+$t = ticket_by_number($num);
+$token = mailed_token($t);
+echo "1. The mailed token opens the ticket\n";
+$r = secure_page($v, $token);
+ok($r['code'] === 200 && str_contains($r['body'], $num) && str_contains($r['body'], 'SMOKE the linked one') && str_contains($r['body'], 'id="public-reply-form"') && !str_contains($r['body'], 'nxl-navigation'), 'the secure page: the number, the subject, the reply box, no shell');
+$used = one('SELECT last_used_at FROM ticket_links_secure WHERE ticket_id = :t AND rotated_at IS NULL', ['t' => $t]);
+ok($used !== null, 'last_used_at stamped');
+$l = q("SELECT * FROM activity_log WHERE action = 'screen.view' AND screen = 'secure-ticket' ORDER BY id DESC LIMIT 1")[0] ?? null;
+ok($l !== null && (int) $l['ticket_id'] === $t && (int) $l['actor_requester_id'] === (int) ticket_row($t)['requester_id'] && $l['actor_member_id'] === null && $l['source'] === 'portal', 'screen.view logged with ticket_id and actor_requester_id, source portal');
+echo "2. Dead links: one page, 404, the same bytes\n";
+$pages = [];
+ok(secure_page($v, 'not-a-token')['code'] === 404 && secure_page($v, substr($token, 0, 47))['code'] === 404, 'a malformed or short token never reaches PHP: the router (as Apache) answers 404');
+foreach (['unknown' => str_repeat('a', 48), 'unknown2' => str_repeat('0', 47) . 'f'] as $k => $bad) {                 // 48 hex, so PHP answers (anything else the router refuses first)
+    $x = secure_page($v, $bad);
+    $pages[$k] = [$x['code'], $x['body']];
+}
+act($marco, '/tickets/secure-link.php', ['ticket' => $t]);                                                                   // rotated
+$x = secure_page($v, $token); $pages['rotated'] = [$x['code'], $x['body']];
+$fresh = mailed_token($t);
+q("UPDATE ticket_links_secure SET expires_at = now() - interval '1 day' WHERE ticket_id = :t AND rotated_at IS NULL", ['t' => $t]);
+$x = secure_page($v, $fresh); $pages['expired'] = [$x['code'], $x['body']];
+q("UPDATE ticket_links_secure SET expires_at = NULL WHERE ticket_id = :t AND rotated_at IS NULL", ['t' => $t]);
+$codes = array_values(array_unique(array_map(fn ($p) => $p[0], $pages))); $bodies = array_values(array_unique(array_map(fn ($p) => $p[1], $pages)));
+ok($codes === [404] && count($bodies) === 1 && str_contains($pages['unknown'][1], 'id="dead-link"') && str_contains($pages['unknown'][1], 'This link no longer works.'), 'unknown (twice), rotated, expired: 404 and identical bytes (' . implode(', ', array_map(fn ($k, $p) => $k . ' ' . $p[0] . ' ' . substr(md5($p[1]), 0, 8), array_keys($pages), $pages)) . ')');
+ok(secure_page($v, $fresh)['code'] === 200, 'the fresh link works again once its expiry is lifted');
+$token = $fresh;
+echo "3. The page holds only what a requester may see\n";
+act($marco, '/tickets/note.php', ['ticket' => $t, 'body' => 'SECRETNOTE check the fuse']);
+act($marco, '/tickets/cc.php', ['ticket' => $t, 'cc' => 'boss@customer.invalid']);
+act($marco, '/tickets/assign.php', ['ticket' => $t, 'assignee' => 'me']);
+act($marco, '/tickets/tags.php', ['ticket' => $t, 'tags' => 'secrettag']);
+act($owner, '/settings/fields/save.php', ['label' => 'SMOKE Internal ref', 'field_type' => 'text', 'applies_to' => 'ticket']);
+act($marco, '/tickets/fields.php', ['ticket' => $t, 'custom' => ['smoke_internal_ref' => 'SECRETVALUE']]);
+q("UPDATE sla_targets SET due_at = now() - interval '1 hour' WHERE ticket_id = :t AND metric = 'first_response'", ['t' => $t]);
+act($marco, '/tickets/reply.php', ['ticket' => $t, 'body' => 'SMOKE Marco answered: we are looking.']);
+$body = secure_page($v, $token)['body'];
+$leaks = array_filter(['SECRETNOTE', 'boss@customer.invalid', 'secrettag', 'SECRETVALUE', 'at_risk', 'breached', 'SLA', 'Marco Marco'], fn ($s) => str_contains($body, $s));
+ok($leaks === [] && str_contains($body, 'SMOKE Marco answered') && preg_match('/<span class="fw-semibold">SMOKE<\/span>/', $body) === 1, 'no note, CC, tag, custom value, SLA or surname — the reply shows under the first name only' . ($leaks ? ' — LEAKED: ' . implode(', ', $leaks) : ''));
+ok(!str_contains($body, 'href="/tickets/') && !str_contains($body, '/inbox'), 'no link into the application');
+echo "4. Attachments through the token\n";
+$aid = (int) one('SELECT id FROM attachments WHERE ticket_id = :t', ['t' => $t]);
+$r = req('GET', '/t/' . $token . '/attachment?id=' . $aid, ['jar' => $v]);
+ok($r['code'] === 200 && str_contains($r['body'], 'SMOKE public attachment') && preg_match('/^X-Content-Type-Options: nosniff/mi', $r['headers']) === 1, 'the ticket\'s own attachment downloads (nosniff)');
+$other = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE other', 'body' => 'x', 'queue' => $W['it']])[1]['record_id'];
+$txt = need('HD_DEV_STATE') . '/other.txt'; file_put_contents($txt, 'OTHERFILE');
+$oa = (int) upload($marco, '/tickets/attachments/save.php', ['ticket' => $other], $txt)[1]['attachment_id'];
+act($marco, '/tickets/reply.php', ['ticket' => $other, 'body' => 'with file', 'attachments' => [$oa]]);
+$r = req('GET', '/t/' . $token . '/attachment?id=' . $oa, ['jar' => $v]);
+ok($r['code'] === 404 && str_contains($r['body'], 'id="dead-link"'), 'another ticket\'s attachment by id: the dead-link page, 404');
+$noteFile = need('HD_DEV_STATE') . '/note.txt'; file_put_contents($noteFile, 'NOTEFILE');
+$na = (int) upload($marco, '/tickets/attachments/save.php', ['ticket' => $t], $noteFile)[1]['attachment_id'];
+act($marco, '/tickets/note.php', ['ticket' => $t, 'body' => 'a note with a file', 'attachments' => [$na]]);
+$r = req('GET', '/t/' . $token . '/attachment?id=' . $na, ['jar' => $v]);
+ok($r['code'] === 404, 'a file on a note of this ticket: 404 too');
+finish();

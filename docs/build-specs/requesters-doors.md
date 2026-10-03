@@ -135,33 +135,48 @@ staff beyond a first name on a reply, or a link into the application.
   survey (slice 8 calls `send_due_surveys()`); public knowledge base pages (slice 9); the magic-link "all my tickets" page
   for externals (Extended); the member's `my-tickets`, `ticket_confirm`, `ticket_reopen` (slice 3).
 
-## Proof (curl without a session for the public doors; live as members for the rest; headless Chromium at 375 × 740 and 1280 × 800)
-- **The form**: a submission creates one ticket (`channel form`, queue by the category's default, the requester external
-  and claimed by `customer.invalid`'s organization), one public message authored by the requester, one secure link row
-  (hash only), one outbox row whose body contains `/t/` + 48 hex and nothing of the ticket but the number; the thank-you
-  page shows the number and nothing else; a member's address lands on the member's requester row (no second row); the
-  honeypot filled → the same page, nothing created, outcome `honeypot`; the 6th submission from one address in an hour →
-  the same page, nothing created, outcome `rate_limited`; the 21st from one IP likewise; without the CSRF token → 403;
-  with the form off → the "taken by email" page and POST 404.
-- **The link is the authority**: the mailed token opens the ticket; a malformed, unknown, rotated or expired one → the
-  same dead-link page, 404, identical bytes; `last_used_at` moves; the page holds **no** note, no CC, no assignee surname,
-  no SLA, no tag (grep the HTML against the fixture: the note's text, Dana's surname, "at_risk", the custom value); an
-  attachment of another ticket by id → 404.
-- **Reply, confirm, reopen**: a reply on a pending ticket reopens it (`status open`, `last_requester_reply_at` set, the
-  assignee's `replied` outbox row); confirm on an open ticket → solved with `resolved`, `ticket.confirm` and
-  `ticket.transition via requester` logged with `actor_requester_id`; reopen within the window → open with the reason as a
-  reply; after the window (fixture `solved_at` 20 days back) → the closed-message page and POST 422; a reply on a closed
-  ticket → the "start a new request" page, nothing written; the 31st POST in an hour → 429.
-- **Rating**: the scale follows `csat_settings` (good_bad: two buttons; five_point: five); a bad score demands no reason
-  but offers the configured list; the row is written once (`responded_at`), a second POST says already received; the
-  survey mail's `?r=` token works once and not after `expires_at`; `rating.submit` logged; the assignee's `rated` notice queued.
-- **Members**: Priya rates her own solved ticket from `ticket-view`; Marco's `rating_submit` on it → 403; `ratings-list`
-  for Lena shows every rating with the CSAT percentage, for Marco IT's only, for Priya 403 *"You may not see reports."*;
-  `survey_send` on an unsolved ticket → 422 *"HD-1001 is not solved yet."*; an agent's `survey_send` → `pending_approval`.
-- **Settings**: a changed delay changes the next survey's timing (`send_due_surveys()` picks the ticket after the new
-  delay, not before); `csat_settings.save` carries only the changed fields; nothing changed → no row.
-- **375 px**: the public pages fit (no horizontal scroll), the rating buttons ≥ 44 px, the reply box full width; **1280 px** the same pages centred at a readable width.
-- JSON mode: `survey_send`, `rating_submit`, `csat_settings_save` answer the contract; `php bin/build_action_registry.php --check` passes.
+## Proof (`tests/phase3/slice6/run.sh`: the scratch database, slice 3's world, curl with an anonymous session for the public doors, members through dev hand-offs and action tokens for the rest, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-03: 130 checks green** (form 22, link 11, actions 19, rating 21, members 13, settings 12, json 8, browser 23, the registry); Phase 2's and slices 1–5's suites
+still green; the installer's `plan` clean.
+- [x] **The form.** GET: the form with a honeypot and a CSRF token, no shell; a submission with a category and a file → one ticket (channel form, routed by the category to IT at high, `created_by`
+  NULL, no submitter), the requester an external claimed by Customer Co's domain, one public message authored by the requester on the portal channel with its file, one secure link row (its hash
+  only), one `created` notice carrying `/t/` + 48 hex and the number and nothing else of the ticket, the mailed token the live link, `ticket.create` logged with `actor_requester_id`, source
+  portal and channel form, the ledger row with the IP; the thank-you page shows the number and the address as typed and nothing else; a member's address lands on their requester row (no
+  second row); the honeypot filled → the same page, nothing created, outcome honeypot; no CSRF → 403; validation → the form again with the errors (422); the sixth from one address in an hour →
+  the same page, nothing created, outcome rate_limited (the log never carries the address); past the IP limit a fresh address is limited too; the form off → *"Requests are taken by email at
+  help@example.invalid."* and POST 404.
+- [x] **The link is the authority.** The mailed token opens the page (the number, the subject, the reply box, no shell); `last_used_at` stamped; `screen.view` logged with `ticket_id` and
+  `actor_requester_id`; a malformed or short token never reaches PHP (the router, as Apache, answers 404); unknown (twice), rotated and expired → 404 and identical bytes; the fresh link works
+  again once its expiry is lifted; with a note, a CC, an assignee, a tag, a custom value and a breached SLA on the ticket the page shows none of them and the reply under the first name only; no
+  link into the application; the ticket's own attachment downloads (nosniff); another ticket's by id and a file on a note → the dead-link page.
+- [x] **Reply, confirm, reopen.** A reply with a file on a pending ticket: back to the page with the notice, the trigger reopens it, a public reply on the portal channel by the requester, the
+  assignee's `replied` notice, `ticket.reply` logged with `actor_requester_id` and channel portal, the page shows the notice and the reply as "You"; after a reply from us "Did this resolve
+  it?" — confirm → solved with resolved, `ticket.confirm` and `ticket.transition` (via requester) with `actor_requester_id` and no `actor_member_id`, the page shows the reopen box; reopen
+  within the window → open, reopen_count 1, the reason a public reply, `ticket.reopen` logged; after the window (solved 20 days back) → *"This was closed on … Start a new request"* and POST 422;
+  a reply on a closed ticket → the closed notice, nothing written, the page sends them to the form; thirty replies in an hour pass, the 31st → 429.
+- [x] **Rating.** `survey_send` on an unsolved ticket → 422 *"HD-… is not solved yet."*; no block on an open ticket; good_bad → two buttons and the question; the row made on first view of the
+  solved ticket (hash, expiry); the bad-reason list the configured one; five_point → five buttons; a bad rating with a reason and a comment written once, `rating.submit` logged with the score
+  and the reason, the assignee's `rated` bell notice; a second POST → already received, the row unchanged, the page says so; `survey_send` on a solved ticket → a survey notice carrying
+  `/t/{secure}/rate?r={rating token}` (a second live link — the created one still works), `survey.send` logged; again → 422; the survey page by the mailed link carries the rating token; a
+  wrong token → the dead-link page, nothing written; after `expires_at` dead; with the live token → rated Good, once only; a queue not surveyed → 422.
+- [x] **Members.** Priya's solved ticket shows the rating block (not on Marco's view); Marco's `rating_submit` on it → 403 *"Only the requester rates a ticket."*; Priya rates (written, logged,
+  Marco's bell), a second → *"Thank you — already received."*; `ratings-list`: Lena every rating, bad first, a CSAT percentage; Marco IT's only; Priya → 403 *"You may not see reports."*; the bad
+  filter; the ledger page; the CSV logged as `report.export`; the registry marks `survey_send` external_send and `csat_settings_save` other (the kernel pauses an agent by action).
+- [x] **Settings.** The screen with the live sentence and the queues; support and a requester → 403; the same values → *"Nothing changed"*, no row; a change → `csat_settings.save` with only the
+  changed fields; a delay out of range and an unknown scale → 422; queues chosen and cleared; `send_due_surveys()` leaves a ticket solved 3 minutes ago under a 5-minute delay and surveys it under
+  a 2-minute one (logged with source cron), a second run sends nothing, the survey off sends nothing.
+- [x] **JSON mode.** `rating_submit` (422 by field for a bad score; `{ok, did, record_id, score, location}`), `survey_send` (the sentence; `{ok, did, rating_id, location}`), `csat_settings_save`
+  (`{ok, did, changed}`, Nothing changed, 403 for support); the settings screen answers JSON.
+- [x] **375 × 740 and 1280 × 800.** The request form, the secure page and the dead-link page fit with every button ≥ 44 px and no shell; the desktop page centred at a readable width; the
+  form files a request and the thank-you page shows the number; the solved ticket shows the rating block; the reply box full width; no page errors.
+
+**Decisions taken while building (2026-10-03):** the rate limits are `app_settings.form_limit_per_email` / `form_limit_per_ip` (the schema had them; the open question is closed); the
+thank-you page for a refused submission (honeypot, rate-limited) is the same page without a number — there is no ticket to name; a malformed token is refused by the router and Apache before
+PHP, so "identical bytes" holds for every token PHP sees; the survey mail carries an **extra** live secure link (`mint_extra_secure_link()`) — `hd_secure_link_mint()` rotates earlier links
+and would kill the requester's created mail; the abuse guard counts the writes through the link (reply, confirm, reopen, rate) in the activity trail, never the form's create; the `rated`
+notice is the assignee's bell (mail follows their preferences, as every notice does); the worker's `survey.send` rows carry source `cron` (the schema's list); `create_ticket()` takes a nullable
+actor (`created_by NULL` for the form) and a form's first message is on the portal channel; `transition_ticket()` for the requester's own confirm and reopen passes `checkRight = false` with via
+requester (no new option was needed); the public POSTs render the page themselves on a refusal (422) and redirect back with a notice on success; `t/rate.php` on GET is the ticket page.
 
 ## Open questions
 - Rate limits: 5 an hour per address and 20 per IP are proposals; the owner names the numbers (settings, not constants —

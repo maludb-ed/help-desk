@@ -104,7 +104,7 @@ Schema: `canned_responses` (db/011), `custom_field_defs` (db/009), `tickets.cust
   / `field-edit`); a canned response that sends an **article** (`article_send`, slice 9); templates with attachments (Later).
 
 ## Proof (`tests/phase3/slice5/run.sh`: the scratch database, slice 3's world, members through dev hand-offs, curl with signed action and run tokens and HTMX-shaped posts, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
-**Built and proven 2026-10-03: 100 checks green** (scope 22, render 12, apply 19, bulk 19, fields 11, json 10, browser 6, the registry); Phase 2's, slices 1–4's suites still green; the
+**Built and proven 2026-10-03: 116 checks green** (scope 22, render 12, apply 19, bulk 19, fields 11, json 10, browser 22, the registry); Phase 2's, slices 1–4's suites still green; the
 installer's `plan` clean.
 - [x] **Scope and rights.** Marco's personal response is on his list and not on Lena's (a direct URL → 404 *"Canned response not found."*); his `scope=global` → 403 *"Sharing with everyone
   needs the Lead role."*, `scope=queue` for IT (he is no lead) → 403; Lena (IT's lead) saves a queue response for IT and is refused one for Facilities (422, she does not hold it); an IT-queue

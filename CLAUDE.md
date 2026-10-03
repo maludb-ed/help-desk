@@ -68,8 +68,8 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; slices 1 (queues and people), 2 (the vocabulary), 3 (tickets core, THE EXEMPLAR), 4 (views and the board) and 5 (working faster) BUILT and proven** —
-  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (47 screens + 73 actions built, 5 placeholders),
+- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; slices 1 (queues and people), 2 (the vocabulary), 3 (tickets core, THE EXEMPLAR), 4 (views and the board), 5 (working faster) and 6 (the requesters' doors) BUILT and proven** —
+  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (49 screens + 76 actions built, 4 placeholders),
   the shell (Phase 2), slices 1–2, slice 3 (`app/features/tickets/{queries,present,write,transition,dispatch,handler}.php`, `app/features/messages/`, `html/tickets/`, `html/inbox.php`;
   the prelude `tickets/handler.php` loads every feature a ticket reads; `ticket_from_request()` → `require_work()` → `hd_guard()` → `ticket_log()` (ticket_id + queue_id on every row) → `ticket_done()`),
   slice 4 (`app/features/views/{filters,queries,board,present}.php` — `view_filters_sql()` is THE translator of filters to SQL, slice 3's `ticket_where()` delegates to it; `html/views/`, `html/board.php`,
@@ -77,8 +77,11 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   slice 5 (`app/features/canned/{queries,present,render}.php` — `canned_render()` over exactly thirteen placeholders, `canned_side_effects()` through slice 3's functions under savepoints;
   `app/features/bulk/{queries,handler}.php` — `bulk_apply()` one transaction a ticket; `html/canned/`, `html/bulk/`; the composer's picker inserts at the caret and its chips ride on `ticket_reply`
   as `canned_id` + `apply_side_effects`; `required_on_solve` enforced in `transition_ticket()` after the code; the agent pauses are the kernel hook's by action key — never a faked 202),
-  the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (100) — green 2026-10-03;
-  the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: slice 6 (`docs/build-specs/requesters-doors.md`), then 7–10.**
+  slice 6 (`app/features/public/{queries,form,secure}.php` — nobody is signed in: the base tables, never the mcp views; `render_public()` in the bare `app/views/public-layout.php`; the secure
+  link is the only authority, one dead-link page for every bad token PHP sees; `app/features/ratings/{queries,present}.php` — `send_survey()` mints an EXTRA live link (the mint rotates);
+  `html/request.php`, `html/t.php`, `html/t/`, `html/ratings/`, `html/settings/csat.php`; the public POSTs log with `actor_requester_id` and source portal),
+  the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (116), `slice6/run.sh` (130) — green 2026-10-03;
+  the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: slice 7 (`docs/build-specs/email-notifications.md`), then 8–10.**
   Owed: the live launch (▲) after the owner's `apply`.
 - Proofs: `tests/phase2/run.sh` is the regression (sso, gates, sync, ingest, kernel_compat, vhost, browser.mjs, the registry check; the fakes `tests/fake_kernel.php`, `tests/fake_maludb.php`; ports 8291–8297). `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
   `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.

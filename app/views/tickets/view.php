@@ -26,6 +26,7 @@ $id = (int) $facts['ticket_id']; $sla = $t['sla_state']; $isNew = $facts['status
     </div>
     <?php endif; ?>
     <?php if ($own && !$work): ?>
+    <?php if ($own && in_array($facts['status_category'], ['solved', 'closed'], true) && $facts['requester_member_id'] === (int) current_member_id() && queue_surveyed($csat ?? find_csat_settings(db()), $facts['queue_id'])): ?><?= view('ratings/partials/rating-block.php', ['t' => $facts, 'rating' => find_rating_for_ticket(db(), $id), 'cs' => $csat ?? find_csat_settings(db())]) ?><?php endif; ?>
     <div class="d-flex flex-wrap gap-1 mb-3" id="ticket-own-actions">
         <?php if (in_array($facts['status_category'], ['pending', 'open', 'on_hold'], true) && $t['last_agent_reply_at'] !== null): ?><form method="post" action="/tickets/confirm.php" hx-post="/tickets/confirm.php" hx-target="#flash"><?= csrf_field() ?><input type="hidden" name="ticket" value="<?= $id ?>"><button type="submit" class="btn btn-success btn-touch" id="ticket-confirm-btn"><i class="feather-check me-1"></i>Confirm it is resolved</button></form><?php endif; ?>
         <?php if ($facts['status_category'] === 'solved'): ?><form method="post" action="/tickets/reopen.php" hx-post="/tickets/reopen.php" hx-target="#flash"><?= csrf_field() ?><input type="hidden" name="ticket" value="<?= $id ?>"><button type="submit" class="btn btn-light btn-touch" id="ticket-reopen-btn"><i class="feather-rotate-ccw me-1"></i>Reopen</button></form><?php endif; ?>

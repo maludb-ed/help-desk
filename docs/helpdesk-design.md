@@ -367,12 +367,19 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 6 (the requesters' doors) — BUILT and proven 2026-10-03** (`docs/build-specs/requesters-doors.md`): the public request form (anonymous session for CSRF, honeypot, the rate limits from
+`app_settings`, channel form, the created notice carrying the secure link), the secure ticket page (`/t/{token}`: the whitelist of what a requester sees, reply with files, confirm, reopen within
+the window, rate; one dead-link page; the abuse guard), the bare public layout, ratings (the row made on first view of a solved ticket or by the survey, written once, the one-time survey token,
+`send_survey()` / `send_due_surveys()` for slice 8's worker, the ratings ledger with the CSAT percentage and a CSV), the survey settings, the member's rating block on the ticket page; 3 actions,
+4 screens. **Proof:** `tests/phase3/slice6/run.sh` — 130 checks green; Phase 2 (250), slices 1 (211), 2 (129), 3 (223), 4 (114) and 5 (116) still green; the installer's `plan` clean. Next:
+slice 7 (`email-notifications.md`).
+
 **Slice 5 (working faster) — BUILT and proven 2026-10-03** (`docs/build-specs/working-faster.md`): canned responses (personal, a queue's, everyone's; the list by folder with the
 side-effect chips; the form with the placeholder helper, side-effects and a live preview against a sample ticket; `canned_render()` over exactly the thirteen placeholders), apply from the
 composer's Canned picker (insert at the caret, the chips travelling with the reply) or by voice (`send=no` the text, `send=yes` a public reply through slice 3's `add_message()` with the
 side-effects through slice 3's functions, each under a savepoint — a forbidden move skipped and named), bulk update from the inbox's selection (per-ticket transactions, a result page with
 ✓ or the sentence), the custom fields of the chosen type on the ticket forms and `required_on_solve` enforced by `transition_ticket()`; 5 actions, 4 screens. **Proof:**
-`tests/phase3/slice5/run.sh` — 100 checks green; Phase 2 (250), slices 1 (211), 2 (129), 3 (223) and 4 (114) still green; the installer's `plan` clean. Next: slice 6 (`requesters-doors.md`).
+`tests/phase3/slice5/run.sh` — 116 checks green; Phase 2 (250), slices 1 (211), 2 (129), 3 (223) and 4 (114) still green; the installer's `plan` clean. Next: slice 6 (`requesters-doors.md`).
 
 **Slice 4 (views and the board) — BUILT and proven 2026-10-03** (`docs/build-specs/views-board.md`): the one translator (`app/features/views/filters.php`; slice 3's inbox reads through
 it), saved views (standard, mine, my queues'; the list as cards with counts, the form with one row per filter key, sort, columns, layout and board settings; a standard view copied, never

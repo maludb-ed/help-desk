@@ -218,3 +218,8 @@ details > summary::-webkit-details-marker { display: none; }
 .chip-check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .chip-check { cursor: pointer; }
 .chip-check:has(input:checked) { background: var(--bs-primary, #3454d1); color: #fff; border-color: var(--bs-primary, #3454d1); }
+
+/* Help Desk slice 6 (2026-10-03) — the public doors: a bare, centred page at a readable width. */
+.public-body { background: var(--bs-light, #f5f6fa); }
+.public-main { max-width: 720px; margin: 0 auto; padding: 1rem 16px 2rem; }
+.public-main .card { border-radius: .75rem; }
