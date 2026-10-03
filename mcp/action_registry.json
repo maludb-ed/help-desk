@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T12:26:18+00:00",
+    "generated_at": "2026-10-03T15:56:23+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -8,7 +8,7 @@
             "section": "Home, my tickets and settings",
             "when": "their home: what needs them (support), their open tickets (anyone), a new request button, the knowledge base search",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "my-tickets": {
@@ -19,7 +19,7 @@
             "params": [
                 "state"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "settings": {
@@ -30,7 +30,7 @@
             "params": [
                 "tab"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "tokens": {
@@ -39,7 +39,7 @@
             "section": "Home, my tickets and settings",
             "when": "their own access tokens for the two MCP servers",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "notifications": {
@@ -48,7 +48,7 @@
             "section": "Home, my tickets and settings",
             "when": "their in-app notifications, unread first",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "activity": {
@@ -60,7 +60,7 @@
                 "ticket",
                 "period"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "general-settings": {
@@ -79,7 +79,7 @@
             "when": "which agents work here, their queues, their last dispatch and run (read-only; hiring and grants link to the kernel)",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "organizations-list": {
             "screen": "organizations-list",
@@ -91,7 +91,7 @@
                 "tier"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "organization-add": {
             "screen": "organization-add",
@@ -131,7 +131,7 @@
                 "organization"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "requester-view": {
             "screen": "requester-view",
@@ -169,7 +169,7 @@
             "when": "the queues as cards: department, members, open count, assignment method",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "queue-add": {
             "screen": "queue-add",
@@ -205,7 +205,7 @@
             "when": "the SLA policies in match order and the business-hours schedules",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "sla-policy-add": {
             "screen": "sla-policy-add",
@@ -243,7 +243,7 @@
             "when": "the statuses in board order with their category and clock, and the transitions matrix",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "status-add": {
             "screen": "status-add",
@@ -281,7 +281,7 @@
                 "tab"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "category-add": {
             "screen": "category-add",
@@ -310,7 +310,7 @@
             "when": "the custom field definitions for tickets, organizations and requesters",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "field-add": {
             "screen": "field-add",
@@ -347,7 +347,7 @@
                 "sort"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "ticket-add": {
             "screen": "ticket-add",
@@ -362,7 +362,7 @@
                 "from_inbound"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "ticket-view": {
             "screen": "ticket-view",
@@ -380,7 +380,7 @@
             "when": "to change a ticket's subject, requester, organization, type, category, custom fields or due date",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "ticket-merge": {
             "screen": "ticket-merge",
@@ -406,7 +406,7 @@
                 "q"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "views-list": {
             "screen": "views-list",
@@ -448,7 +448,7 @@
                 "folder"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "canned-add": {
             "screen": "canned-add",
@@ -486,7 +486,7 @@
             "when": "the queues' mailboxes and their last poll",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "mailbox-add": {
             "screen": "mailbox-add",
@@ -525,7 +525,7 @@
             "when": "the rules as cards: kind, event, run count, last run, on or off",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "rule-add": {
             "screen": "rule-add",
@@ -565,7 +565,7 @@
                 "q"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "kb-section": {
             "screen": "kb-section",
@@ -625,7 +625,7 @@
             "when": "the satisfaction survey: on or off, scale, question, delay, window, bad-rating reasons, which queues",
             "params": [],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "ratings-list": {
             "screen": "ratings-list",
@@ -649,7 +649,7 @@
                 "queue"
             ],
             "built": false,
-            "stub": false
+            "stub": true
         },
         "reports": {
             "screen": "reports",
@@ -709,7 +709,7 @@
             "approval": null,
             "log_event": "prefs.save",
             "who": "own",
-            "built": false
+            "built": true
         },
         "token_mint": {
             "action": "token_mint",
@@ -734,7 +734,7 @@
             "approval": null,
             "log_event": "token.mint",
             "who": "own",
-            "built": false
+            "built": true
         },
         "token_revoke": {
             "action": "token_revoke",
@@ -753,7 +753,7 @@
             "approval": null,
             "log_event": "token.revoke",
             "who": "own",
-            "built": false
+            "built": true
         },
         "notification_read": {
             "action": "notification_read",
@@ -772,7 +772,7 @@
             "approval": null,
             "log_event": "notification.read",
             "who": "own",
-            "built": false
+            "built": true
         },
         "settings_save": {
             "action": "settings_save",

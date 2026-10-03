@@ -367,6 +367,14 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Phase 2 — BUILT and proven 2026-10-03** (`docs/build-specs/sso-shell.md`): the nxl shell phone first (the tab bar Home · My tickets · New · Knowledge · More,
+the sidebar from 992 px with the groups Help / Work / Settings / Me shown by right, the role badge, the bell, the command bar through the kernel's chat
+endpoint), the dashboard's three regions as empty states, My tickets and Notifications as empty shapes, My settings (how I am told: `prefs_save`), Tokens
+(`token_mint`/`token_revoke`), Activity, `notification_read`, own sign-out, the web manifest and icons (the life-buoy stand-in), the design-system assets,
+18 placeholder screens that name their slice. **Proof:** `tests/phase2/run.sh` — 250 checks green under `php -S` and under a real Apache serving the rendered vhost
+(`HD_APP=apache`): sso 43, gates 79 (the 23 screens × 5 roles matrix), sync 25, ingest 12, kernel_compat 9, vhost 31, browser 51 (375 × 740 and 1280 × 800, JS off,
+installable), the registry check; the installer's `plan` 60 steps, no stop. Owed: ▲ the live launch after the owner's `apply`. Next: slice 1 (`queues-people.md`).
+
 **Phase 1 — APPROVED by the owner 2026-10-03** (one word, "Approved"; silence on the ten questions = every proposal stands: spam mark-only,
 follow-up tickets never reopens, plain-text composer, the mailbox's signature, tables-only reports, 5/20 form limits, a queue lead sees their
 queue's dashboard, KB noindex + vote counts, silent auto-close, `feather-life-buoy`). Phase 2 began the same day.

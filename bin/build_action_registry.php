@@ -109,7 +109,7 @@ foreach ($lines as $no => $line) {
             'approval' => $cells[5] === '' ? null : $cells[5],
             'log_event' => trim($cells[6], '`'),
             'who' => $cells[7],
-            'built' => $endpoint !== null && is_file(WEB_ROOT . $endpoint),
+            'built' => $endpoint !== null && is_file(WEB_ROOT . $endpoint) && !is_stub(WEB_ROOT . $endpoint),   // a placeholder screen's file is not a built action (csat_settings_save shares /settings/csat.php with its screen)
         ];
     }
 }

@@ -112,24 +112,34 @@ state, or 403 by the right); the registry builder reads a placeholder as unbuilt
 Every ticket, queue and settings screen (slices 1–10); the public doors' handlers (6, 7, 9); the bell's contents (7); the two MCP servers
 (Phase 4 — `maludb-os.json` lists no MCP endpoint until then).
 
-## Proof before Phase 3 (`tests/phase2/run.sh` on a scratch database, against `php -S` with `tests/dev_router.php` and against a private Apache serving `deploy/apache-helpdesk.conf` rendered as the installer renders it)
+## Proof before Phase 3 (`tests/phase2/run.sh` on a scratch database, against `php -S` with `tests/dev_router.php` and — `HD_APP=apache` — against a private Apache serving `deploy/apache-helpdesk.conf` rendered as the installer renders it)
+**Built and proven 2026-10-03: 250 checks, green under both servers** (sso 43, gates 79, sync 25, ingest 12, kernel_compat 9, vhost 31, browser 51; the registry check).
 - [x] *(Phase 0, `tests/phase0/run.sh`, 15 checks)* a hand-off minted the kernel's way opens a session once; replay, another audience, an unknown member and a
   tampered signature → 403 with one page and the reason logged; the sign-out notice → 204 and `ended_by = 'kernel'`; a bad notice → 204; health 200.
-- [ ] The kernel-compat mint: a token from the kernel's own `mint_sso_token()`/`sign_sso_claims()` (its `app/auth.php` in a CLI) opens a session;
+- [x] The kernel-compat mint: a token from the kernel's own `mint_sso_token()`/`sign_sso_claims()` (its `app/auth.php` in a CLI) opens a session;
   `claims.roles = ['support','user']` lands in `members.roles` and `has_right('tickets.work')` is true; `['user']` → false; `{}` with capability
-  `admin` → every right.
-- [ ] The dashboard at 375 × 740 and 1280 × 800 (headless Chromium): `scrollWidth` = viewport, the tab bar on the phone and the sidebar on the desktop,
+  `admin` → every right (`tests/phase2/kernel_compat.php`).
+- [x] The dashboard at 375 × 740 and 1280 × 800 (headless Chromium): `scrollWidth` = viewport, the tab bar on the phone and the sidebar on the desktop,
   the command bar thumb-reachable, HTMX navigation pushing URL and title, no console errors; the page whole with JavaScript off; a requester-only
-  member sees Help and My settings only; a support member sees Work; an admin sees Settings — every other URL → 403 in the right's sentence.
-- [ ] `bin/directory_sync.php --full` applies the fixture; an `access[]` row with `capability: null` ends the member's sessions and their next request
-  → 302 to the launcher; a role change reaches `members.roles` in one pass; the cursor advances; a second run applies 0.
-- [ ] The ingest ships rows tagged `helpdesk` with `ticket_id`/`queue_id` keys and advances the checkpoint only past what a fake MaluDB accepted;
-  `/api/v1/health` answers `ingest_lag` and the sync state.
-- [ ] The command bar against a stubbed kernel (`tests/fake_kernel.php` answering `/api/v1/agents/chat.php`): a reply rendered, a paused action shown,
-  a 409 shown in the kernel's words; `assistant.ask` logged without the text.
-- [ ] `token_mint` shows the value once and `my_tokens` never; the minted token opens the records server (Phase 4) — until then, `mcp_resolve_token()` by SQL.
-- [ ] `php bin/build_action_registry.php --check` passes; the placeholders read as unbuilt; `php /var/www/bin/app_install.php plan /srv/apps/helpdesk` — no stop.
+  member sees Help and My settings only; a support member sees Work; an admin sees Settings — every other URL → 403 in the right's sentence
+  (`browser.mjs`; the 23-screen × 5-role matrix in `gates.php`).
+- [x] `bin/directory_sync.php --full` applies the fixture; an `access[]` row with `capability: null` ends the member's sessions and their next request
+  → 302 to the launcher; a role change reaches `members.roles` in one pass (an open session sees Reports at once); the cursor advances; a second run applies 0 (`sync.php`).
+- [x] The ingest ships rows tagged `helpdesk` with `ticket_id`/`queue_id` keys and advances the checkpoint only past what a fake MaluDB accepted;
+  `/api/v1/health` answers `ingest_lag` and the sync state (`ingest.php`).
+- [x] The command bar against a stubbed kernel (`tests/fake_kernel.php` answering `/api/v1/agents/chat.php`): a reply rendered, a paused action shown
+  as "waits for approval" with the request number, a 404 and a 409 shown in the kernel's words; `assistant.ask` logged with the length and run id, never the text (`gates.php`).
+- [x] `token_mint` shows the value once and `my_tokens` never; `mcp_resolve_token()` by SQL resolves the minted token and not the revoked one (the records server is Phase 4).
+- [x] `php bin/build_action_registry.php --check` passes; the 18 placeholders read as unbuilt (6 screens built, 4 actions); `php /var/www/bin/app_install.php plan /srv/apps/helpdesk` — 60 steps, no stop.
 - [ ] ▲ (the installed application on the live kernel — the owner's `apply`): a real launch from `app.<domain>`, the return trip with `?app=helpdesk`.
+
+**Decisions taken while building (2026-10-03):** the placeholders are real controllers calling `render_nav_stub()` (200 after the right, 501 `not_built` to
+JSON and to a POST — `csat_settings_save` shares its file with its screen, so the registry builder now reads a stub file as an unbuilt ACTION too);
+the menu's three groups gain a fourth, **Me** (Notifications, Tokens, Activity), shown to everyone — the spec's `/notifications`, `/settings/tokens/`
+and `/activity` had no menu item; the phone's tabs read Home · My tickets · New · Knowledge · More; the role badge is the highest role held (a super-admin
+wears "Super-admin"); a token's scope may be `mcp` or `api` as the manifest says (the form offers mcp); the activity screen is the member's OWN trail
+by default, `?ticket=` opens a ticket's history through the view's rule; the fixture gained a lead (28) and a collaborator (29) for the gates matrix;
+`tests/dev_router.php` answers 404 for a rewrite whose file is not built, as Apache does; the command bar's field is `utterance`.
 
 ## Open questions
 - The theme's logo: Help Desk needs its own mark (the owner's artwork); `feather-life-buoy` stands in.

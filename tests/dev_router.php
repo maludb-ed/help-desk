@@ -11,13 +11,14 @@ if ($path !== '/' && is_file($root . $path)) {
     return false;                                             // a static file or a real .php file
 }
 $map = ['/sso' => '/sso.php', '/sso/logout' => '/sso/logout.php', '/api/v1/health' => '/api/v1/health.php', '/request' => '/request.php', '/channels/malumail/mail' => '/channels/malumail-mail.php'];
-if (preg_match('#^/t/([a-f0-9]{48})(?:/(reply|confirm|reopen|rate|attachment))?$#', $path, $m)) { $_GET['token'] = $m[1]; $_REQUEST['token'] = $m[1]; $t = isset($m[2]) ? "/t/{$m[2]}.php" : '/t.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
-if (preg_match('#^/settings/automation/([0-9]+)/runs$#', $path, $m)) { $_GET['id'] = $m[1]; $_REQUEST['id'] = $m[1]; $t = '/settings/automation/runs.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
-if (preg_match('#^/reports/([a-z_]+)$#', $path, $m) && !is_file($root . "/reports/{$m[1]}.php")) { $_GET['report'] = $m[1]; $_REQUEST['report'] = $m[1]; $t = '/reports/report.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
-if (preg_match('#^/kb/s/([a-z0-9-]+)$#', $path, $m)) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $t = '/kb/section.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
-if (preg_match('#^/kb/([a-z0-9-]+)$#', $path, $m) && !is_file($root . "/kb/{$m[1]}.php") && !is_dir($root . "/kb/{$m[1]}")) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $t = '/kb/article.php'; $_SERVER['SCRIPT_NAME'] = $t; $_SERVER['SCRIPT_FILENAME'] = $root . $t; chdir(dirname($root . $t)); require $root . $t; return true; }
 $rel = rtrim($path, '/') ?: '/';
-if (isset($map[$rel])) { $target = $map[$rel]; }
+// The slug rewrites (the vhost's rules outside the canonical shape): a target its slice has not built yet answers 404 below, as Apache does.
+if (preg_match('#^/t/([a-f0-9]{48})(?:/(reply|confirm|reopen|rate|attachment))?$#', $path, $m)) { $_GET['token'] = $m[1]; $_REQUEST['token'] = $m[1]; $target = isset($m[2]) ? "/t/{$m[2]}.php" : '/t.php'; }
+elseif (preg_match('#^/settings/automation/([0-9]+)/runs$#', $path, $m)) { $_GET['id'] = $m[1]; $_REQUEST['id'] = $m[1]; $target = '/settings/automation/runs.php'; }
+elseif (preg_match('#^/reports/([a-z_]+)$#', $path, $m) && !is_file($root . "/reports/{$m[1]}.php")) { $_GET['report'] = $m[1]; $_REQUEST['report'] = $m[1]; $target = '/reports/report.php'; }
+elseif (preg_match('#^/kb/s/([a-z0-9-]+)$#', $path, $m)) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $target = '/kb/section.php'; }
+elseif (preg_match('#^/kb/([a-z0-9-]+)$#', $path, $m) && !is_file($root . "/kb/{$m[1]}.php") && !is_dir($root . "/kb/{$m[1]}")) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $target = '/kb/article.php'; }
+elseif (isset($map[$rel])) { $target = $map[$rel]; }
 elseif ($rel === '/') { $target = '/index.php'; }
 elseif (preg_match('#^/(.+)/new$#', $rel, $m) && is_file($root . '/' . $m[1] . '/form.php')) { $target = '/' . $m[1] . '/form.php'; }
 elseif (preg_match('#^/(.+)/([0-9]+)/edit$#', $rel, $m) && is_file($root . '/' . $m[1] . '/form.php')) { $target = '/' . $m[1] . '/form.php'; $_GET['id'] = $m[2]; $_REQUEST['id'] = $m[2]; }
@@ -25,6 +26,7 @@ elseif (preg_match('#^/(.+)/([0-9]+)$#', $rel, $m) && is_file($root . '/' . $m[1
 elseif (is_file($root . $rel . '.php')) { $target = $rel . '.php'; }
 elseif (is_file($root . $rel . '/index.php')) { $target = $rel . '/index.php'; }
 else { http_response_code(404); echo 'Not found'; return true; }
+if (!is_file($root . $target)) { http_response_code(404); echo 'Not found'; return true; }     // a rewrite to a file its slice has not built yet: 404, as Apache answers
 $_SERVER['SCRIPT_NAME'] = $target;
 $_SERVER['SCRIPT_FILENAME'] = $root . $target;
 chdir(dirname($root . $target));

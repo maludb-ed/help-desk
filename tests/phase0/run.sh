@@ -28,7 +28,7 @@ echo "== the kit without a kernel"
 cd "$ROOT"
 php bin/directory_sync.php --from-file bin/dev_directory.json >/dev/null 2>&1; check "$?" "0" "the directory fixture applies"
 members=$(sudo -n -u postgres psql -d "$HD_DEV_DB" -Atc "select count(*) from members where capability is not null")
-check "$members" "5" "five members admitted from the fixture"
+check "$members" "7" "seven members admitted from the fixture"
 roles=$(sudo -n -u postgres psql -d "$HD_DEV_DB" -Atc "select roles::text from members where id = 27")
 check "$roles" "{support,user}" "Marco holds support and user from access[]"
 php -S 127.0.0.1:$PORT -t html tests/dev_router.php >/tmp/helpdesk-phase0-server.log 2>&1 &

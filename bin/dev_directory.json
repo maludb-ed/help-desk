@@ -1,44 +1,435 @@
 {
   "claims": {
-    "1":  {"display_name": "SMOKE Owner", "email": "owner@example.invalid", "business_role": "super_admin", "is_external": false,
-           "status": "active", "departments": [{"id": 5, "name": "IT", "is_admin": true}], "capability": "admin", "role": "admin",
-           "roles": ["admin"], "rights": [], "scopes": [], "scope": null},
-    "26": {"display_name": "SMOKE Priya", "email": "priya@example.invalid", "business_role": "user", "is_external": false,
-           "status": "active", "departments": [{"id": 6, "name": "Facilities", "is_admin": false}], "capability": "write", "role": "user",
-           "roles": ["user"], "rights": [], "scopes": [], "scope": null},
-    "27": {"display_name": "SMOKE Marco", "email": "marco@example.invalid", "business_role": "user", "is_external": false,
-           "status": "active", "departments": [{"id": 5, "name": "IT", "is_admin": false}], "capability": "write", "role": "support",
-           "roles": ["support", "user"], "rights": [], "scopes": [], "scope": null},
-    "31": {"display_name": "SMOKE Ext", "email": "ext@customer.invalid", "business_role": "user", "is_external": true,
-           "status": "active", "departments": [], "capability": "write", "role": "user", "roles": ["user"], "rights": [], "scopes": [], "scope": null}
+    "1": {
+      "display_name": "SMOKE Owner",
+      "email": "owner@example.invalid",
+      "business_role": "super_admin",
+      "is_external": false,
+      "status": "active",
+      "departments": [
+        {
+          "id": 5,
+          "name": "IT",
+          "is_admin": true
+        }
+      ],
+      "capability": "admin",
+      "role": "admin",
+      "roles": [
+        "admin"
+      ],
+      "rights": [],
+      "scopes": [],
+      "scope": null
+    },
+    "26": {
+      "display_name": "SMOKE Priya",
+      "email": "priya@example.invalid",
+      "business_role": "user",
+      "is_external": false,
+      "status": "active",
+      "departments": [
+        {
+          "id": 6,
+          "name": "Facilities",
+          "is_admin": false
+        }
+      ],
+      "capability": "write",
+      "role": "user",
+      "roles": [
+        "user"
+      ],
+      "rights": [],
+      "scopes": [],
+      "scope": null
+    },
+    "27": {
+      "display_name": "SMOKE Marco",
+      "email": "marco@example.invalid",
+      "business_role": "user",
+      "is_external": false,
+      "status": "active",
+      "departments": [
+        {
+          "id": 5,
+          "name": "IT",
+          "is_admin": false
+        }
+      ],
+      "capability": "write",
+      "role": "support",
+      "roles": [
+        "support",
+        "user"
+      ],
+      "rights": [],
+      "scopes": [],
+      "scope": null
+    },
+    "31": {
+      "display_name": "SMOKE Ext",
+      "email": "ext@customer.invalid",
+      "business_role": "user",
+      "is_external": true,
+      "status": "active",
+      "departments": [],
+      "capability": "write",
+      "role": "user",
+      "roles": [
+        "user"
+      ],
+      "rights": [],
+      "scopes": [],
+      "scope": null
+    },
+    "28": {
+      "display_name": "SMOKE Lena",
+      "email": "lena@example.invalid",
+      "business_role": "user",
+      "is_external": false,
+      "status": "active",
+      "departments": [
+        {
+          "id": 5,
+          "name": "IT",
+          "is_admin": false
+        }
+      ],
+      "capability": "write",
+      "role": "lead",
+      "roles": [
+        "lead",
+        "support",
+        "user"
+      ],
+      "rights": [],
+      "scopes": [],
+      "scope": null
+    },
+    "29": {
+      "display_name": "SMOKE Colin",
+      "email": "colin@example.invalid",
+      "business_role": "user",
+      "is_external": false,
+      "status": "active",
+      "departments": [
+        {
+          "id": 6,
+          "name": "Facilities",
+          "is_admin": false
+        }
+      ],
+      "capability": "write",
+      "role": "collaborator",
+      "roles": [
+        "collaborator",
+        "user"
+      ],
+      "rights": [],
+      "scopes": [],
+      "scope": null
+    }
   },
   "feed": {
-    "schema": "os.directory-changes/1", "since": null, "next": "2026-01-01T00:00:00.000000Z", "full": true,
+    "schema": "os.directory-changes/1",
+    "since": null,
+    "next": "2026-01-01T00:00:00.000000Z",
+    "full": true,
     "members": [
-      {"id": 1, "display_name": "SMOKE Owner", "email": "owner@example.invalid", "member_kind": "human", "business_role": "super_admin", "is_external": false, "status": "active", "job_title": null, "phone": null, "timezone": "UTC", "departments": [{"id": 5, "name": "IT", "is_admin": true, "is_primary": true}], "updated_at": "2026-01-01T00:00:00Z"},
-      {"id": 26, "display_name": "SMOKE Priya", "email": "priya@example.invalid", "member_kind": "human", "business_role": "user", "is_external": false, "status": "active", "job_title": null, "phone": null, "timezone": "UTC", "departments": [{"id": 6, "name": "Facilities", "is_admin": false, "is_primary": true}], "updated_at": "2026-01-01T00:00:00Z"},
-      {"id": 27, "display_name": "SMOKE Marco", "email": "marco@example.invalid", "member_kind": "human", "business_role": "user", "is_external": false, "status": "active", "job_title": null, "phone": null, "timezone": "UTC", "departments": [{"id": 5, "name": "IT", "is_admin": false, "is_primary": true}], "updated_at": "2026-01-01T00:00:00Z"},
-      {"id": 31, "display_name": "SMOKE Ext", "email": "ext@customer.invalid", "member_kind": "human", "business_role": "user", "is_external": true, "status": "active", "job_title": null, "phone": null, "timezone": "UTC", "departments": [], "updated_at": "2026-01-01T00:00:00Z"},
-      {"id": 40, "display_name": "SMOKE Frontline", "email": null, "member_kind": "agent", "business_role": "user", "is_external": false, "status": "active", "job_title": null, "phone": null, "timezone": "UTC", "departments": [{"id": 5, "name": "IT", "is_admin": false, "is_primary": true}], "updated_at": "2026-01-01T00:00:00Z"}
+      {
+        "id": 1,
+        "display_name": "SMOKE Owner",
+        "email": "owner@example.invalid",
+        "member_kind": "human",
+        "business_role": "super_admin",
+        "is_external": false,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [
+          {
+            "id": 5,
+            "name": "IT",
+            "is_admin": true,
+            "is_primary": true
+          }
+        ],
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 26,
+        "display_name": "SMOKE Priya",
+        "email": "priya@example.invalid",
+        "member_kind": "human",
+        "business_role": "user",
+        "is_external": false,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [
+          {
+            "id": 6,
+            "name": "Facilities",
+            "is_admin": false,
+            "is_primary": true
+          }
+        ],
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 27,
+        "display_name": "SMOKE Marco",
+        "email": "marco@example.invalid",
+        "member_kind": "human",
+        "business_role": "user",
+        "is_external": false,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [
+          {
+            "id": 5,
+            "name": "IT",
+            "is_admin": false,
+            "is_primary": true
+          }
+        ],
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 28,
+        "display_name": "SMOKE Lena",
+        "email": "lena@example.invalid",
+        "member_kind": "human",
+        "business_role": "user",
+        "is_external": false,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [
+          {
+            "id": 5,
+            "name": "IT",
+            "is_admin": false,
+            "is_primary": true
+          }
+        ],
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 29,
+        "display_name": "SMOKE Colin",
+        "email": "colin@example.invalid",
+        "member_kind": "human",
+        "business_role": "user",
+        "is_external": false,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [
+          {
+            "id": 6,
+            "name": "Facilities",
+            "is_admin": false,
+            "is_primary": true
+          }
+        ],
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 31,
+        "display_name": "SMOKE Ext",
+        "email": "ext@customer.invalid",
+        "member_kind": "human",
+        "business_role": "user",
+        "is_external": true,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [],
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 40,
+        "display_name": "SMOKE Frontline",
+        "email": null,
+        "member_kind": "agent",
+        "business_role": "user",
+        "is_external": false,
+        "status": "active",
+        "job_title": null,
+        "phone": null,
+        "timezone": "UTC",
+        "departments": [
+          {
+            "id": 5,
+            "name": "IT",
+            "is_admin": false,
+            "is_primary": true
+          }
+        ],
+        "updated_at": "2026-01-01T00:00:00Z"
+      }
     ],
     "departments": [
-      {"id": 5, "name": "IT", "description": null, "parent_id": null, "manager_member_id": null, "is_system": true, "system_key": "it", "archived_at": null, "updated_at": "2026-01-01T00:00:00Z"},
-      {"id": 6, "name": "Facilities", "description": null, "parent_id": null, "manager_member_id": null, "is_system": false, "system_key": null, "archived_at": null, "updated_at": "2026-01-01T00:00:00Z"}
+      {
+        "id": 5,
+        "name": "IT",
+        "description": null,
+        "parent_id": null,
+        "manager_member_id": null,
+        "is_system": true,
+        "system_key": "it",
+        "archived_at": null,
+        "updated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 6,
+        "name": "Facilities",
+        "description": null,
+        "parent_id": null,
+        "manager_member_id": null,
+        "is_system": false,
+        "system_key": null,
+        "archived_at": null,
+        "updated_at": "2026-01-01T00:00:00Z"
+      }
     ],
     "memberships": [
-      {"member_id": 1, "department_id": 5, "is_admin": true, "is_primary": true, "joined_at": "2026-01-01T00:00:00Z", "left_at": null},
-      {"member_id": 26, "department_id": 6, "is_admin": false, "is_primary": true, "joined_at": "2026-01-01T00:00:00Z", "left_at": null},
-      {"member_id": 27, "department_id": 5, "is_admin": false, "is_primary": true, "joined_at": "2026-01-01T00:00:00Z", "left_at": null},
-      {"member_id": 40, "department_id": 5, "is_admin": false, "is_primary": true, "joined_at": "2026-01-01T00:00:00Z", "left_at": null}
+      {
+        "member_id": 1,
+        "department_id": 5,
+        "is_admin": true,
+        "is_primary": true,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "left_at": null
+      },
+      {
+        "member_id": 26,
+        "department_id": 6,
+        "is_admin": false,
+        "is_primary": true,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "left_at": null
+      },
+      {
+        "member_id": 27,
+        "department_id": 5,
+        "is_admin": false,
+        "is_primary": true,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "left_at": null
+      },
+      {
+        "member_id": 28,
+        "department_id": 5,
+        "is_admin": false,
+        "is_primary": true,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "left_at": null
+      },
+      {
+        "member_id": 29,
+        "department_id": 6,
+        "is_admin": false,
+        "is_primary": true,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "left_at": null
+      },
+      {
+        "member_id": 40,
+        "department_id": 5,
+        "is_admin": false,
+        "is_primary": true,
+        "joined_at": "2026-01-01T00:00:00Z",
+        "left_at": null
+      }
     ],
     "deleted_departments": [],
     "scopes": [],
     "access": [
-      {"member_id": 1, "role": "admin", "roles": ["admin"], "rights": [], "capability": "admin", "scopes": []},
-      {"member_id": 26, "role": "user", "roles": ["user"], "rights": [], "capability": "write", "scopes": []},
-      {"member_id": 27, "role": "support", "roles": ["support", "user"], "rights": [], "capability": "write", "scopes": []},
-      {"member_id": 31, "role": "user", "roles": ["user"], "rights": [], "capability": "write", "scopes": []},
-      {"member_id": 40, "role": "support", "roles": ["support", "user"], "rights": [], "capability": "write", "scopes": []}
+      {
+        "member_id": 1,
+        "role": "admin",
+        "roles": [
+          "admin"
+        ],
+        "rights": [],
+        "capability": "admin",
+        "scopes": []
+      },
+      {
+        "member_id": 26,
+        "role": "user",
+        "roles": [
+          "user"
+        ],
+        "rights": [],
+        "capability": "write",
+        "scopes": []
+      },
+      {
+        "member_id": 27,
+        "role": "support",
+        "roles": [
+          "support",
+          "user"
+        ],
+        "rights": [],
+        "capability": "write",
+        "scopes": []
+      },
+      {
+        "member_id": 28,
+        "role": "lead",
+        "roles": [
+          "lead",
+          "support",
+          "user"
+        ],
+        "rights": [],
+        "capability": "write",
+        "scopes": []
+      },
+      {
+        "member_id": 29,
+        "role": "collaborator",
+        "roles": [
+          "collaborator",
+          "user"
+        ],
+        "rights": [],
+        "capability": "write",
+        "scopes": []
+      },
+      {
+        "member_id": 31,
+        "role": "user",
+        "roles": [
+          "user"
+        ],
+        "rights": [],
+        "capability": "write",
+        "scopes": []
+      },
+      {
+        "member_id": 40,
+        "role": "support",
+        "roles": [
+          "support",
+          "user"
+        ],
+        "rights": [],
+        "capability": "write",
+        "scopes": []
+      }
     ]
   }
 }
