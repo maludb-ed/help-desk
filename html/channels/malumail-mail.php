@@ -28,6 +28,7 @@ if (($notice['type'] ?? '') === 'message.new' && ($notice['folder'] ?? '') === '
             dispatch_to_agent($pdo, $ticketId, $agentId, 'assigned', null);
         }
         $GLOBALS['__dispatch_after'] = [];
+        mail_fire_triggers($pdo);
     } catch (Throwable $e) {
         error_log('malumail webhook: ' . $e->getMessage());             // the poll picks it up
     }

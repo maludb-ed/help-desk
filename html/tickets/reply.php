@@ -64,5 +64,6 @@ $r = hd_guard($pdo, static function () use ($pdo, $me, $t, $body, $attachments, 
     $pdo->commit();
     return ['message_id' => $mid, 'recipients' => $n, 'moved' => $moved, 'effects' => $effects];
 });
+automation_run_triggers($pdo, 'ticket.reply', $t['ticket_id']);
 $effectWords = $r['effects'] === null ? '' : ($r['effects']['applied'] !== [] ? ' (' . implode(', ', $r['effects']['applied']) . ')' : '') . ($r['effects']['skipped'] !== [] ? ' — skipped ' . implode('; ', array_map(static fn (array $s): string => $s['effect'] . ': ' . $s['why'], $r['effects']['skipped'])) : '');
 ticket_done($t, 'Replied on ' . $t['number'] . ($r['moved'] !== null ? ' and set it ' . $r['moved']['after']['status'] : '') . $effectWords, ['message_id' => $r['message_id'], 'record_id' => $r['message_id'], 'recipients' => $r['recipients']] + ($r['effects'] !== null ? ['side_effects' => $r['effects']] : []), 'sent');

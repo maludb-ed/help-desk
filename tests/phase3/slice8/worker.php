@@ -1,0 +1,34 @@
+<?php
+/** Proof — the worker (spec "Proof", 1): one pass prints the JSON report with every step; a second pass with the same clock changes nothing; --only=sla runs one step; worker.pass logged once per pass with source cron; a second worker while one runs is skipped (the lock). */
+require __DIR__ . '/lib.php';
+$W = world();
+$marco = as_member(27); $lena = as_member(28);
+echo "1. A pass\n";
+$since = last_activity_id();
+$r = worker();
+$steps = ['send', 'mail', 'sla', 'snooze', 'auto_close', 'rules', 'survey', 'dispatch', 'housekeeping'];
+ok(array_diff($steps, array_keys($r)) === [] && isset($r['at'], $r['now']), 'the report names every step (' . implode(', ', array_intersect($steps, array_keys($r))) . ')');
+ok(is_array($r['sla']) && isset($r['sla']['breached'], $r['sla']['warned']) && is_array($r['rules']) && is_array($r['housekeeping']) && is_array($r['dispatch']), 'the counts have their shapes');
+$wp = activity('worker.pass', $since);
+ok(count($wp) === 1 && $wp[0]['source'] === 'cron' && json_decode($wp[0]['after'], true)['now'] === $r['now'], 'worker.pass logged once, source cron, with the report');
+echo "2. Idempotent\n";
+$now = $r['now'];
+$since = last_activity_id();
+$r2 = worker([], $now);
+$rows = q("SELECT action FROM activity_log WHERE id > :s AND action <> 'worker.pass'", ['s' => $since]);
+ok($rows === [] && $r2['sla'] === ['breached' => 0, 'warned' => 0] && $r2['snooze'] === 0 && $r2['auto_close'] === 0 && $r2['survey'] === 0, 'a second pass with the same clock: nothing changes, no new rows (' . count($rows) . ')');
+echo "3. --only\n";
+$r3 = worker(['sla']);
+ok(isset($r3['sla']) && !isset($r3['send']) && !isset($r3['rules']) && !isset($r3['housekeeping']), '--only=sla runs one step');
+echo "4. The lock\n";
+$lock = pdo();
+$lock->query("SELECT pg_advisory_lock(hashtext('helpdesk_worker'))");
+$r4 = worker();
+ok(($r4['skipped'] ?? '') === 'locked', 'a pass while one runs: {"skipped":"locked"}');
+$lock->query("SELECT pg_advisory_unlock(hashtext('helpdesk_worker'))");
+echo "5. Housekeeping\n";
+q("INSERT INTO ticket_viewers (ticket_id, member_id, last_seen_at) VALUES (:t, 27, now() - interval '20 minutes') ON CONFLICT (ticket_id, member_id) DO UPDATE SET last_seen_at = EXCLUDED.last_seen_at", ['t' => $W['t_jo']]);
+q("INSERT INTO sso_nonces (nonce, member_id, expires_at) VALUES ('SMOKEnonce', 27, now() - interval '2 hours')");
+$r5 = worker(['housekeeping']);
+ok($r5['housekeeping']['viewers'] >= 1 && $r5['housekeeping']['nonces'] >= 1 && one("SELECT 1 FROM sso_nonces WHERE nonce = 'SMOKEnonce'") === false, 'stale viewers and spent nonces are gone');
+finish();

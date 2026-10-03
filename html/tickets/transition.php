@@ -46,4 +46,5 @@ $moved = hd_guard($pdo, static function () use ($pdo, $me, $t, $to, $carry, $not
     $pdo->commit();
     return $moved;
 });
+automation_run_triggers($pdo, 'ticket.update', $t['ticket_id']);
 ticket_done($t, $t['number'] . ': ' . $moved['label'] . ' — now ' . $to['label'], ['status' => $to['key'], 'category' => $to['category']], 'saved');

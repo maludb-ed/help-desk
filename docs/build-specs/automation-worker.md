@@ -67,15 +67,44 @@ Advisory lock `hashtext('helpdesk_worker')`; `$step()` as txtSchedules' notifica
 ## Out of scope for this slice
 - The sending itself (slice 7 owns `outbox_send_batch` and the mail poll; this slice calls them); the survey page the requester rates on (slice 6); AI actions inside rules (Later); K8's wake call.
 
-## Proof (scratch database, `HD_WORKER_NOW` faked; curl as members through dev hand-offs; headless Chromium at 375 × 740 and 1280 × 800)
-- **Each step counts and is idempotent**: a fixture of tickets at every state; `php bin/worker.php` prints the JSON report with every step; a second pass with the same clock changes nothing (0 everywhere, no new activity rows); `--only=sla` runs one step.
-- **SLA**: a target past 80 % → one `ticket.sla_warning` row and one notice; the next pass adds none; past due → `breached_at = due_at`, one `ticket.sla_breach`, the assignee and the leads notified once; a paused target is never breached.
-- **Snooze and auto-close**: `pending_until` in the past → open, `via auto`, `pending_elapsed` queued; solved 4 days ago → closed and its secure link dated; `auto_close_days = 0` → never.
-- **Rules**: the seeded two fire; a time-based rule with `days_since solved_at gte setting:auto_close_days`; `problem` solved → its three children solved with the note; a rule whose action names a missing status → `skipped` with the sentence and the pass continues; a rule that throws (a forced error in a fixture action) → `error`, logged, the next rule runs; `Would match N` equals the pass's `applied + skipped`.
-- **Triggers**: on create of an `urgent` ticket from a Gold organization the trigger sets the queue and priority **after** the create committed (the ticket exists even if the rule fails — proven by a trigger that throws); a trigger never fires itself (depth 1).
-- **Assignment**: round-robin walks the IT queue's three members (two people, one agent) in order and skips `offline` and a full capacity; least-loaded picks the emptiest; `default_assignee` an agent → an `agent_dispatches` row `via duty` with no network call (stubbed kernel asserts 0 calls); the same with an acting person → `via chat`, the stub's one call recorded with `X-Acting-Member`.
-- **Survey**: a solved ticket past the delay in a surveyed queue → one rating row with a hash, the raw token only in the outbox body; a second pass sends none; a requester with no address → none.
-- **Rights**: a support member → 403 on every settings screen and handler with *"You may not change Help Desk's settings."*; `view_queue` reads the list; JSON mode answers `{ok,…}` / 422; `bin/build_action_registry.php --check` OK; the rule screens at 375 px scroll nowhere sideways (condition rows stack).
+## Proof (`tests/phase3/slice8/run.sh`: the scratch database, slice 3's world, the worker run as a command with `HD_WORKER_NOW` faked, members through dev hand-offs and action tokens, the stubbed kernel counting chat calls, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-03: 110 checks green** (worker 7, sla 11, rules 20, triggers 11, assignment 13, survey 6, screens 17, json 10, browser 15, the registry); Phase 2's and
+slices 1–7's suites still green (Phase 2's vhost check now expects the runs page); the installer's `plan` clean.
+- [x] **The worker.** One pass prints the report naming every step with its counts' shapes; `worker.pass` logged once with source cron and the report; a second pass with the same clock
+  changes nothing (no new rows); `--only=sla` runs one step; a pass while one runs → `{"skipped":"locked"}`; housekeeping removes stale viewers and spent nonces.
+- [x] **SLA.** A first-response target past 85 % of its span → one `ticket.sla_warning` with the target id, `warned_at` stamped, the assignee and the lead told; the next pass warns no more for
+  it; past due → `breached_at = due_at`, one `ticket.sla_breach`, told once each for that target; the next pass breaches no more; the ticket shows breached; a paused target is never breached
+  nor warned.
+- [x] **Snooze and auto-close.** `pending_until` passed → open via auto with the wake-up cleared and `pending_elapsed` queued for the assignee; `auto_close_days = 0` → never; solved 5 days
+  ago with 4 → closed via auto and its secure link dated.
+- [x] **Rules.** The two seeded rules fire through the rules step (the solved one closed, the snoozed one reopened; `rule.fire`, a `rule_runs` row, `run_count`, the move via rule, the
+  report counting per rule); a problem solved → Run now applies `link_children`: its three children solved with resolved and the note naming the parent; "Would match N" equals applied +
+  skipped; run again → skipped (no open children); a missing status planted by SQL → skipped with *"No status 'parked'."*; a throwing action → error, counted, and the next rule still ran
+  and tagged the ticket; a second pass skips the tag rule (nothing to change); `days_since solved_at gte setting:auto_close_days` → the note with `{{ticket.number}}` filled.
+- [x] **Triggers.** On create of a high ticket from the Gold organization: in IT, urgent, tagged — `ticket.create` committed before `rule.fire`, the queue move logged via trigger with the
+  rule id; a low one untouched; a trigger that throws leaves the ticket and records an error; a `ticket.update` trigger fires once on a change and its own set_fields fires no second round
+  (depth 1); `ticket.reply` and `ticket.note` triggers fire; a request from the public form fires `ticket.create` triggers too.
+- [x] **Assignment.** The IT queue holds the owner, Marco, Lena and the agent; round-robin walks 1, 27, 28, 40 and wraps (`ticket.assign` via round_robin); with Lena offline and the agent at
+  capacity 1 it walks 27, 1, 27; least-loaded picks the emptiest; the queue's default assignee an agent: from the form (nobody acting) a dispatch via duty with no network call, by Marco via
+  chat with the stub's one call carrying X-Acting-Member 27; a queue change with no assignee named lets the new queue's method assign; the dispatch retry: the worker retries a failed
+  dispatch as the person who assigned, gives up after three failures (logged once) and leaves it alone after.
+- [x] **Survey.** Solved 30 minutes ago with a 60-minute delay: not yet; past the delay → one rating row with a hash, the raw token in the survey mail only (hashing to the row),
+  `survey.send` via auto without the token; a second pass sends none; a requester with no address → none.
+- [x] **Rights and the screens.** Support reads the list without the buttons, a requester → 403; the form and every handler → 403 *"You may not change Help Desk's settings."* for support;
+  the seeded rules show Built in with a switch and Run now; the form's rows become the documents (a list from "a, b", the empty row dropped), `rule.create` logged, landing on the edit
+  page with the rows and "Would match N"; a missing status on save → 422 *"No status 'parked'."*, an unknown field → 422 by name; toggled off; the runs ledger (support may read); deleted.
+- [x] **JSON mode.** `rule_create` (`{ok, record_id, kind, location}`), a tag that does not exist → 422 *"No tag 'never-matches'."*, `rule_update` keeps what it was not sent, the kind is fixed
+  once saved, validation 422 by field, `rule_run_now` (`{ok, did, applied, skipped}`), `rule_toggle` (`{ok, active}`), support → 403, `rule_delete` (`{ok}`), the list answers JSON.
+- [x] **375 × 740 and 1280 × 800.** The rules list, the form (the condition rows stack on a phone) and the runs page render without horizontal scroll; no console errors.
+
+**Decisions taken while building (2026-10-03):** the worker's steps read the base tables (the mcp views are empty to a caller with no member) through `rule_ticket_rows()`, one query
+a pass; `warned_at` (db/016) answers "not yet warned" — no log lookup; a rule's note (and the note on a child a problem solves) is authored by the rule's creator, else the first
+super-admin — the schema demands an author; a form's condition rows are "all" rows (a list value turns `eq` into `in`; the JSON tab wins when given); a refused action is that action
+skipped, not the run failed (savepoints per action; an unexpected throwable rolls the ticket back and is the run's error); the assignment on arrival is `assign_on_arrival()` inside the
+creating transaction, and a queue change with no assignee named in `ticket_assign` lets the new queue's method pick; the dispatch retry acts as the person who assigned (a retry via duty would
+do nothing); `rule_run_now` never fires triggers; the rules list is readable by `tickets.view_queue` (the buttons for `settings.manage`); the header's three "new rule" buttons are icon-only on
+a phone; `survey_pass()` is the worker's own clock-aware step (slice 6's `send_due_surveys()` stays for a plain call). The open questions stand: `warned_at` is the column (chosen); auto-close
+is silent.
 
 ## Open questions
 - `warned_at` as a column (db/016) or the activity-log lookup — the lookup costs one query per candidate target per pass; fine under a thousand open targets, a column beyond.

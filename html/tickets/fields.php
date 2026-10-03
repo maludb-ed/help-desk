@@ -53,4 +53,5 @@ $d = hd_guard($pdo, static function () use ($pdo, $me, $t, $fields): array {
     $pdo->commit();
     return $d;
 });
+automation_run_triggers($pdo, 'ticket.update', $t['ticket_id']);
 ticket_done($t, $d['after'] === [] ? 'Nothing changed on ' . $t['number'] : 'Changed ' . implode(', ', array_map(static fn (string $k): string => str_replace(['_id', '_', 'custom.'], ['', ' ', ''], $k), array_keys($d['after']))) . ' on ' . $t['number'], ['changed' => array_keys($d['after'])], 'saved');

@@ -192,6 +192,7 @@ $r = hd_guard($pdo, static function () use ($pdo, $me, $f, $onBehalfOf, $submitt
     $pdo->commit();
     return $r;
 });
+automation_run_triggers($pdo, 'ticket.create', $r['id']);                                   // slice 8: after the commit, each rule its own transaction
 if ($r['assignee_member_id'] !== null && $r['assignee_kind'] === 'agent') {
     $t = ticket_facts($pdo, $r['id']);
     $d = dispatch_to_agent($pdo, $r['id'], $r['assignee_member_id'], 'assigned', $isAgent ? null : $me);

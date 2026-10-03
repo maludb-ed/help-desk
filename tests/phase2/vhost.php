@@ -18,7 +18,8 @@ ok(page($j, '/kb/')['code'] === 200 && page($j, '/kb')['code'] === 200, '/kb/ an
 ok(page($j, '/settings/csat')['code'] === 403 && page($j, '/settings/agents')['code'] === 403, '/settings/csat and /settings/agents resolve (403 for support staff, by the right)');
 ok(req('GET', '/nosuchscreen', ['jar' => $j])['code'] === 404, 'an unknown path: 404');
 ok(req('GET', '/request')['code'] === 200 && req('GET', '/t/' . str_repeat('ab', 24))['code'] === 404 && req('GET', '/t/' . str_repeat('ab', 24) . '/reply')['code'] === 405, '/request answers (slice 6); an unknown /t/{token} is the dead-link page (404); GET on its /reply is 405');
-foreach (['/kb/s/getting-started', '/kb/some-article', '/settings/automation/1/runs', '/reports/backlog'] as $p) {
+ok(in_array(req('GET', '/settings/automation/1/runs')['code'], [302, 303], true), '/settings/automation/1/runs reaches runs.php (slice 8; an anonymous GET is sent to sign in)');
+foreach (['/kb/s/getting-started', '/kb/some-article', '/reports/backlog'] as $p) {
     ok(req('GET', $p, ['jar' => $j])['code'] === 404, "$p is rewritten but its handler is not built: 404 (its slice brings it)");
 }
 ok(req('POST', '/channels/malumail/mail')['code'] === 403 && req('GET', '/channels/malumail/mail')['code'] === 405, 'POST /channels/malumail/mail unsigned: 403 (slice 7); GET: 405');

@@ -105,6 +105,9 @@ function mail_inbound_uid(PDO $pdo, array $mailbox, int $uid): array
                 malumail_mcp_call('mark_message', ['address' => (string) $mailbox['address'], 'uid' => $uid, 'seen' => true]);
             } catch (Throwable) {
             }
+            if ($status === 'processed' && $ticketId !== null) {
+                $GLOBALS['__trigger_after'][] = [$msgRef !== null && (int) one_value($pdo, 'SELECT count(*) FROM messages WHERE ticket_id = :t', ['t' => $ticketId]) > 1 ? 'ticket.reply' : 'ticket.create', $ticketId];
+            }
             return [$status, $ticketId, $msgRef];
         };
         $bounced = mail_is_bounce($h, (array) ($msg['parts'] ?? []));
@@ -245,5 +248,15 @@ function mail_poll_mailbox(PDO $pdo, array $mailbox, int $limit = 50): int
         dispatch_to_agent($pdo, $ticketId, $agentId, 'assigned', null);
     }
     $GLOBALS['__dispatch_after'] = [];
+    mail_fire_triggers($pdo);
     return $handled;
+}
+
+/** The triggers the processed messages earned, after their commits (slice 8). */
+function mail_fire_triggers(PDO $pdo): void
+{
+    foreach ($GLOBALS['__trigger_after'] ?? [] as [$event, $ticketId]) {
+        automation_run_triggers($pdo, $event, (int) $ticketId);
+    }
+    $GLOBALS['__trigger_after'] = [];
 }

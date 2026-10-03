@@ -367,6 +367,14 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 8 (automation and the worker) — BUILT and proven 2026-10-03** (`docs/build-specs/automation-worker.md`): `bin/worker.php` — one advisory-locked pass of nine steps every
+minute (send, mail, sla, snooze, auto_close, rules, survey, dispatch, housekeeping), each its own try, logged once as `worker.pass`, the clock fakeable outside production; the rules
+engine (`app/features/automation/engine.php`: the bounded vocabulary, `rule_evaluate()` over base-table facts, `rule_apply()` through slice 3's write functions under savepoints with a
+`rule_runs` row and `rule.fire`); triggers after a write's commit, depth 1; assignment on arrival (manual, default, round-robin, least-loaded) with an agent assignee dispatched; SLA
+warnings (`warned_at`) and breaches; the snooze's wake-up; auto-close; the survey falling due; the dispatch retry; the rules screens (cards, a form of rows with a JSON tab, the runs ledger);
+5 actions, 4 screens. **Proof:** `tests/phase3/slice8/run.sh` — 110 checks green; Phase 2 (250), slices 1 (211), 2 (129), 3 (223), 4 (114), 5 (116), 6 (130) and 7 (134) still green; the
+installer's `plan` clean. Next: slice 9 (`knowledge-base.md`).
+
 **Slice 7 (email and notifications) — BUILT and proven 2026-10-03** (`docs/build-specs/email-notifications.md`): mailboxes on MaluMail (the secret a reference into the environment),
 the signed new-mail webhook and the poll (`mail_inbound_uid()`: one transaction a message, idempotent on uid; auto-replies and bounces make no ticket; threading on Message-IDs and the
 subject tag; a sender's reply, a CC's, a member's (and `#note`), a stranger's, a follow-up after close; a new mail a new ticket with its confirmation), the inbound ledger with retry and

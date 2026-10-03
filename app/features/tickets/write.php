@@ -58,14 +58,10 @@ function create_ticket(PDO $pdo, array $f, ?int $actorMemberId): array
     $raw = (string) $pdo->query('SELECT hd_secure_link_mint(' . $id . ')')->fetchColumn();
     $assignee = null;
     $assigneeKind = null;
-    if (!empty($f['assign'])) {
-        $q = $pdo->prepare("SELECT q.default_assignee_member_id, m.member_kind FROM queues q LEFT JOIN members m ON m.id = q.default_assignee_member_id WHERE q.id = :q AND q.assignment_method = 'default_assignee' AND q.default_assignee_member_id IS NOT NULL");
-        $q->execute(['q' => $f['queue_id']]);
-        $d = $q->fetch();
-        if ($d !== false) {
-            $assignee = (int) $d['default_assignee_member_id'];
-            $assigneeKind = $d['member_kind'];
-            $pdo->prepare('UPDATE tickets SET assignee_member_id = :a WHERE id = :id')->execute(['a' => $assignee, 'id' => $id]);
+    if (!empty($f['assign'])) {                                                      // slice 8: the queue's assignment method (manual, default, round-robin, least-loaded)
+        $assignee = assign_on_arrival($pdo, $id, 'create');
+        if ($assignee !== null) {
+            $assigneeKind = (string) $pdo->query('SELECT member_kind FROM members WHERE id = ' . (int) $assignee)->fetchColumn();
         }
     }
     return ['id' => $id, 'number' => (string) $row['number'], 'raw_link' => $raw, 'assignee_member_id' => $assignee, 'assignee_kind' => $assigneeKind];

@@ -42,6 +42,15 @@ $r = hd_guard($pdo, static function () use ($pdo, $me, $t, $assignee, $queue, $g
     $pdo->commit();
     return $r;
 });
+if ($r['changed'] && $r['after']['queue_id'] !== $r['before']['queue_id'] && $r['after']['assignee_member_id'] === null) {   // slice 8: a new queue's method decides
+    $pdo->beginTransaction();
+    $picked = assign_on_arrival($pdo, $t['ticket_id'], 'queue_change');
+    $pdo->commit();
+    if ($picked !== null) {
+        $r = ['changed' => true, 'before' => $r['before'], 'after' => assign_ticket_state($pdo, $t['ticket_id'])];
+    }
+}
+automation_run_triggers($pdo, 'ticket.update', $t['ticket_id']);
 $dispatch = null;
 if ($r['changed'] && $r['after']['assignee_kind'] === 'agent' && $r['after']['assignee_member_id'] !== $r['before']['assignee_member_id']) {
     $dispatch = dispatch_to_agent($pdo, $t['ticket_id'], $r['after']['assignee_member_id'], 'assigned', is_action_authed() && current_agent_run_id() !== null ? null : $me);

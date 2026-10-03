@@ -15,7 +15,7 @@ $matrix = [
     '/' => $all, '/my-tickets' => $all, '/tickets/new' => $all, '/kb/' => $all, '/settings/' => $all, '/settings/tokens/' => $all, '/notifications' => $all, '/activity' => $all,
     '/inbox' => 'collaborator support lead admin', '/board' => 'collaborator support lead admin', '/requesters/' => 'collaborator support lead admin', '/organizations/' => 'collaborator support lead admin',
     '/canned/' => 'support lead admin', '/reports/' => 'lead admin', '/settings/queues/' => 'lead admin',
-    '/settings/statuses/' => 'admin', '/settings/vocabulary/' => 'admin', '/settings/fields/' => 'admin', '/settings/sla/' => 'admin', '/settings/automation/' => 'admin',
+    '/settings/statuses/' => 'admin', '/settings/vocabulary/' => 'admin', '/settings/fields/' => 'admin', '/settings/sla/' => 'admin', '/settings/automation/' => 'collaborator support lead admin',
     '/settings/mailboxes/' => 'admin', '/settings/csat' => 'admin', '/settings/agents' => 'admin',
 ];
 [$jUser, ] = sign_on(26);

@@ -27,4 +27,5 @@ $mid = hd_guard($pdo, static function () use ($pdo, $me, $t, $body, $attachments
     $pdo->commit();
     return $mid;
 });
+automation_run_triggers($pdo, 'ticket.note', $t['ticket_id']);
 ticket_done($t, 'Noted on ' . $t['number'], ['message_id' => $mid, 'record_id' => $mid, 'mentions' => $mentions], 'noted');

@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T19:20:45+00:00",
+    "generated_at": "2026-10-03T19:52:27+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -524,8 +524,8 @@
             "section": "Automation",
             "when": "the rules as cards: kind, event, run count, last run, on or off",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "rule-add": {
             "screen": "rule-add",
@@ -535,7 +535,7 @@
             "params": [
                 "kind"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "rule-edit": {
@@ -544,7 +544,7 @@
             "section": "Automation",
             "when": "to change a rule's conditions or actions",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "rule-runs": {
@@ -553,7 +553,7 @@
             "section": "Automation",
             "when": "what a rule did: the last 30 days of runs",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "kb-home": {
@@ -3717,7 +3717,7 @@
             "approval": "other",
             "log_event": "rule.create",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "rule_update": {
             "action": "rule_update",
@@ -3778,7 +3778,7 @@
             "approval": "other",
             "log_event": "rule.update",
             "who": "admin",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "rule_toggle": {
@@ -3804,7 +3804,7 @@
             "approval": "other",
             "log_event": "rule.toggle",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "rule_delete": {
             "action": "rule_delete",
@@ -3823,7 +3823,7 @@
             "approval": "deletion",
             "log_event": "rule.delete",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "rule_run_now": {
             "action": "rule_run_now",
@@ -3842,7 +3842,7 @@
             "approval": "other",
             "log_event": "rule.run_now",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "section_save": {
             "action": "section_save",

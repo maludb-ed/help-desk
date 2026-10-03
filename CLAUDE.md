@@ -68,19 +68,21 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; slices 1 (queues and people), 2 (the vocabulary), 3 (tickets core, THE EXEMPLAR), 4 (views and the board), 5 (working faster), 6 (the requesters' doors) and 7 (email and notifications) BUILT and proven** —
-  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (53 screens + 82 actions built, 3 placeholders: automation, kb, reports),
+- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; slices 1–8 (queues and people, the vocabulary, tickets core — THE EXEMPLAR, views and the board, working faster, the requesters' doors, email and notifications, automation and the worker) BUILT and proven** —
+  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (57 screens + 87 actions built, 2 placeholders: kb, reports),
   the shell (Phase 2), slices 1–2, slice 3 (`app/features/tickets/{queries,present,write,transition,dispatch,handler}.php`, `app/features/messages/`, `html/tickets/`, `html/inbox.php`;
   the prelude `tickets/handler.php` loads every feature a ticket reads; `ticket_from_request()` → `require_work()` → `hd_guard()` → `ticket_log()` (ticket_id + queue_id on every row) → `ticket_done()`),
   slice 4 (`app/features/views/{filters,queries,board,present}.php` — `view_filters_sql()` is THE translator of filters to SQL; `html/views/`, `html/board.php`, `html/board/{move,reorder}.php`),
   slice 5 (`app/features/canned/`, `app/features/bulk/`; `html/canned/`, `html/bulk/`; `required_on_solve` in `transition_ticket()`; the agent pauses are the kernel hook's by action key),
   slice 6 (`app/features/public/{queries,form,secure}.php` — nobody signed in: the base tables; `app/features/ratings/`; `html/request.php`, `html/t.php`, `html/t/`, `html/ratings/`, `html/settings/csat.php`),
-  slice 7 (`app/mail.php` — MaluMail send, the mailbox MCP, the webhook signature; `app/features/mail/{parse,thread,queries,inbound,present}.php` — `mail_inbound_uid()` one transaction a message;
-  `app/features/notify/{kinds,queue,body,send}.php` — `notify_member()`/`notify_requester()` the ONE queueing function (slice 3's `notify()` delegates), `outbox_send_batch()` what slice 8's worker calls;
-  `html/channels/malumail-mail.php`, `html/settings/mailboxes/`; the stub `tests/fake_malumail.php` on :8294, its state reset on every server start),
-  the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (116), `slice6/run.sh` (130), `slice7/run.sh` (134) — green 2026-10-03;
-  the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: slice 8 (`docs/build-specs/automation-worker.md`), then 9–10.**
-  Owed: the live launch (▲) after the owner's `apply`.
+  slice 7 (`app/mail.php`; `app/features/mail/{parse,thread,queries,inbound,present}.php` — `mail_inbound_uid()` one transaction a message; `app/features/notify/{kinds,queue,body,send}.php` — the ONE queueing function and `outbox_send_batch()`;
+  `html/channels/malumail-mail.php`, `html/settings/mailboxes/`; the stub `tests/fake_malumail.php` on :8294),
+  slice 8 (`bin/worker.php` — nine steps, advisory lock, `HD_WORKER_NOW` outside production; `app/features/automation/{engine,assign,triggers,worker_steps,queries,present}.php` — the engine reads BASE tables
+  (`rule_ticket_rows()`: the mcp views are empty to a caller with no member), `rule_apply()` under savepoints, `assign_on_arrival()` inside `create_ticket()`, `automation_run_triggers()` after a handler's commit at depth 1;
+  `html/settings/automation/`; a rule's note is authored by its creator else the first super-admin — the schema demands an author),
+  the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (116), `slice6/run.sh` (130), `slice7/run.sh` (134), `slice8/run.sh` (110) — green 2026-10-03;
+  the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: slice 9 (`docs/build-specs/knowledge-base.md`), then 10.**
+  Owed: the live launch (▲) after the owner's `apply`; the worker timer runs `bin/worker.php` once installed.
 - Proofs: `tests/phase2/run.sh` is the regression (sso, gates, sync, ingest, kernel_compat, vhost, browser.mjs, the registry check; the fakes `tests/fake_kernel.php`, `tests/fake_maludb.php`; ports 8291–8297). `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
   `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.
 - The shell's menu table is `app/features/shell/nav.php` (the bootstrap requires it; Phase 2 builds the shell around it). `app/activity.php`

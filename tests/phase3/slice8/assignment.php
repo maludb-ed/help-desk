@@ -1,0 +1,62 @@
+<?php
+/** Proof — assignment (spec "Proof", 6): round-robin walks the IT queue's members in order and skips offline and a full capacity; least-loaded picks the emptiest; default_assignee an agent → a dispatch via duty with no network call; with an acting person → via chat, the stub's one call with X-Acting-Member. */
+require __DIR__ . '/lib.php';
+$W = world();
+$marco = as_member(27); $owner = as_member(1);
+$it = $W['it'];
+$members = array_map(fn ($m) => $m['member_id'], queue_member_rows(pdo(), $it));
+ok($members === [1, 27, 28, 40], 'the IT queue holds the owner, Marco, Lena and the Frontline agent (' . implode(',', $members) . ')');
+echo "1. Round-robin\n";
+queue_method($it, 'round_robin');
+$v = jar(); $tok = csrf_of(req('GET', '/request', ['jar' => $v])['body']);
+$n = 0;
+$file = function (string $s) use ($v, $tok, &$n): int { $n++; req('POST', '/request', ['jar' => $v, 'form' => ['csrf_token' => $tok, 'name' => 'RR', 'email' => 'rr' . $n . '@customer.invalid', 'subject' => $s, 'body' => 'x', 'category' => (int) one("SELECT id FROM categories WHERE name = 'SMOKE Public cat'")]]); return (int) one('SELECT id FROM tickets WHERE subject = :s', ['s' => $s]); };     // a fresh address each time: the form's per-address limit
+act($owner, '/settings/vocabulary/category.php', ['name' => 'SMOKE Public cat', 'default_queue' => $it, 'requester_visible' => 'yes']);
+$a = []; foreach (['SMOKE rr 1', 'SMOKE rr 2', 'SMOKE rr 3', 'SMOKE rr 4', 'SMOKE rr 5'] as $s) { $a[] = (int) ticket_row($file($s))['assignee_member_id']; }
+ok($a === [1, 27, 28, 40, 1], 'five arrivals walk 1, 27, 28, 40 and wrap (' . implode(',', $a) . ')');
+$l = q("SELECT after FROM activity_log WHERE action = 'ticket.assign' AND after->>'via' = 'round_robin' ORDER BY id DESC LIMIT 1")[0];
+ok(json_decode($l['after'], true)['assignee_member_id'] === 1, 'ticket.assign via round_robin');
+presence_of(28, 'offline');
+presence_of(40, 'online', 1);
+$b = []; foreach (['SMOKE rr 6', 'SMOKE rr 7', 'SMOKE rr 8'] as $s) { $b[] = (int) ticket_row($file($s))['assignee_member_id']; }
+ok($b === [27, 1, 27], 'with Lena offline and the agent full (capacity 1): 27, 1, 27 (' . implode(',', $b) . ')');
+presence_of(28, 'online'); presence_of(40, 'online', null);
+echo "2. Least-loaded\n";
+queue_method($it, 'least_loaded');
+$open = fn (int $m) => member_open_count(pdo(), $m);
+$counts = [27 => $open(27), 28 => $open(28), 40 => $open(40)];
+asort($counts);
+$want = array_key_first($counts);
+$t = $file('SMOKE least loaded');
+ok((int) ticket_row($t)['assignee_member_id'] === $want, 'least-loaded picked the emptiest (' . $want . ' with ' . $counts[$want] . ' open)');
+echo "3. The default assignee, an agent\n";
+queue_method($it, 'default_assignee', 40);
+$calls = count(chat_calls());
+$t2 = $file('SMOKE agent by the form');
+$d = dispatches($t2);
+ok((int) ticket_row($t2)['assignee_member_id'] === 40 && count($d) === 1 && $d[0]['via'] === 'duty' && $d[0]['acting_member_id'] === null && count(chat_calls()) === $calls, 'from the form (nobody acting): a dispatch via duty, no network call');
+$t3 = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE agent by Marco', 'body' => 'x', 'queue' => $it])[1]['record_id'];
+$d = dispatches($t3);
+$cc = chat_calls();
+ok((int) ticket_row($t3)['assignee_member_id'] === 40 && count($d) === 1 && $d[0]['via'] === 'chat' && (int) $d[0]['acting_member_id'] === 27 && count($cc) === $calls + 1 && (string) end($cc)['acting'] === '27', 'by Marco: via chat, the stub\'s one call with X-Acting-Member 27');
+echo "4. A queue change with no assignee named\n";
+queue_method($it, 'round_robin');
+$t4 = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE moved into IT', 'body' => 'x', 'queue' => $W['fac'], 'requester' => $W['jo']])[1]['record_id'];
+ok(ticket_row($t4)['assignee_member_id'] === null, 'in Facilities (manual): unassigned');
+[$c, $b] = act($owner, '/tickets/assign.php', ['ticket' => $t4, 'queue' => $it]);
+ok($c === 200 && ticket_row($t4)['assignee_member_id'] !== null && (int) ticket_row($t4)['queue_id'] === $it, 'moved into IT with no assignee named: the queue\'s method assigned it (' . ticket_row($t4)['assignee_member_id'] . ')');
+queue_method($it, 'manual');
+echo "5. The dispatch retry\n";
+kernel_state(function ($s) { $s['chat_status'] = 500; $s['chat_message'] = 'down'; return $s; });
+$t5 = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE retry me', 'body' => 'x', 'queue' => $it])[1]['record_id'];
+act($marco, '/tickets/assign.php', ['ticket' => $t5, 'assignee' => 40]);
+ok(dispatches($t5)[0]['status'] === 'failed', 'the first dispatch failed (the kernel down)');
+$r = worker(['dispatch']);
+ok($r['dispatch']['retried'] >= 1 && count(dispatches($t5)) === 2 && dispatches($t5)[1]['status'] === 'failed' && (int) dispatches($t5)[1]['acting_member_id'] === 27, 'the worker retried as the person who assigned; failed again');
+worker(['dispatch']);
+$r = worker(['dispatch']);
+ok(count(dispatches($t5)) === 3 && $r['dispatch']['given_up'] >= 1 && count(q("SELECT 1 FROM activity_log WHERE action = 'ticket.dispatch' AND ticket_id = :t AND after->>'status' = 'given_up'", ['t' => $t5])) === 1, 'three failures: given up, logged once');
+$r = worker(['dispatch']);
+ok(count(dispatches($t5)) === 3 && count(q("SELECT 1 FROM activity_log WHERE action = 'ticket.dispatch' AND ticket_id = :t AND after->>'status' = 'given_up'", ['t' => $t5])) === 1, 'and left alone after');
+kernel_state(function ($s) { unset($s['chat_status'], $s['chat_message']); return $s; });
+finish();

@@ -1,0 +1,41 @@
+<?php
+/** Proof — SLA (spec "Proof", 2): a target past 80 % → one ticket.sla_warning and one notice, the next pass none; past due → breached_at = due_at, one ticket.sla_breach, the assignee and the leads told once; a paused target is never breached. */
+require __DIR__ . '/lib.php';
+$W = world();
+$marco = as_member(27);
+act(as_member(1), '/settings/queues/member.php', ['queue' => $W['it'], 'member' => 28, 'is_lead' => 'yes']);
+$t = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE sla clock', 'body' => 'x', 'queue' => $W['it'], 'requester' => $W['jo'], 'priority' => 'high'])[1]['record_id'];
+act($marco, '/tickets/assign.php', ['ticket' => $t, 'assignee' => 'me']);
+$g = q("SELECT id, started_at, due_at FROM sla_targets WHERE ticket_id = :t AND metric = 'first_response'", ['t' => $t])[0];
+$span = strtotime($g['due_at']) - strtotime($g['started_at']);
+ok($span > 0, 'a first-response target with a span of ' . round($span / 60) . ' minutes');
+echo "1. The warning\n";
+$since = last_activity_id();
+$r = worker(['sla'], at('@' . (strtotime($g['started_at']) + (int) ($span * 0.85))));
+$warn = array_values(array_filter(activity('ticket.sla_warning', $since), fn ($x) => (int) $x['ticket_id'] === $t && json_decode($x['after'], true)['target_id'] === (int) $g['id']));     // the next-response target (the requester's first message) warns too
+ok($r['sla']['warned'] >= 1 && count($warn) === 1 && json_decode($warn[0]['after'], true)['target_id'] === (int) $g['id'] && json_decode($warn[0]['after'], true)['metric'] === 'first_response', 'past 85 % of the span: one ticket.sla_warning with the target id');
+ok(one('SELECT warned_at FROM sla_targets WHERE id = :g', ['g' => (int) $g['id']]) !== null, 'warned_at stamped');
+$told = q("SELECT DISTINCT member_id FROM notifications WHERE ticket_id = :t AND kind = 'sla_warning' ORDER BY member_id", ['t' => $t]);
+ok(array_map(fn ($x) => (int) $x['member_id'], $told) === [27, 28], 'the assignee (Marco) and the lead (Lena) told');
+$since = last_activity_id();
+$r = worker(['sla'], at('@' . (strtotime($g['started_at']) + (int) ($span * 0.9))));
+ok(count(array_filter(activity('ticket.sla_warning', $since), fn ($x) => (int) $x['ticket_id'] === $t && json_decode($x['after'], true)['target_id'] === (int) $g['id'])) === 0, 'the next pass warns no more for that target');
+echo "2. The breach\n";
+$since = last_activity_id();
+$r = worker(['sla'], at('@' . (strtotime($g['due_at']) + 600)));
+$br = array_values(array_filter(activity('ticket.sla_breach', $since), fn ($x) => (int) $x['ticket_id'] === $t && json_decode($x['after'], true)['target_id'] === (int) $g['id']));
+ok($r['sla']['breached'] >= 1 && count($br) === 1 && (string) one('SELECT breached_at FROM sla_targets WHERE id = :g', ['g' => (int) $g['id']]) === (string) $g['due_at'], 'past due: breached_at = due_at, one ticket.sla_breach');
+ok(count(q("SELECT DISTINCT member_id FROM notifications WHERE ticket_id = :t AND kind = 'sla_breached'", ['t' => $t])) === 2 && count(q("SELECT 1 FROM notification_outbox WHERE ticket_id = :t AND kind = 'sla_breached' AND dedupe_key LIKE :k", ['t' => $t, 'k' => 'sla_breached:' . $g['id'] . ':%'])) === 2, 'the assignee and the lead told once each for that target');
+$since = last_activity_id();
+$r = worker(['sla'], at('@' . (strtotime($g['due_at']) + 1200)));
+ok(count(array_filter(activity('ticket.sla_breach', $since), fn ($x) => (int) $x['ticket_id'] === $t && json_decode($x['after'], true)['target_id'] === (int) $g['id'])) === 0, 'the next pass breaches no more for that target');
+[$c, $d] = screen($marco, '/tickets/' . $t);
+ok(($d['ticket']['sla']['state'] ?? '') === 'breached', 'the ticket shows breached');
+echo "3. A paused target\n";
+$t2 = (int) act($marco, '/tickets/save.php', ['subject' => 'SMOKE sla paused', 'body' => 'x', 'queue' => $W['it'], 'requester' => $W['jo']])[1]['record_id'];
+act($marco, '/tickets/transition.php', ['ticket' => $t2, 'status' => 'pending']);
+$g2 = q("SELECT id, due_at, paused_at FROM sla_targets WHERE ticket_id = :t AND metric = 'first_response'", ['t' => $t2])[0];
+ok($g2['paused_at'] !== null, 'pending paused the clock');
+worker(['sla'], at('@' . (strtotime($g2['due_at']) + 3600)));
+ok(one('SELECT breached_at FROM sla_targets WHERE id = :g', ['g' => (int) $g2['id']]) === null && one('SELECT warned_at FROM sla_targets WHERE id = :g', ['g' => (int) $g2['id']]) === null, 'a paused target is never breached nor warned');
+finish();

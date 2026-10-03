@@ -54,6 +54,7 @@ try {
 }
 log_activity($pdo, 'ticket.create', 'ticket', $made['ticket_id'], ['ticket_id' => $made['ticket_id'], 'queue_id' => $made['queue_id'], 'actor_requester_id' => $made['requester_id'],
     'after' => ['number' => $made['number'], 'channel' => 'form', 'requester_id' => $made['requester_id'], 'queue_id' => $made['queue_id'], 'priority' => (string) one_value($pdo, 'SELECT priority FROM tickets WHERE id = :t', ['t' => $made['ticket_id']]), 'category_id' => $clean['category_id'], 'attachments' => count($files)]]);
+automation_run_triggers($pdo, 'ticket.create', $made['ticket_id']);
 if ($made['assignee_member_id'] !== null && $made['assignee_kind'] === 'agent') {
     dispatch_to_agent($pdo, $made['ticket_id'], $made['assignee_member_id'], 'assigned', null);
 }
