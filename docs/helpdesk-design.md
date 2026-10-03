@@ -367,6 +367,13 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 3 (tickets core, THE EXEMPLAR) — BUILT and proven 2026-10-03** (`docs/build-specs/tickets-core.md`): the inbox (the seeded views as tabs, ad-hoc filters, cards on a phone and a table
+on a desktop, `#ticket-list` swapped alone), filing for every requester kind (oneself, on behalf, an external by email, an agent under a run token with an idempotent `external_id`), the ticket page
+(the conversation and the composer, the fields panel with the matrix's moves, the requester card, followers and CCs, links, time, SLA, the secure link, the timeline in words, viewers), the merge
+page, every move through `hd_transition()` with the refusals in sentences, replies that move the clock, notes with mentions, assignment with the agent dispatch through the kernel's chat endpoint,
+attachments through the gate, the requester's own confirm and reopen; 28 actions, 7 screens; the dashboard filled. **Proof:** `tests/phase3/slice3/run.sh` — 223 checks green; Phase 2's 250,
+slice 1's 211 and slice 2's 129 still green; the installer's `plan` clean. Next: slice 4 (`views-board.md`).
+
 **Slice 2 (the vocabulary) — BUILT and proven 2026-10-03** (`docs/build-specs/vocabulary.md`): statuses in board order with the database's guard, the 6 × 6 transitions matrix editing the
 same table `hd_transition()` reads, types (inline), the categories tree with routing defaults, tags (inline, a lead may rename), custom fields for tickets / organizations / requesters with the
 validator `app/features/fields/validate.php` (`fields_for()`, `custom_values_validate()`, `custom_values_missing_on_solve()`) and the one input renderer slice 3 reuses; 11 actions, 10 screens.

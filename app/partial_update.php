@@ -14,6 +14,7 @@ const PARTIAL_UPDATE_TARGETS = [
     '/organizations/save.php'   => ['organizations', 'organization', 'mcp_organizations', 'organization_id'],
     '/requesters/save.php'      => ['requesters', 'requester', 'mcp_requesters', 'requester_id'],
     '/settings/sla/save.php'    => ['sla_policies', 'policy', 'mcp_sla_policies', 'policy_id'],
+    '/tickets/save.php'         => ['tickets', 'ticket', 'mcp_tickets', 'ticket_id'],
 ];
 
 function partial_update_prefill(PDO $pdo): void

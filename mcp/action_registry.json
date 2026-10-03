@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T16:51:52+00:00",
+    "generated_at": "2026-10-03T17:24:32+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -346,8 +346,8 @@
                 "priority",
                 "sort"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "ticket-add": {
             "screen": "ticket-add",
@@ -361,8 +361,8 @@
                 "on_behalf_of",
                 "from_inbound"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "ticket-view": {
             "screen": "ticket-view",
@@ -370,7 +370,7 @@
             "section": "Tickets",
             "when": "one ticket: the conversation and composer, the fields, the requester card, followers, links, time, SLA, the timeline",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "ticket-edit": {
@@ -379,8 +379,8 @@
             "section": "Tickets",
             "when": "to change a ticket's subject, requester, organization, type, category, custom fields or due date",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "ticket-merge": {
             "screen": "ticket-merge",
@@ -390,7 +390,7 @@
             "params": [
                 "into"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "board": {
@@ -2225,7 +2225,7 @@
             "approval": null,
             "log_event": "ticket.create",
             "who": "member",
-            "built": false
+            "built": true
         },
         "ticket_update": {
             "action": "ticket_update",
@@ -2292,7 +2292,7 @@
             "approval": null,
             "log_event": "ticket.update",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_reply": {
             "action": "ticket_reply",
@@ -2341,7 +2341,7 @@
             "approval": "external_send",
             "log_event": "ticket.reply",
             "who": "work or own (the requester replies on their own)",
-            "built": false
+            "built": true
         },
         "ticket_note": {
             "action": "ticket_note",
@@ -2378,7 +2378,7 @@
             "approval": null,
             "log_event": "ticket.note",
             "who": "note or work",
-            "built": false
+            "built": true
         },
         "ticket_transition": {
             "action": "ticket_transition",
@@ -2427,7 +2427,7 @@
             "approval": null,
             "log_event": "ticket.transition",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_assign": {
             "action": "ticket_assign",
@@ -2464,7 +2464,7 @@
             "approval": null,
             "log_event": "ticket.assign",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_set_fields": {
             "action": "ticket_set_fields",
@@ -2513,7 +2513,7 @@
             "approval": null,
             "log_event": "ticket.set_fields",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_add_tags": {
             "action": "ticket_add_tags",
@@ -2538,7 +2538,7 @@
             "approval": null,
             "log_event": "ticket.tag",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_remove_tag": {
             "action": "ticket_remove_tag",
@@ -2563,7 +2563,7 @@
             "approval": null,
             "log_event": "ticket.untag",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_follow": {
             "action": "ticket_follow",
@@ -2588,7 +2588,7 @@
             "approval": null,
             "log_event": "ticket.follow",
             "who": "note or member on their own",
-            "built": false
+            "built": true
         },
         "ticket_unfollow": {
             "action": "ticket_unfollow",
@@ -2613,7 +2613,7 @@
             "approval": null,
             "log_event": "ticket.unfollow",
             "who": "own",
-            "built": false
+            "built": true
         },
         "ticket_cc_add": {
             "action": "ticket_cc_add",
@@ -2638,7 +2638,7 @@
             "approval": null,
             "log_event": "ticket.cc_add",
             "who": "work or own",
-            "built": false
+            "built": true
         },
         "ticket_cc_remove": {
             "action": "ticket_cc_remove",
@@ -2663,7 +2663,7 @@
             "approval": null,
             "log_event": "ticket.cc_remove",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_link": {
             "action": "ticket_link",
@@ -2694,7 +2694,7 @@
             "approval": null,
             "log_event": "ticket.link",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_unlink": {
             "action": "ticket_unlink",
@@ -2725,7 +2725,7 @@
             "approval": null,
             "log_event": "ticket.unlink",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_merge": {
             "action": "ticket_merge",
@@ -2756,7 +2756,7 @@
             "approval": "other",
             "log_event": "ticket.merge",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "ticket_close": {
             "action": "ticket_close",
@@ -2787,7 +2787,7 @@
             "approval": "other",
             "log_event": "ticket.close",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "ticket_reopen": {
             "action": "ticket_reopen",
@@ -2812,7 +2812,7 @@
             "approval": null,
             "log_event": "ticket.reopen",
             "who": "work or own (within the window)",
-            "built": false
+            "built": true
         },
         "ticket_confirm": {
             "action": "ticket_confirm",
@@ -2831,7 +2831,7 @@
             "approval": null,
             "log_event": "ticket.confirm",
             "who": "own",
-            "built": false
+            "built": true
         },
         "ticket_spam": {
             "action": "ticket_spam",
@@ -2850,7 +2850,7 @@
             "approval": "deletion",
             "log_event": "ticket.spam",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "ticket_delete": {
             "action": "ticket_delete",
@@ -2869,7 +2869,7 @@
             "approval": "deletion",
             "log_event": "ticket.delete",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "ticket_log_time": {
             "action": "ticket_log_time",
@@ -2912,7 +2912,7 @@
             "approval": null,
             "log_event": "ticket.log_time",
             "who": "work",
-            "built": false
+            "built": true
         },
         "time_entry_delete": {
             "action": "time_entry_delete",
@@ -2931,7 +2931,7 @@
             "approval": null,
             "log_event": "ticket.time_delete",
             "who": "own or manage",
-            "built": false
+            "built": true
         },
         "attachment_add": {
             "action": "attachment_add",
@@ -2962,7 +2962,7 @@
             "approval": null,
             "log_event": "ticket.attach",
             "who": "work or own",
-            "built": false
+            "built": true
         },
         "attachment_delete": {
             "action": "attachment_delete",
@@ -2981,7 +2981,7 @@
             "approval": "deletion",
             "log_event": "ticket.attachment_delete",
             "who": "manage",
-            "built": false
+            "built": true
         },
         "secure_link_rotate": {
             "action": "secure_link_rotate",
@@ -3000,7 +3000,7 @@
             "approval": null,
             "log_event": "ticket.secure_link_rotate",
             "who": "work",
-            "built": false
+            "built": true
         },
         "ticket_dispatch": {
             "action": "ticket_dispatch",
@@ -3019,7 +3019,7 @@
             "approval": null,
             "log_event": "ticket.dispatch",
             "who": "work",
-            "built": false
+            "built": true
         },
         "view_create": {
             "action": "view_create",

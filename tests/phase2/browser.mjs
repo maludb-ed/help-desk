@@ -71,8 +71,8 @@ const groupsOf = async (page) => (await page.locator('.nxl-navbar .nxl-caption l
   await page.screenshot({ path: `${SHOTS}/phone-my-tickets.png` });
   await page.click('#tab-new-ticket');
   await page.waitForURL(BASE + '/tickets/new');
-  await page.waitForSelector('#new-ticket-coming');
-  ok((await page.locator('#new-ticket-coming').innerText()).includes('slice 3'), 'New request opens the placeholder that names slice 3');
+  await page.waitForSelector('#ticket-form');
+  ok(true, 'New request opens the form (slice 3 built it)');
   // More opens the sidebar with the groups the member's rights give
   await page.click('#tab-more');
   await page.waitForSelector('nav.nxl-navigation.mob-navigation-active');
@@ -135,10 +135,10 @@ const groupsOf = async (page) => (await page.locator('.nxl-navbar .nxl-caption l
   ok(bar.x >= nav.width - 1 && bar.y + bar.height >= 780, `the command bar sits at the bottom, right of the sidebar (x ${Math.round(bar.x)}, sidebar ${Math.round(nav.width)})`);
   ok((await page.locator('#header-role-badge').innerText()).includes('Super-admin'), 'the badge reads Super-admin');
   await page.screenshot({ path: `${SHOTS}/desktop-dashboard.png` });
-  await page.click('#nav-inbox .nxl-link');                       // a placeholder until slice 4 (statuses were slice 2's)
-  await page.waitForURL(BASE + '/inbox');
-  await page.waitForSelector('#inbox-coming');
-  ok((await page.title()).startsWith('Inbox'), 'HTMX navigation: /inbox pushed, title "' + (await page.title()) + '"');
+  await page.click('#nav-board .nxl-link');                       // a placeholder until slice 4 (the inbox was slice 3's)
+  await page.waitForURL(BASE + '/board');
+  await page.waitForSelector('#board-coming');
+  ok((await page.title()).startsWith('Board'), 'HTMX navigation: /board pushed, title "' + (await page.title()) + '"');
   await page.screenshot({ path: `${SHOTS}/desktop-placeholder.png` });
   await page.goBack();
   await page.waitForURL(BASE + '/');

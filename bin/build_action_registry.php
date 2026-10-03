@@ -194,6 +194,12 @@ function screen_controller(string $url): ?string
     if (ctype_digit($last)) {
         return is_file(WEB_ROOT . $dir . '/view.php') ? WEB_ROOT . $dir . '/view.php' : null;
     }
+    // /tickets/{id}/merge → tickets/merge.php, /settings/automation/{id}/runs → …/runs.php (a page of the record, rewritten by the vhost)
+    if (preg_match('/^[a-z_-]+$/', $last) && $parts !== [] && ctype_digit((string) end($parts))) {
+        array_pop($parts);
+        $page = WEB_ROOT . '/' . implode('/', $parts) . '/' . $last . '.php';
+        return is_file($page) ? $page : null;
+    }
     return null;
 }
 

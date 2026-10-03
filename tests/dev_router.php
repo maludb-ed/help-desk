@@ -15,6 +15,7 @@ $rel = rtrim($path, '/') ?: '/';
 // The slug rewrites (the vhost's rules outside the canonical shape): a target its slice has not built yet answers 404 below, as Apache does.
 if (preg_match('#^/t/([a-f0-9]{48})(?:/(reply|confirm|reopen|rate|attachment))?$#', $path, $m)) { $_GET['token'] = $m[1]; $_REQUEST['token'] = $m[1]; $target = isset($m[2]) ? "/t/{$m[2]}.php" : '/t.php'; }
 elseif (preg_match('#^/settings/automation/([0-9]+)/runs$#', $path, $m)) { $_GET['id'] = $m[1]; $_REQUEST['id'] = $m[1]; $target = '/settings/automation/runs.php'; }
+elseif (preg_match('#^/tickets/([0-9]+)/merge$#', $path, $m)) { $_GET['ticket'] = $m[1]; $_REQUEST['ticket'] = $m[1]; $target = '/tickets/merge.php'; }
 elseif (preg_match('#^/reports/([a-z_]+)$#', $path, $m) && !is_file($root . "/reports/{$m[1]}.php")) { $_GET['report'] = $m[1]; $_REQUEST['report'] = $m[1]; $target = '/reports/report.php'; }
 elseif (preg_match('#^/kb/s/([a-z0-9-]+)$#', $path, $m)) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $target = '/kb/section.php'; }
 elseif (preg_match('#^/kb/([a-z0-9-]+)$#', $path, $m) && !is_file($root . "/kb/{$m[1]}.php") && !is_dir($root . "/kb/{$m[1]}")) { $_GET['slug'] = $m[1]; $_REQUEST['slug'] = $m[1]; $target = '/kb/article.php'; }

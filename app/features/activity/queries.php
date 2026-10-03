@@ -50,6 +50,11 @@ function activity_sentence(array $r): string
         'settings.save' => 'changed Help Desk\'s settings', 'ticket.assign' => 'moved a ticket', 'status.save' => 'changed a status', 'status.archive' => 'archived a status',
         'transition.save' => 'changed which moves are allowed', 'type.save' => 'changed a ticket type', 'type.archive' => 'archived a ticket type', 'category.save' => 'changed a category',
         'category.archive' => 'archived a category', 'tag.save' => 'changed a tag', 'tag.delete' => 'deleted a tag', 'field.save' => 'changed a custom field', 'field.archive' => 'archived a custom field',
+        'ticket.create' => 'filed a ticket', 'ticket.reply' => 'replied on a ticket', 'ticket.note' => 'noted on a ticket', 'ticket.transition' => 'changed a ticket\'s status', 'ticket.set_fields' => 'changed a ticket\'s fields',
+        'ticket.tag' => 'tagged a ticket', 'ticket.untag' => 'untagged a ticket', 'ticket.follow' => 'followed a ticket', 'ticket.unfollow' => 'stopped following a ticket', 'ticket.cc_add' => 'copied someone on a ticket', 'ticket.cc_remove' => 'removed a CC from a ticket',
+        'ticket.link' => 'linked tickets', 'ticket.unlink' => 'unlinked tickets', 'ticket.merge' => 'merged tickets', 'ticket.close' => 'closed a ticket', 'ticket.reopen' => 'reopened a ticket', 'ticket.confirm' => 'confirmed a ticket is resolved',
+        'ticket.spam' => 'marked a ticket as spam', 'ticket.delete' => 'deleted a ticket', 'ticket.log_time' => 'logged time on a ticket', 'ticket.time_delete' => 'removed a time entry', 'ticket.attach' => 'attached a file', 'ticket.attachment_delete' => 'removed an attachment',
+        'ticket.secure_link_rotate' => 'rotated a secure link', 'ticket.dispatch' => 'handed a ticket to an agent',
     ];
     if ($r['action'] === 'screen.view') {
         return $who . ' opened a screen';

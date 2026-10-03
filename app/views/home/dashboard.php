@@ -20,7 +20,7 @@
                     <?php else: ?>
                         <ul class="list-unstyled mb-0">
                             <?php foreach ($needsMe as $t): ?>
-                                <li class="mb-1" id="home-needs-<?= (int) $t['ticket_id'] ?>"><?= hx_link(with_back('/tickets/' . (int) $t['ticket_id'], '/'), '<span class="fw-semibold">' . e($t['number']) . '</span> ' . e($t['subject']), 'text-dark') ?></li>
+                                <li class="mb-1 d-flex gap-2 align-items-start" id="home-needs-<?= (int) $t['ticket_id'] ?>"><span class="badge bg-<?= e($t['status_color']) ?> mt-1"><?= e($t['status_label']) ?></span><div class="min-w-0"><?= hx_link(with_back('/tickets/' . (int) $t['ticket_id'], '/'), '<span class="fw-semibold">' . e($t['number']) . '</span> ' . e($t['subject']), 'text-dark') ?><div class="fs-12 text-muted"><?= e($t['reason']) ?><?= ($w = sla_due_words($t['sla_next_due_at'], $t['sla_state'])) !== '' ? ' · ' . e($w) : '' ?></div></div></li>
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
@@ -41,7 +41,7 @@
                     <?php else: ?>
                         <ul class="list-unstyled mb-0">
                             <?php foreach ($myTickets as $t): ?>
-                                <li class="mb-1" id="home-ticket-<?= (int) $t['ticket_id'] ?>"><?= hx_link(with_back('/tickets/' . (int) $t['ticket_id'], '/'), '<span class="fw-semibold">' . e($t['number']) . '</span> ' . e($t['subject']) . ' <span class="text-muted fs-12">· ' . e($t['status']) . '</span>', 'text-dark') ?></li>
+                                <li class="mb-1 d-flex gap-2 align-items-start" id="home-ticket-<?= (int) $t['ticket_id'] ?>"><span class="badge bg-<?= e($t['status_color']) ?> mt-1"><?= e($t['status_label']) ?></span><div class="min-w-0"><?= hx_link(with_back('/tickets/' . (int) $t['ticket_id'], '/'), '<span class="fw-semibold">' . e($t['number']) . '</span> ' . e($t['subject']), 'text-dark') ?><div class="fs-12 text-muted">last <?= e(format_ts($t['last_activity_at'], $tz, 'M j, g:i A')) ?></div></div></li>
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>

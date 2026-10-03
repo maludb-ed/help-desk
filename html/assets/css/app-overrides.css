@@ -191,3 +191,16 @@ label.btn-touch { display: flex; }
 .empty-state .avatar-text { flex: 0 0 auto; }
 /* A placeholder screen (not built yet) reads as a note, never as a broken page. */
 .coming-card { border-style: dashed; }
+
+/* Help Desk slice 3 (2026-10-03) — tickets. The SLA strip on a row's or card's edge (data, as a class), the note's tint, the composer, the timeline. */
+.sla-breached { border-left: 4px solid var(--bs-danger, #dc3545) !important; }
+.sla-at_risk { border-left: 4px solid var(--bs-warning, #ffc107) !important; }
+.sla-paused { border-left: 4px solid var(--bs-secondary, #6c757d) !important; }
+tr.sla-breached > td:first-child, tr.sla-at_risk > td:first-child, tr.sla-paused > td:first-child { border-left-width: 4px; }
+.bg-soft-warning { background: rgba(255, 193, 7, .12); }
+.message-body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.composer-body { min-height: 6rem; }
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+.ticket-card { border-radius: .75rem; }
+#ticket-timeline .border-bottom:last-child { border-bottom: 0 !important; }

@@ -48,5 +48,6 @@ OS_INTERNAL_URL=http://127.0.0.1:8292
 OS_APPLICATION_TOKEN=osapp_dev_$(openssl rand -hex 12)
 MALUDB_API_URL=http://127.0.0.1:8293
 MALUDB_API_TOKEN=dev-maludb-$(openssl rand -hex 8)
+ATTACHMENT_MAX_BYTES=200000
 ENV
 echo "scratch database $DB ready; environment in $ENVF"
