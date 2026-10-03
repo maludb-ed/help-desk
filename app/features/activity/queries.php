@@ -58,6 +58,7 @@ function activity_sentence(array $r): string
         'view.create' => 'saved a view', 'view.update' => 'changed a view', 'view.delete' => 'deleted a view', 'board.move' => 'moved a card on the board', 'board.reorder' => 'reordered a card on the board',
         'canned.create' => 'wrote a canned response', 'canned.update' => 'changed a canned response', 'canned.delete' => 'deleted a canned response', 'canned.apply' => 'used a canned response', 'ticket.bulk_update' => 'changed several tickets at once',
         'rating.submit' => 'rated a ticket', 'survey.send' => 'sent a satisfaction survey', 'csat_settings.save' => 'changed the survey settings', 'report.export' => 'exported a report', 'request_form.rate_limited' => 'was rate-limited on the request form', 'request_form.honeypot' => 'tripped the request form\'s honeypot',
+        'mailbox.create' => 'added a mailbox', 'mailbox.update' => 'changed a mailbox', 'mailbox.archive' => 'stopped using a mailbox', 'mailbox.poll' => 'polled a mailbox', 'mail.inbound' => 'read an inbound email', 'mail.inbound_retry' => 'retried an inbound email', 'mail.inbound_ignore' => 'ignored an inbound email', 'mail.outbound' => 'sent an email', 'notification.send' => 'sent a notice',
     ];
     if ($r['action'] === 'screen.view') {
         return $who . ' opened a screen';

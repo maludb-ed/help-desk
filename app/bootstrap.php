@@ -137,6 +137,7 @@ if (PHP_SAPI !== 'cli') {
                 if ($m !== null && $m['member_kind'] === 'agent' && $m['status'] === 'active' && $m['capability'] === null
                     && action_token_run_id($actionToken) !== null) {
                     $facts = run_facts($actionToken);
+                    $GLOBALS['__run_facts'] = $facts;                 // slice 7: an evaluation run queues no notice
                     if ($facts !== null && !empty($facts['valid']) && !empty($facts['is_agent'])
                         && (int) ($facts['member_id'] ?? 0) === $mid && !empty($facts['endpoints'])) {
                         db()->prepare("UPDATE members SET capability = 'write', synced_at = now() WHERE id = :id")->execute(['id' => $mid]);

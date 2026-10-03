@@ -36,7 +36,7 @@ function create_ticket(PDO $pdo, array $f, ?int $actorMemberId): array
     $row = $st->fetch();
     $id = (int) $row['id'];
     foreach ($f['cc_requester_ids'] ?? [] as $rid) {
-        add_follower($pdo, $id, 'cc', null, (int) $rid, (int) $actorMemberId);
+        add_follower($pdo, $id, 'cc', null, (int) $rid, $actorMemberId);
     }
     foreach ($f['tags'] ?? [] as $slug) {
         $tagId = tag_by_slug_or_create($pdo, (string) $slug);
@@ -191,7 +191,7 @@ function set_ticket_tags(PDO $pdo, int $ticketId, array $add, array $remove): ar
     return $st->fetchAll(PDO::FETCH_COLUMN);
 }
 
-function add_follower(PDO $pdo, int $ticketId, string $kind, ?int $memberId, ?int $requesterId, int $by): void
+function add_follower(PDO $pdo, int $ticketId, string $kind, ?int $memberId, ?int $requesterId, ?int $by): void
 {
     $pdo->prepare('INSERT INTO ticket_followers (ticket_id, kind, member_id, requester_id, added_by) VALUES (:t, :k, :m, :r, :by) ON CONFLICT DO NOTHING')
         ->execute(['t' => $ticketId, 'k' => $kind, 'm' => $memberId, 'r' => $requesterId, 'by' => $by]);
@@ -204,7 +204,7 @@ function remove_follower(PDO $pdo, int $ticketId, string $kind, ?int $memberId, 
     return $st->rowCount() > 0;
 }
 
-function link_tickets(PDO $pdo, int $from, int $to, string $kind, int $by): int
+function link_tickets(PDO $pdo, int $from, int $to, string $kind, ?int $by): int
 {
     if ($from === $to) {
         throw new DomainException('A ticket cannot link to itself.');
@@ -377,52 +377,10 @@ function touch_viewer(PDO $pdo, int $ticketId, int $memberId, bool $composing): 
  */
 function notify(PDO $pdo, array $recipient, string $kind, int $ticketId, string $subject, string $body, ?int $messageId = null, ?string $dedupe = null): int
 {
-    $n = 0;
-    if (!empty($recipient['requester_id'])) {
-        $rid = (int) $recipient['requester_id'];
-        $r = $pdo->prepare('SELECT member_id, primary_email FROM requesters WHERE id = :r');
-        $r->execute(['r' => $rid]);
-        $row = $r->fetch();
-        if ($row === false) {
-            return 0;
-        }
-        if ($row['member_id'] !== null) {
-            return notify($pdo, ['member_id' => (int) $row['member_id']], $kind, $ticketId, $subject, $body, $messageId, $dedupe);
-        }
-        if ($row['primary_email'] === null) {
-            return 0;
-        }
-        $pdo->prepare('INSERT INTO notification_outbox (channel, requester_id, kind, ticket_id, message_ref_id, dedupe_key, subject, body) VALUES (\'email\', :r, :k, :t, :m, :d, :s, :b) ON CONFLICT (dedupe_key) WHERE dedupe_key IS NOT NULL DO NOTHING')
-            ->execute(['r' => $rid, 'k' => $kind, 't' => $ticketId, 'm' => $messageId, 'd' => $dedupe === null ? null : $dedupe . ':r' . $rid . ':email', 's' => $subject, 'b' => $body]);
-        return 1;
+    if (!empty($recipient['requester_id'])) {                            // slice 7: the ONE queueing function (app/features/notify/queue.php)
+        return notify_requester($pdo, (int) $recipient['requester_id'], $kind, $ticketId, $subject, $body, $dedupe, $messageId);
     }
-    $mid = (int) ($recipient['member_id'] ?? 0);
-    if ($mid < 1) {
-        return 0;
-    }
-    $p = $pdo->prepare('SELECT email_enabled, text_enabled, kinds, text_kinds FROM notification_prefs WHERE member_id = :m');
-    $p->execute(['m' => $mid]);
-    $prefs = $p->fetch();
-    $email = $prefs === false ? true : (bool) $prefs['email_enabled'];
-    $text = $prefs === false ? false : (bool) $prefs['text_enabled'];
-    $kinds = $prefs === false ? ['assigned', 'replied', 'mentioned', 'sla_warning', 'sla_breached', 'pending_elapsed', 'escalated', 'created', 'cc_added'] : pg_text_array((string) $prefs['kinds']);
-    $textKinds = $prefs === false ? [] : pg_text_array((string) $prefs['text_kinds']);
-    $isAgent = (bool) $pdo->query("SELECT member_kind = 'agent' FROM members WHERE id = $mid")->fetchColumn();
-    $pdo->prepare('INSERT INTO notifications (member_id, kind, ticket_id, title, body) VALUES (:m, :k, :t, :s, :b)')->execute(['m' => $mid, 'k' => $kind, 't' => $ticketId, 's' => $subject, 'b' => excerpt($body, 200)]);
-    $n++;
-    if ($isAgent) {
-        return $n;                                     // an agent is dispatched or reads my_queue; no mail
-    }
-    $ins = $pdo->prepare('INSERT INTO notification_outbox (channel, member_id, kind, ticket_id, message_ref_id, dedupe_key, subject, body) VALUES (:c, :r, :k, :t, :m, :d, :s, :b) ON CONFLICT (dedupe_key) WHERE dedupe_key IS NOT NULL DO NOTHING');
-    if ($email && (in_array($kind, $kinds, true) || $kind === 'created')) {
-        $ins->execute(['c' => 'email', 'r' => $mid, 'k' => $kind, 't' => $ticketId, 'm' => $messageId, 'd' => $dedupe === null ? null : $dedupe . ':m' . $mid . ':email', 's' => $subject, 'b' => $body]);
-        $n++;
-    }
-    if ($text && in_array($kind, $textKinds, true)) {
-        $ins->execute(['c' => 'text', 'r' => $mid, 'k' => $kind, 't' => $ticketId, 'm' => $messageId, 'd' => $dedupe === null ? null : $dedupe . ':m' . $mid . ':text', 's' => $subject, 'b' => excerpt($body, 300)]);
-        $n++;
-    }
-    return $n;
+    return notify_member($pdo, (int) ($recipient['member_id'] ?? 0), $kind, $ticketId, $subject, $body, $dedupe, $messageId);
 }
 
 /** The notice words of a ticket for a requester: the secure link for an external, the page for a member. */

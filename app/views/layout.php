@@ -103,7 +103,7 @@ $navlink = function (string $id, string $url, string $icon, string $label) use (
                     <div class="nxl-h-item">
                         <a href="/notifications" class="nxl-head-link me-0 position-relative" id="header-bell" aria-label="Notifications" hx-get="/notifications" hx-target="#page-content" hx-push-url="/notifications">
                             <i class="feather-bell"></i>
-                            <?php if ($unread > 0): ?><span class="badge bg-danger nxl-h-badge" id="header-bell-count"><?= $unread > 99 ? '99+' : $unread ?></span><?php endif; ?>
+                            <?= view('notifications/partials/bell.php', ['unread' => $unread]) ?>
                         </a>
                     </div>
                     <div class="nxl-h-item d-none d-sm-flex">

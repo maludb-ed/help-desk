@@ -48,6 +48,12 @@ OS_INTERNAL_URL=http://127.0.0.1:8292
 OS_APPLICATION_TOKEN=osapp_dev_$(openssl rand -hex 12)
 MALUDB_API_URL=http://127.0.0.1:8293
 MALUDB_API_TOKEN=dev-maludb-$(openssl rand -hex 8)
+MALUMAIL_API_URL=http://127.0.0.1:8294
+MALUMAIL_MCP_URL=http://127.0.0.1:8294/mcp
+MALUMAIL_API_KEY=dev-malumail-$(openssl rand -hex 8)
+MAILBOX_SUPPORT_WEBHOOK_SECRET=whsec_$(openssl rand -hex 16)
+MAIL_FROM=helpdesk@example.invalid
+MAIL_FROM_NAME="Help Desk"
 ATTACHMENT_MAX_BYTES=200000
 ENV
 echo "scratch database $DB ready; environment in $ENVF"

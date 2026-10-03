@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T18:51:08+00:00",
+    "generated_at": "2026-10-03T19:20:45+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -485,8 +485,8 @@
             "section": "Email and the inbound queue",
             "when": "the queues' mailboxes and their last poll",
             "params": [],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "mailbox-add": {
             "screen": "mailbox-add",
@@ -494,7 +494,7 @@
             "section": "Email and the inbound queue",
             "when": "to add a mailbox for a queue",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "mailbox-edit": {
@@ -503,7 +503,7 @@
             "section": "Email and the inbound queue",
             "when": "to change a mailbox's queue, signature or polling",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "inbound-list": {
@@ -515,7 +515,7 @@
                 "status",
                 "mailbox"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "rules-list": {
@@ -3524,7 +3524,7 @@
             "approval": "other",
             "log_event": "mailbox.create",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "mailbox_update": {
             "action": "mailbox_update",
@@ -3579,7 +3579,7 @@
             "approval": "other",
             "log_event": "mailbox.update",
             "who": "admin",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "mailbox_archive": {
@@ -3599,7 +3599,7 @@
             "approval": "other",
             "log_event": "mailbox.archive",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "mailbox_poll_now": {
             "action": "mailbox_poll_now",
@@ -3618,7 +3618,7 @@
             "approval": null,
             "log_event": "mailbox.poll",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "inbound_retry": {
             "action": "inbound_retry",
@@ -3637,7 +3637,7 @@
             "approval": null,
             "log_event": "mail.inbound_retry",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "inbound_ignore": {
             "action": "inbound_ignore",
@@ -3662,7 +3662,7 @@
             "approval": null,
             "log_event": "mail.inbound_ignore",
             "who": "admin",
-            "built": false
+            "built": true
         },
         "rule_create": {
             "action": "rule_create",

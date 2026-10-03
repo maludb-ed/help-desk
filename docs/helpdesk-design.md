@@ -367,6 +367,15 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 7 (email and notifications) — BUILT and proven 2026-10-03** (`docs/build-specs/email-notifications.md`): mailboxes on MaluMail (the secret a reference into the environment),
+the signed new-mail webhook and the poll (`mail_inbound_uid()`: one transaction a message, idempotent on uid; auto-replies and bounces make no ticket; threading on Message-IDs and the
+subject tag; a sender's reply, a CC's, a member's (and `#note`), a stranger's, a follow-up after close; a new mail a new ticket with its confirmation), the inbound ledger with retry and
+ignore, the ONE queueing function (`notify_member()` / `notify_requester()`: the bell always, one row per channel the person has on, dedupe keys, nothing for the inactive or an eval
+run), the outbox senders (`outbox_send_batch()`: email through MaluMail from the queue mailbox and threaded, an external's own link, retries and the fifth failure; texts through the
+kernel's K6 with every refusal a skip and the email independent), the templates with the marker, the bell as a Pattern A region, the prefs tab with what was sent lately; 6 actions,
+4 screens + 2 filled. **Proof:** `tests/phase3/slice7/run.sh` — 134 checks green; Phase 2 (250), slices 1 (211), 2 (129), 3 (223), 4 (114), 5 (116) and 6 (130) still green; the
+installer's `plan` clean. Next: slice 8 (`automation-worker.md`).
+
 **Slice 6 (the requesters' doors) — BUILT and proven 2026-10-03** (`docs/build-specs/requesters-doors.md`): the public request form (anonymous session for CSRF, honeypot, the rate limits from
 `app_settings`, channel form, the created notice carrying the secure link), the secure ticket page (`/t/{token}`: the whitelist of what a requester sees, reply with files, confirm, reopen within
 the window, rate; one dead-link page; the abuse guard), the bare public layout, ratings (the row made on first view of a solved ticket or by the survey, written once, the one-time survey token,

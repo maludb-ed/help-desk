@@ -16,6 +16,9 @@ $me = (int) current_member_id();
 $tab = 'notify';
 $prefs = find_prefs($pdo, $me);
 $refusal = last_text_refusal($pdo, $me);
+$recent = $pdo->prepare('SELECT id, kind, channel, subject, status, detail, created_at FROM notification_outbox WHERE member_id = :m ORDER BY id DESC LIMIT 10');
+$recent->execute(['m' => $me]);
+$recent = $recent->fetchAll();
 $presence = has_right('tickets.work') ? find_my_presence($pdo, $me) : null;
 log_screen_view($pdo, 'settings');
 if (wants_json()) {
@@ -23,5 +26,5 @@ if (wants_json()) {
 }
 $notices = ['prefs_saved' => ['success', 'Saved how you are told.'], 'presence' => ['success', 'Saved your availability.']];
 render_screen('My settings', view('settings/index.php', ['tab' => $tab, 'prefs' => $prefs, 'refusal' => $refusal, 'presence' => $presence, 'may' => ['settings' => has_right('settings.manage')],
-    'osChannels' => rtrim((string) env('OS_LAUNCHER_URL', '/'), '/') . '/settings/channels', 'notice' => $notices[$_GET['notice'] ?? ''] ?? null]),
+    'osChannels' => rtrim((string) env('OS_LAUNCHER_URL', '/'), '/') . '/settings/channels', 'recent' => $recent, 'notice' => $notices[$_GET['notice'] ?? ''] ?? null]),
     ['activeNav' => 'my-settings', 'screen' => 'settings', 'entity' => 'settings']);

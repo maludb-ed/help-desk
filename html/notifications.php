@@ -7,6 +7,11 @@ require_once dirname(__DIR__) . '/app/features/settings/present.php';
 require_login();
 require_human();
 $pdo = db();
+if (request_string('count') === '1') {                                                       // slice 7: the bell (Pattern A, no log)
+    header('Vary: HX-Request');
+    echo view('notifications/partials/bell.php', ['unread' => (int) $pdo->query('SELECT count(*) FROM mcp_notifications WHERE read_at IS NULL')->fetchColumn()]);
+    exit;
+}
 $unreadOnly = request_bool('unread');
 $rows = find_my_notifications($pdo, (int) current_member_id(), $unreadOnly);
 log_screen_view($pdo, 'notifications');

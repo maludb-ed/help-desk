@@ -17,6 +17,7 @@ $moves = ticket_allowed_moves($pdo, $id);
 $requester = requester_summary($pdo, $facts['requester_id']) ?? ['requester_id' => $facts['requester_id'], 'kind' => $facts['requester_kind'], 'display_name' => $facts['requester_name'], 'organization_id' => null, 'organization_name' => null, 'email' => null, 'phone' => null, 'notes' => null, 'support_tier' => null, 'last_tickets' => []];
 $history = ticket_history($pdo, $id);
 log_activity($pdo, 'screen.view', null, null, ['screen' => 'ticket-view', 'ticket_id' => $id, 'queue_id' => $facts['queue_id'], 'after' => ['ticket_id' => $id]]);
+$pdo->prepare('UPDATE notifications SET read_at = now() WHERE member_id = :m AND ticket_id = :t AND read_at IS NULL')->execute(['m' => (int) current_member_id(), 't' => $id]);   // slice 7: opening the ticket reads its notices
 if (wants_json()) {
     respond_screen(['ticket' => present_ticket($t, $internals), 'conversation' => array_map('present_message', $conversation), 'moves' => array_map('present_move', $moves),
         'requester' => present_requester_brief(($internals ? $requester : ['email' => null, 'phone' => null] + $requester) + ['ticket_count' => $requester['ticket_count'] ?? 0]) + ['organization' => $requester['organization_name'], 'notes' => $internals ? ($requester['notes'] ?? null) : null],   // the address and notes: this queue's holders only

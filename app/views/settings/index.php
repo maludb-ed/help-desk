@@ -18,5 +18,5 @@
         <button type="submit" class="btn btn-light btn-touch w-100 mt-2" id="presence-form-save-btn">Save availability</button>
     </div></form>
     <?php endif; ?>
-    <?= view('settings/partials/prefs.php', ['prefs' => $prefs, 'refusal' => $refusal, 'osChannels' => $osChannels]) ?>
+    <?= view('settings/partials/notify.php', ['prefs' => $prefs, 'refusal' => $refusal, 'osChannels' => $osChannels, 'recent' => $recent ?? []]) ?>
 </div>

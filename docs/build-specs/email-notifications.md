@@ -166,34 +166,52 @@ Schema: `mailboxes`, `inbound_email`, `outbound_email` (db/012), `notifications`
   digest); IMAP intake for a non-MaluMail provider (Later); push notifications; a text to an external (K6 is members-only;
   externals get email); dispatching to agents (slice 8).
 
-## Proof (a stubbed MaluMail at `tests/fake_malumail.php` for `/mcp` and `/v1/send`, a stubbed kernel for K6 at `tests/fake_kernel.php`; curl for the webhook; live as members for the screens; headless Chromium at 375 × 740 and 1280 × 800)
-- **The webhook**: a signed notice for a known mailbox → 204 and the message read from the stub, a ticket created
-  (`channel email`, the subject, the body as the first reply, the requester external and claimed by its domain, the link
-  minted, the `created` outbox row carrying `/t/`); the same notice again → 204 and **no second ticket** (`provider_uid`
-  unique); a bad signature → 403 and nothing; a six-minute-old timestamp → 403; a notice for an unknown address → 403;
-  a GET → 405; `source = webhook` on every row.
-- **Threading**: a reply whose `In-Reply-To` is our outbound Message-ID lands on the ticket as the requester's public
-  reply and reopens a pending ticket; one with only `[HD-1042]` in the subject lands too; one from a CC lands as the CC's;
-  one from Marco (a member with `tickets.work`) lands as **his** public reply, and with `#note` first as a note; one from a
-  stranger lands and adds them as CC; a reply to a **closed** ticket makes a follow-up ticket linked `follow_up_of`.
-- **Parsing**: the text above `On … wrote:`, above `-----Original Message-----` and above our marker is what the message
-  holds; the full text stays in `inbound_email`; an `Auto-Submitted: auto-replied` mail → `auto_reply`, no ticket; a DSN
-  for one of our Message-IDs → `bounce`, the outbound row `failed`, no ticket; a sender bounced twice → `suppressed`.
-- **The poll**: with the webhook never called, the worker's step picks the unseen message within one pass and advances
-  `last_uid`; a message the stub refuses to `read_message` leaves the row `failed` and the uid not advanced; `inbound_retry` then processes it.
-- **Outbound and K6**: a reply by Marco queues the requester's email (subject `[HD-1002] …`, `in_reply_to` the inbound
-  Message-ID, the marker line, the secure link for an external, the reply in full, **no note**) and nothing for Marco; the
-  stub receives it and the row is `sent` with `provider_message_id`; a member with text on and the stubbed kernel answering
-  202 gets a text row `sent` and an email row `sent`; with the kernel answering `no_verified_phone`, `opted_out`,
-  `rate_limited`, `no_sender`, `not_held` the text row is `skipped` with the code **and the email row is sent**; a 5xx is
-  `retry` and the 5th → `failed`; no API key → `queued` and `unconfigured`, attempts 0, texts still sent; the dedupe key
-  stops a second queueing of the same event; an inactive member and an evaluation run queue nothing.
-- **Nothing sensitive leaves**: grep every queued body and everything the stubs received for the note's text, the other
-  requester's address, Dana's surname on a requester mail, any token but the recipient's own link — none.
-- **Screens**: `mailboxes-list` for the admin only (Marco 403 *"You may not change Help Desk's settings."*); the form never
-  shows a secret value; `inbound-list` filters by status; the bell count follows `mark_read`; the prefs tab round-trips the
-  five fields and shows the phone note after a `no_verified_phone` skip; 375 px and 1280 px without horizontal scroll.
-- JSON mode for every action; `php bin/build_action_registry.php --check` passes.
+## Proof (`tests/phase3/slice7/run.sh`: the scratch database, slice 3's world, the stubbed MaluMail at `tests/fake_malumail.php` (`/mcp` and `/v1/send`, :8294), the stubbed kernel's K6, curl for the signed webhook, members through dev hand-offs and action tokens, the batch and the poll run in-process, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-03: 134 checks green** (webhook 17, threading 15, parsing 8, poll 17, outbound 22, leaks 6, screens 18, json 11, browser 19, the registry); Phase 2's and
+slices 1–6's suites still green (Phase 2's vhost check now expects the webhook: 403 unsigned, 405 on GET); the installer's `plan` clean.
+- [x] **The webhook.** A signed notice → 204; the inbound row processed and linked to the ticket and the message with the headers kept; one ticket (channel email, the subject, the
+  mailbox's queue, `created_by` NULL); the requester an external named from the From and claimed by the domain; the body as the first public reply with its Message-ID; the attachment on
+  the message and the Cc a follower; the link minted and the `created` notice carrying it; read through the MCP and marked seen; `ticket.create` and `mail.inbound` with source webhook.
+  The same notice again → 204 and no second ticket; a bad signature, a six-minute-old timestamp, an unknown address → 403 and nothing written; GET → 405; another event type → 204, nothing read.
+- [x] **Threading.** Our reply goes out with the provider's Message-ID; the requester's reply on it lands as their public reply with the quoted part stripped and reopens the pending
+  ticket, the assignee told; one with only `[HD-…]` in the subject lands; a CC's lands as the CC's; Marco's lands as HIS public reply (the original message stripped; it counts as an agent
+  reply and the requester is told), `#note` first as his internal note; a stranger lands and becomes a CC (`ticket.cc_add`); a reply to a closed ticket makes a follow-up: same requester,
+  the original's subject, linked `follow_up_of`, `ticket.create` (channel email) and `ticket.link` logged, the requester told of the new number.
+- [x] **Parsing.** `mail_strip_quoted()` over five shapes; the message holds the text above the line while `inbound_email` keeps the full text; `Auto-Submitted: auto-replied` and
+  `Precedence: bulk` → auto_reply, no ticket; a DSN for our Message-ID → bounce, the outbound row failed, no ticket; a sender bounced twice in 7 days → suppressed; our own address → ignored.
+- [x] **The poll.** With no webhook the worker's step handles the unseen message, `last_uid` 40, marked seen, logged with source cron; a second pass handles nothing; a message the stub
+  refuses leaves its row failed with the error while the one after it is still handled and the floor stays below the failure; the inbound screen lists it with Retry and the mailbox card
+  the problem count; `inbound_retry` processes it (both marked seen), again → 422; Poll now from the screen handles a new one and `last_uid` follows; `inbound_ignore` with a reason; the
+  list filters by status; an ignored message is not read again.
+- [x] **Outbound and K6.** Marco's reply queues one `replied` row for the requester and none for himself; the stub receives it: to the requester, `[HD-…]` in the subject, from the queue
+  mailbox with its From name, `in_reply_to` and `references` the inbound Message-ID, the marker, the reply in full, the requester's own secure link, the signature — and no note; the row
+  sent with the provider's Message-ID, `outbound_email` rows, `notification.send` logged without an address, the message carrying the Message-ID it went out with. Lena with texts on:
+  assigning queues a text row and an email row; the kernel's 202 → both sent (the kernel's id kept), the text naming the number and the link with the reference; `no_verified_phone`,
+  `opted_out`, `rate_limited`, `not_held`, `no_sender` → the text skipped with its code and the email sent; a 5xx → retry in a minute, the fifth → failed; no API key → the email stays
+  queued (unconfigured, attempts 0) and the text still goes, then sent once the key is back; the same dedupe key twice → once per channel; an inactive member and an evaluation run → nothing;
+  a rejected address → skipped undeliverable with the outbound row suppressed; a 502 from MaluMail → retry.
+- [x] **Nothing sensitive leaves.** Every queued body and everything the stub received: no note's text; a requester's mail carries no other requester's address and no staff surname;
+  every token in a requester's mail is that ticket's own link; a member's mail never carries a secure link; the mail and notice log rows hold no address and no secret.
+- [x] **Screens.** `mailboxes-list` for the admin only (Marco 403 *"You may not change Help Desk's settings."*); the card with the secret ✓ and Poll now; the form shows the key and ✓,
+  never the value, and the webhook URL; a mailbox whose key is not set saves with a warning in `did`; a duplicate address and a bad key name → 422; `mailbox.update` carries the changed
+  fields only; archived → off the list; support cannot create one. The bell partial counts the unread; Mark all read empties it; a new mention → 1; opening the ticket reads its notices;
+  the notifications page lists them. The prefs tab round-trips the five fields and, after a `no_verified_phone` skip, shows the phone note and what was sent lately.
+- [x] **JSON mode.** `mailbox_create` (`{ok, record_id, location, secret_set}`), `mailbox_update` keeps what it was not sent, `mailbox_poll_now` (`{ok, handled}`), `mailbox_archive`
+  (again → 422), `inbound_retry` on nothing → 404, support → 403, `notification_read` (`{ok, count}`), `prefs_save` (`{ok, email_enabled, text_enabled}`); the list answers JSON without
+  a secret; the inbound list answers JSON.
+- [x] **375 × 740 and 1280 × 800.** The mailboxes list, the form, the inbound ledger and the prefs tab render without horizontal scroll; no console errors; Mark all read empties the
+  bell without a page load.
+
+**Decisions taken while building (2026-10-03):** the stub is `tests/fake_malumail.php` on :8294 (the fake MaluDB's `/v1/send` is no longer used; the dev env carries `MALUMAIL_API_URL`,
+`MALUMAIL_MCP_URL`, `MALUMAIL_API_KEY`, `MAILBOX_SUPPORT_WEBHOOK_SECRET`, `MAIL_FROM`, `MAIL_FROM_NAME`; its state is reset on every server start); slice 3's `notify()` delegates to the
+one queueing function; `notify_body()` renders the kind's template around the queued text at send time (the `[number]` subject, the marker, the signature) rather than at queue time;
+an external recipient whose queued text carries no `/t/` link gets an **extra** live link minted at send time (nothing rotates); threading is on the conversation's own Message-IDs,
+newest first (the requester's last mail, so their client threads); the poll continues past a failed message and keeps `last_uid` below it (a retry or the next poll sees it again); a
+follow-up keeps the original's subject; `add_follower()` and `link_tickets()` take a nullable actor (a mail acts for nobody); the `#note` marker is honoured only for a member who works
+the queue; a Cc on a new mail becomes a `cc` follower by requester row; the created notice names the number only; the eval check reads the run facts the bootstrap keeps
+(`$GLOBALS['__run_facts']`); the `rated`/`survey` kinds and the bell's `created` are part of the prefs' default list only as the schema says; `html/tickets/view.php` marks the ticket's
+notices read on open; the prefs tab (`settings/partials/notify.php`) wraps Phase 2's partial and adds "sent to you lately" (channel and outcome, never a body). The open questions stand
+(the env keys are in `maludb-os.json` `env.optional` already; a stranger becomes a CC).
 
 ## Open questions
 - `MALUMAIL_MCP_URL` and `MAILBOX_*_WEBHOOK_SECRET` are not in `maludb-os.json` `env.optional`; they should be added

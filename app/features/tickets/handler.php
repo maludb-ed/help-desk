@@ -29,6 +29,12 @@ require_once dirname(__DIR__) . '/bulk/handler.php';
 require_once dirname(__DIR__) . '/ratings/queries.php';
 require_once dirname(__DIR__) . '/ratings/present.php';
 require_once dirname(__DIR__) . '/public/secure.php';
+require_once dirname(__DIR__, 2) . '/mail.php';
+require_once dirname(__DIR__) . '/settings/queries.php';
+require_once dirname(__DIR__) . '/notify/queue.php';
+require_once dirname(__DIR__) . '/notify/send.php';
+require_once dirname(__DIR__) . '/mail/inbound.php';
+require_once dirname(__DIR__) . '/mail/present.php';
 
 /** The ticket a request names (`ticket`, `ticket_id`, `id`), visible to the caller — else 404 "Ticket not found." */
 function ticket_from_request(PDO $pdo, string ...$fields): array

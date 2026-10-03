@@ -15,4 +15,7 @@ log_activity($pdo, 'notification.read', $id === null ? null : 'notification', $i
 $pdo->commit();
 emit_action_status(true, ['did' => $id === null ? 'Marked ' . $n . ' notification' . ($n === 1 ? '' : 's') . ' read' : ($n === 1 ? 'Marked the notification read' : 'That notification was already read'),
     'record_id' => $id, 'count' => $n, 'refresh' => 'notificationChanged']);
+if (is_htmx_request() && !wants_json()) {                                                    // slice 7: the bell out-of-band beside the page
+    hx_trigger('notificationChanged');
+}
 saved_go('/notifications', 'notificationChanged');

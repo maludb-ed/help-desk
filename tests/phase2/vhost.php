@@ -21,7 +21,7 @@ ok(req('GET', '/request')['code'] === 200 && req('GET', '/t/' . str_repeat('ab',
 foreach (['/kb/s/getting-started', '/kb/some-article', '/settings/automation/1/runs', '/reports/backlog'] as $p) {
     ok(req('GET', $p, ['jar' => $j])['code'] === 404, "$p is rewritten but its handler is not built: 404 (its slice brings it)");
 }
-ok(req('POST', '/channels/malumail/mail')['code'] === 404, 'POST /channels/malumail/mail: 404 until slice 7');
+ok(req('POST', '/channels/malumail/mail')['code'] === 403 && req('GET', '/channels/malumail/mail')['code'] === 405, 'POST /channels/malumail/mail unsigned: 403 (slice 7); GET: 405');
 $h = req('GET', '/api/v1/health');
 ok($h['code'] === 200 && json_decode($h['body'], true)['application'] === 'helpdesk', '/api/v1/health answers');
 ok(req('GET', '/api/v1/health.php')['code'] === 200, '/api/v1/health.php answers too');
