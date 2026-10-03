@@ -247,8 +247,8 @@ Actions (base `/views/`):
 | `view_create` | `save.php` | **name**, scope (personal or queue or global), queue (for a queue view), filters (JSON over the bounded vocabulary), sort_by, sort_dir (asc or desc), columns[], layout (list or board), board (column_field and swimlane and wip and solved_days as JSON) | view_delete | | | `view.create` | `views.personal` or lead for shared |
 | `view_update` | `save.php` | **view**, any field of view_create | restore prior | | | `view.update` | own or lead for shared |
 | `view_delete` | `delete.php` | **view** (never a standard one) | — | ✔ | | `view.delete` | own or lead for shared |
-| `board_move_card` | `board/move.php` | **ticket**, **column** (the status or other column value to drop into), position (the rank within the column), resolution_code, hold_reason, pending_until | restore prior | | | `board.move` | work |
-| `board_reorder` | `board/reorder.php` | **ticket**, **position** (the rank within its column) | restore prior | | | `board.reorder` | work |
+| `board_move_card` | `/board/move.php` | **ticket**, **column** (the status or other column value to drop into), position (the rank within the column), resolution_code, hold_reason, pending_until | restore prior | | | `board.move` | work |
+| `board_reorder` | `/board/reorder.php` | **ticket**, **position** (the rank within its column) | restore prior | | | `board.reorder` | work |
 
 ## Working faster: canned responses and bulk changes
 

@@ -20,6 +20,7 @@ function nav_groups(): array
         'Work' => [
             ['inbox',         '/inbox',         'feather-layers',      'Inbox',            'tickets.view_queue'],
             ['board',         '/board',         'feather-trello',      'Board',            'tickets.view_queue'],
+            ['views',         '/views/',        'feather-bookmark',    'Views',            'tickets.view_queue'],
             ['requesters',    '/requesters/',   'feather-users',       'Requesters',       'tickets.view_queue'],
             ['organizations', '/organizations/','feather-briefcase',   'Organizations',    'tickets.view_queue'],
             ['canned',        '/canned/',       'feather-message-square', 'Canned responses', 'tickets.work'],
@@ -138,7 +139,7 @@ function back_link(): ?array
         return null;
     }
     $path = parse_url($back, PHP_URL_PATH) ?: '/';
-    $labels = ['/' => 'Home', '/my-tickets' => 'My tickets', '/inbox' => 'Inbox', '/board' => 'Board', '/requesters/' => 'Requesters',
+    $labels = ['/' => 'Home', '/my-tickets' => 'My tickets', '/inbox' => 'Inbox', '/board' => 'Board', '/views/' => 'Views', '/requesters/' => 'Requesters',
                '/organizations/' => 'Organizations', '/canned/' => 'Canned responses', '/reports/' => 'Reports', '/kb/' => 'Knowledge base',
                '/notifications' => 'Notifications', '/activity' => 'Activity', '/settings/' => 'My settings', '/settings/tokens/' => 'Tokens',
                '/settings/general' => 'Help Desk settings', '/settings/agents' => 'Agents', '/settings/sla/' => 'SLA and hours', '/settings/queues/' => 'Queues',

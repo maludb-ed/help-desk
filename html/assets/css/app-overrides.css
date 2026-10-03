@@ -204,3 +204,17 @@ details > summary { list-style: none; cursor: pointer; }
 details > summary::-webkit-details-marker { display: none; }
 .ticket-card { border-radius: .75rem; }
 #ticket-timeline .border-bottom:last-child { border-bottom: 0 !important; }
+
+/* Help Desk slice 4 (2026-10-03) — the board. The column strip scrolls inside #board-columns (never the page), one column per snap on a phone, the columns share the width from 992 px. */
+.board-strip { display: flex; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: .5rem; align-items: flex-start; }
+.board-column { flex: 0 0 86vw; max-width: 86vw; scroll-snap-align: start; background: var(--bs-light, #f5f6fa); border-radius: .75rem; }
+@media (min-width: 992px) { .board-column { flex: 1 1 0; min-width: 11rem; max-width: none; } }
+.board-column-cards { min-height: 4rem; padding: .5rem; }
+.board-card { cursor: grab; border-radius: .75rem; }
+.board-card.sortable-ghost { opacity: .4; }
+.board-card.sortable-drag { cursor: grabbing; }
+.board-card .card-body { padding: .75rem; }
+.board-wip-over { color: var(--bs-danger, #dc3545); font-weight: 600; }
+.chip-check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chip-check { cursor: pointer; }
+.chip-check:has(input:checked) { background: var(--bs-primary, #3454d1); color: #fff; border-color: var(--bs-primary, #3454d1); }

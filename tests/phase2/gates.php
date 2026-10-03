@@ -37,9 +37,9 @@ foreach ($matrix as $route => $allowed) {
 ok($wrong === [], "$n role × screen checks (" . count($matrix) . ' screens × 5 roles) answer 200 or 403 as the rights say' . ($wrong ? ': ' . implode('; ', array_slice($wrong, 0, 6)) : ''));
 $r = page($jUser, '/inbox');
 ok(str_contains($r['body'], 'You may not see this queue&#039;s tickets.') || str_contains($r['body'], "You may not see this queue's tickets."), 'a refusal says what the person may not do, in words ("You may not see this queue\'s tickets.")');
-$r = page($jSupport, '/board');                                                         // the inbox is slice 3's; the board is a placeholder until slice 4
-ok($r['code'] === 200 && str_contains($r['body'], 'id="board-coming"') && str_contains($r['body'], 'slice 4'), 'a placeholder names the slice that builds it (Board → slice 4)');
-ok((json_decode(page($jSupport, '/board', $json)['body'], true)['error']['code'] ?? '') === 'not_built', 'and answers JSON callers not_built (501)');
+$r = page($jSupport, '/canned/');                                                       // the inbox is slice 3's, the board slice 4's; canned responses are a placeholder until slice 5
+ok($r['code'] === 200 && str_contains($r['body'], 'id="canned-coming"') && str_contains($r['body'], 'slice 5'), 'a placeholder names the slice that builds it (Canned responses → slice 5)');
+ok((json_decode(page($jSupport, '/canned/', $json)['body'], true)['error']['code'] ?? '') === 'not_built', 'and answers JSON callers not_built (501)');
 $menu = fn (string $j): array => (preg_match_all('/id="nav-([a-z-]+)"/', page($j, '/')['body'], $m) ? $m[1] : []);
 $groups = fn (string $j): array => (preg_match_all('/nxl-caption"><label>([^<]+)</', page($j, '/')['body'], $m) ? $m[1] : []);
 ok($groups($jUser) === ['Help', 'Settings', 'Me'] && !in_array('inbox', $menu($jUser), true) && in_array('my-settings', $menu($jUser), true), 'a requester-only person sees Help, My settings (and Me): ' . implode(', ', $groups($jUser)));

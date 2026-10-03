@@ -367,6 +367,13 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**Slice 4 (views and the board) — BUILT and proven 2026-10-03** (`docs/build-specs/views-board.md`): the one translator (`app/features/views/filters.php`; slice 3's inbox reads through
+it), saved views (standard, mine, my queues'; the list as cards with counts, the form with one row per filter key, sort, columns, layout and board settings; a standard view copied, never
+changed), the board (a view as columns by status, priority, assignee, queue or type, swimlanes, WIP, solved days; drag with SortableJS or the card's "Move to…" select; a drop is slice 3's
+`transition_ticket()` via board, with the required field inline and the refusals in the same words; reorder within a column), the vendored SortableJS 1.15.6; 5 actions, 4 screens.
+**Proof:** `tests/phase3/slice4/run.sh` — 114 checks green; Phase 2 (250), slice 1 (211), slice 2 (129) and slice 3 (223) still green; the installer's `plan` clean. Next: slice 5
+(`working-faster.md`).
+
 **Slice 3 (tickets core, THE EXEMPLAR) — BUILT and proven 2026-10-03** (`docs/build-specs/tickets-core.md`): the inbox (the seeded views as tabs, ad-hoc filters, cards on a phone and a table
 on a desktop, `#ticket-list` swapped alone), filing for every requester kind (oneself, on behalf, an external by email, an agent under a run token with an idempotent `external_id`), the ticket page
 (the conversation and the composer, the fields panel with the matrix's moves, the requester card, followers and CCs, links, time, SLA, the secure link, the timeline in words, viewers), the merge

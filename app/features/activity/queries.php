@@ -55,6 +55,7 @@ function activity_sentence(array $r): string
         'ticket.link' => 'linked tickets', 'ticket.unlink' => 'unlinked tickets', 'ticket.merge' => 'merged tickets', 'ticket.close' => 'closed a ticket', 'ticket.reopen' => 'reopened a ticket', 'ticket.confirm' => 'confirmed a ticket is resolved',
         'ticket.spam' => 'marked a ticket as spam', 'ticket.delete' => 'deleted a ticket', 'ticket.log_time' => 'logged time on a ticket', 'ticket.time_delete' => 'removed a time entry', 'ticket.attach' => 'attached a file', 'ticket.attachment_delete' => 'removed an attachment',
         'ticket.secure_link_rotate' => 'rotated a secure link', 'ticket.dispatch' => 'handed a ticket to an agent',
+        'view.create' => 'saved a view', 'view.update' => 'changed a view', 'view.delete' => 'deleted a view', 'board.move' => 'moved a card on the board', 'board.reorder' => 'reordered a card on the board',
     ];
     if ($r['action'] === 'screen.view') {
         return $who . ' opened a screen';

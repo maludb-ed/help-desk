@@ -180,6 +180,7 @@ $navlink = function (string $id, string $url, string $icon, string $label) use (
     <script src="/assets/vendors/js/select2.min.js"></script>
     <script src="/assets/vendors/js/select2-active.min.js"></script>
     <script src="/assets/vendors/js/htmx.min.js"></script>
+    <script src="/assets/vendors/sortablejs/Sortable.min.js"></script>
     <script>
         // CSRF over HTMX (php-session-auth): every non-GET request carries the session's token.
         document.body.addEventListener('htmx:configRequest', function (e) {

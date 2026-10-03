@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T17:24:32+00:00",
+    "generated_at": "2026-10-03T18:02:37+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -405,8 +405,8 @@
                 "priority",
                 "q"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "views-list": {
             "screen": "views-list",
@@ -414,7 +414,7 @@
             "section": "Views and the board",
             "when": "the saved views and boards they may open: standard, their own, their queues'",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "view-add": {
@@ -426,7 +426,7 @@
                 "layout",
                 "from"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "view-edit": {
@@ -435,7 +435,7 @@
             "section": "Views and the board",
             "when": "to change a view's filters, columns, layout or board settings",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "canned-list": {
@@ -3086,7 +3086,7 @@
             "approval": null,
             "log_event": "view.create",
             "who": "`views.personal` or lead for shared",
-            "built": false
+            "built": true
         },
         "view_update": {
             "action": "view_update",
@@ -3159,7 +3159,7 @@
             "approval": null,
             "log_event": "view.update",
             "who": "own or lead for shared",
-            "built": false,
+            "built": true,
             "partial": true
         },
         "view_delete": {
@@ -3179,12 +3179,12 @@
             "approval": null,
             "log_event": "view.delete",
             "who": "own or lead for shared",
-            "built": false
+            "built": true
         },
         "board_move_card": {
             "action": "board_move_card",
             "section": "Views and the board",
-            "endpoint": "/views/board/move.php",
+            "endpoint": "/board/move.php",
             "params": [
                 {
                     "name": "ticket",
@@ -3228,12 +3228,12 @@
             "approval": null,
             "log_event": "board.move",
             "who": "work",
-            "built": false
+            "built": true
         },
         "board_reorder": {
             "action": "board_reorder",
             "section": "Views and the board",
-            "endpoint": "/views/board/reorder.php",
+            "endpoint": "/board/reorder.php",
             "params": [
                 {
                     "name": "ticket",
@@ -3253,7 +3253,7 @@
             "approval": null,
             "log_event": "board.reorder",
             "who": "work",
-            "built": false
+            "built": true
         },
         "canned_create": {
             "action": "canned_create",

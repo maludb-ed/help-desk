@@ -129,27 +129,45 @@ and ignored on read of an old row:
   update from a list selection (slice 5); SSE live boards (the 30 s refresh is the design; SSE only if the owner asks);
   per-view notifications; a calendar layout (Later).
 
-## Proof (live as members through dev hand-offs; curl for JSON mode; headless Chromium at 375 × 740 and 1280 × 800)
-- **The translator is the law**: for each key of the vocabulary a fixture ticket that matches and one that does not; the
-  inbox with `?status=open&assignee=me` and the saved view `{"status_category":["open"],"assignee":"me"}` answer the same
-  ids; an unknown key on save → 422 *"'foo' is not a filter."*; `sort_by=foo` → the default sort, never SQL.
-- **Who sees which view**: Priya (Requester) sees the standard views and none of Marco's personal ones (a direct URL to
-  one → 404 *"View not found."*); Marco sees IT's queue views, not Facilities'; a standard view's delete → 422; Priya's
-  `view_create` with scope `global` → 403 *"You may not change shared views."*.
-- **The board shows only what the view's audience may see**: Marco's team board holds IT's three tickets and none of
-  Facilities' (fixture of the schema proof); closed never appears; a ticket solved 5 days ago is absent with
-  `solved_days = 3` and present with 7.
-- **A drop is a transition**: dragging HD-1002 from Open to Solved expands the card for a resolution code; Confirm with
-  `resolved` → the ticket is solved, one `ticket.transition` row (`via board`) and one `board.move` row; dragging a Closed
-  card → 422 *"HD-1003 cannot move from Closed."* and the card is back in its column; Priya's forced POST to
-  `board/move.php` → 403; a drop within a column rewrites `board_position` and the order survives a reload.
-- **No JS**: with JavaScript off the "Move to…" select lists exactly `hd_transition()`'s moves and the POST lands the card
-  in the new column on reload.
-- **JSON mode**: `board_move_card` through an action token answers `{ok:true, ticket_id, status}`; the required-field case
-  answers 422 `{error:{code:'invalid', fields:['resolution_code']}}`.
-- **375 px**: the column strip scrolls inside `#board-columns` (page `scrollWidth` = viewport), snap per column, cards'
-  buttons ≥ 44 px; **1280 px**: five columns visible, the swimlane select in the header.
-- `php bin/build_action_registry.php --check` passes; every screen of this slice is `built`.
+## Proof (`tests/phase3/slice4/run.sh`: the scratch database, slice 3's world, members through dev hand-offs, curl with signed action tokens and HTMX-shaped posts, headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-03: 114 checks green** (translator 11, who 27, board 17, drops 29, json 11, browser 19, the registry); Phase 2's, slice 1's, slice 2's and slice 3's suites
+still green; the installer's `plan` clean.
+- [x] **The translator is the law.** Seventeen keys, each with a ticket that matches and one that does not, through the inbox's query keys (`status`, `status_key`, `queue`, `assignee=me|none|id`,
+  `requester=me`, `organization`, `priority`, `type`, `category`, `tags`, `needs_reply`, `sla`, `stale_days`, `channel`, `q`); the inbox with `?status=open&assignee=me` and the saved view
+  `{"status_category":["open"],"assignee":"me"}` answer the same ids; `'foo'` on save → 422 *"'foo' is not a filter."*; bad values → 422 by key; `sort_by` as SQL on save → 422 by key and the
+  tickets are still there; `?sort=foo` on the inbox → the default order; the form's arrays (blanks dropped, tags split, columns allow-listed).
+- [x] **Who sees which view.** Priya: the eight standard views and a global one, none of Marco's or the queues'; her `view_create` with scope global → 403 *"You may not change shared views."*, a
+  personal one → 403 (no `views.personal`); Marco: his own, IT's queue view, not Facilities' (a direct URL → 404 *"View not found."*); Lena cannot open Marco's personal view; the inbox and the
+  board ignore a view one may not see; a queue view for a queue the lead does not HOLD → 422 (`view_all` is not holding); a standard view's delete and change → 422 in the sentence, Save a copy
+  → a personal copy with its filters; support changing or deleting a shared view → 403; the lead renames one and sets a swimlane, the filters it was not sent kept, `view.update` logged; the list
+  carries `may_change`, the count and the layout; cards show Open on every view and Edit only on one I may change; empty Mine says its sentence.
+- [x] **The board shows only what the view's audience may see.** Marco's team board: the five status columns in order, IT's tickets, none of Facilities' or the general queue's; Priya → 403;
+  the closed ticket on no column; solved today shows, solved 5 days ago absent with `solved_days = 3` and present with 7; the WIP limit in the header as *count / limit*; swimlanes by priority as
+  lanes with lane-scoped column ids; columns by assignee (Unassigned first); a list view opened on `/board` renders as a status board with its filters; a status taken off the board loses its
+  column; the header filters ride on the view through the translator; `screen.view` carries `after.view_id`.
+- [x] **A drop is a transition.** New → Open by the drag's post: the card re-rendered in Open with `HX-Trigger: ticketChanged` and the two columns' counts out-of-band, one `ticket.transition`
+  (via board) and one `board.move` (before new, after open, position, queue_id); Open → Solved comes back expanded with a resolution-code select, Confirm and Cancel, nothing moved; Confirm with
+  resolved → solved, the requester told; a Closed card → 422 *"HD-… cannot move from Closed."* retargeted to `#flash`; an unknown column → 422; Priya's forced POST on her own ticket → 403, on
+  one she cannot see → 404; open → closed by support → the Lead sentence; within a column, x ranked first and y second survive a reload, `board.reorder` logged, a negative rank → 422; a priority
+  board's drop is `ticket_set_fields`, an assignee board's `ticket_assign` (the person told, the agent dispatched, someone outside the queue → 422).
+- [x] **No JavaScript.** The card's "Move to…" lists exactly `hd_transition()`'s moves for support from New; the plain POST → 302 back to the board and the card is in Open on reload; a move
+  needing a field → 302 to `?expand=&to=`, which renders that card expanded.
+- [x] **JSON mode.** `board_move_card` → `{ok, ticket_id, status, column, location}`; the required-field case → 422 `{error: {code: invalid, fields: {resolution_code: …}}}`; `board_reorder` →
+  `{ok, position}`; `view_create` by an agent with JSON filters, columns as a list and board JSON; `view_update` keeps what it was not sent; filters that are not JSON → 422; `view_delete`; the
+  board answers JSON under a token in `board_snapshot`'s shape (a card carries column, board_position, age_words, sla, status).
+- [x] **375 × 740 and 1280 × 800.** The column strip scrolls inside `#board-columns` (page `scrollWidth` = viewport), one column per snap, every button and select ≥ 44 px, the views list and
+  the form within the width; five columns visible on the desktop with the swimlane select in the header; a REAL drag of a New card into Open re-renders it there and the region re-fetches;
+  a drag into Solved expands the card, Confirm settles it in Solved; choosing Priority swimlanes renders lanes without a page load; the views list as cards; the board and its selects render
+  with JavaScript off; no console errors (an aborted stale refresh, `hx-sync`, is by design).
+
+**Decisions taken while building (2026-10-03):** the translator lives in `app/features/views/filters.php` and slice 3's `ticket_where()` now delegates to it (`find_tickets_filtered()` sorts
+through `view_sort_sql()`, the inbox's short sort keys kept as aliases); the inbox reads its ad-hoc keys through `view_filters_from_request()` and accepts `?view=` as an id or a system key;
+the filter builder is one fixed row per key (fourteen rows, each its control) rather than a key select — honest without JavaScript; the manifest's two board rows name `/board/move.php` and
+`/board/reorder.php` absolutely (the section's base is `/views/`); a queue view needs a queue the caller HOLDS (`hd_held_queue_ids()`), not merely sees; a request from inside the region
+(a drag, the card's forms) selects `.board-card` from its response — it inherits the region's `hx-select` otherwise and the card vanishes; the filter form carries `hx-sync="#board-columns:replace"`
+so a person's change wins over a stale refresh; `board_reorder` shifts the cards at or after the rank within the same column (no extra parameter); a column's move table is
+`board_move_table()` — `hd_transition()` once per pair of statuses a page, never per card; "Views" is a Work menu item (`tickets.view_queue`) and the inbox gained Views, Save as view and
+Board links; the view form's queue select lists the queues held. The open question below stands as written: a queue view is visible to everyone who holds the queue.
 
 ## Open questions
 - Should a **queue** view be visible to the queue's collaborators (read) or only to those with `tickets.work`? This spec

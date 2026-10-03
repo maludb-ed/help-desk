@@ -1,4 +1,5 @@
-<?php /** The inbox (screen `inbox`). Data: views, view (system_key), filters, queues, assignees, rows, page, more, query, here, tz, notice */ ?>
+<?php /** The inbox (screen `inbox`). Data: views, view (system_key), saved (the view row or null), filters, adhoc, queues, assignees, rows, page, more, query, here, tz, notice */
+$fromQuery = http_build_query(array_diff_key($query, ['view' => 1, 'sort' => 1]) + ($saved !== null && !$saved['is_system'] ? ['view' => $saved['view_id']] : [])); ?>
 <?= view('shared/header.php', ['id' => 'inbox', 'title' => 'Inbox', 'crumbs' => [['Home', '/'], ['Inbox', null]],
     'action' => has_right('tickets.create') ? hx_link('/tickets/new', '<i class="feather-plus-circle me-1"></i>New ticket', 'btn btn-primary btn-touch', 'id="inbox-new-btn"') : '']) ?>
 <div class="main-content" id="inbox-content">
@@ -8,6 +9,10 @@
             <?php if ($v['system_key'] === 'team_board'): ?><?= hx_link('/board', e($v['name']), 'btn btn-touch btn-light', 'id="inbox-view-team_board"') ?>
             <?php else: ?><?= hx_link('/inbox?view=' . e($v['system_key']), e($v['name']), 'btn btn-touch ' . ($view === $v['system_key'] ? 'btn-primary' : 'btn-light'), 'id="inbox-view-' . e($v['system_key']) . '"') ?><?php endif; ?>
         <?php endforeach; ?>
+        <?php if ($saved !== null && !$saved['is_system']): ?><?= hx_link('/inbox?view=' . (int) $saved['view_id'], e($saved['name']), 'btn btn-touch btn-primary', 'id="inbox-view-' . (int) $saved['view_id'] . '"') ?><?php endif; ?>
+        <?= hx_link('/views/', '<i class="feather-bookmark me-1"></i>Views', 'btn btn-touch btn-light', 'id="inbox-views-link"') ?>
+        <?php if (has_right('views.personal') || has_right('views.shared')): ?><?= hx_link('/views/new?' . $fromQuery, '<i class="feather-save me-1"></i>Save as view', 'btn btn-touch btn-light', 'id="inbox-save-view-link"') ?><?php endif; ?>
+        <?php if ($saved !== null && $saved['layout'] === 'board'): ?><?= hx_link('/board?view=' . (int) $saved['view_id'], '<i class="feather-trello me-1"></i>Board', 'btn btn-touch btn-light', 'id="inbox-board-link"') ?><?php endif; ?>
     </div>
     <form method="get" action="/inbox" hx-get="/inbox" hx-target="#ticket-list" hx-select="#ticket-list" hx-swap="outerHTML" hx-push-url="true" hx-trigger="submit, change from:#inbox-filter-status, change from:#inbox-filter-queue, change from:#inbox-filter-assignee, change from:#inbox-filter-priority, change from:#inbox-filter-sort" class="card mb-3" id="inbox-filters"><div class="card-body d-flex flex-wrap gap-2">
         <?php if ($view !== ''): ?><input type="hidden" name="view" value="<?= e($view) ?>"><?php endif; ?>

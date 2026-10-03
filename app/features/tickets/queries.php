@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once dirname(__DIR__) . '/views/filters.php';     // slice 4: the one translator of filters to SQL
+
 /**
  * Tickets — the reads (slice 3, THE EXEMPLAR). Every list and page reads mcp_tickets and its sibling views: the database decides what the
  * caller sees (db/014), so a screen and a tool can never disagree. The filter vocabulary is the saved views' (db/011).
@@ -30,86 +32,15 @@ function ticket_cast(array $t): array
 /** The WHERE of the saved-view vocabulary on mcp_tickets t: [sql, args]. `me` resolves to the caller. */
 function ticket_where(array $f, int $memberId): array
 {
-    $where = ['t.merged_into_id IS NULL'];
-    $args = [];
-    $cats = (array) ($f['status_category'] ?? []);
-    if ($cats !== []) {
-        $where[] = 't.status_category = ANY (CAST(:cats AS text[]))';
-        $args['cats'] = pg_array_literal(array_values($cats));
-    }
-    if (($f['status'] ?? '') !== '') {
-        $where[] = 't.status = :status';
-        $args['status'] = (string) $f['status'];
-    }
-    $queues = isset($f['queue_id']) ? (array) $f['queue_id'] : [];
-    $queues = array_values(array_filter(array_map('intval', $queues)));
-    if ($queues !== []) {
-        $where[] = 't.queue_id = ANY (CAST(:queues AS bigint[]))';
-        $args['queues'] = '{' . implode(',', $queues) . '}';
-    }
-    $a = $f['assignee'] ?? null;
-    if ($a === 'me') {
-        $where[] = 't.assignee_member_id = :me';
-        $args['me'] = $memberId;
-    } elseif ($a === 'none') {
-        $where[] = 't.assignee_member_id IS NULL';
-    } elseif ($a !== null && $a !== '' && filter_var($a, FILTER_VALIDATE_INT) !== false) {
-        $where[] = 't.assignee_member_id = :assignee';
-        $args['assignee'] = (int) $a;
-    }
-    $r = $f['requester'] ?? null;
-    if ($r === 'me') {
-        $where[] = 't.requester_id = (SELECT hd_my_requester_id())';
-    } elseif ($r !== null && $r !== '' && filter_var($r, FILTER_VALIDATE_INT) !== false) {
-        $where[] = 't.requester_id = :requester';
-        $args['requester'] = (int) $r;
-    }
-    foreach (['organization_id', 'type_id', 'category_id'] as $k) {
-        if (($f[$k] ?? null) !== null && $f[$k] !== '') {
-            $where[] = "t.$k = :$k";
-            $args[$k] = (int) $f[$k];
-        }
-    }
-    $pr = array_values(array_intersect(array_keys(PRIORITY_COLORS), (array) ($f['priority'] ?? [])));
-    if ($pr !== []) {
-        $where[] = 't.priority = ANY (CAST(:priorities AS text[]))';
-        $args['priorities'] = pg_array_literal($pr);
-    }
-    $tags = array_values(array_filter(array_map('strval', (array) ($f['tags'] ?? ($f['tag'] ?? [])))));
-    if ($tags !== []) {
-        $where[] = 't.tags && CAST(:tags AS text[])';
-        $args['tags'] = pg_array_literal($tags);
-    }
-    if (!empty($f['needs_reply'])) {
-        $where[] = 't.needs_reply';
-    }
-    if (in_array($f['sla'] ?? '', ['at_risk', 'breached', 'paused', 'on_track'], true)) {
-        $where[] = 't.sla_state = :sla';
-        $args['sla'] = $f['sla'];
-    }
-    if (($f['stale_days'] ?? null) !== null && (int) $f['stale_days'] > 0) {
-        $where[] = 't.last_activity_at < now() - make_interval(days => :stale)';
-        $args['stale'] = (int) $f['stale_days'];
-    }
-    if (($f['channel'] ?? '') !== '') {
-        $where[] = 't.channel = :channel';
-        $args['channel'] = (string) $f['channel'];
-    }
-    $q = trim((string) ($f['q'] ?? ($f['text'] ?? '')));
-    if ($q !== '') {
-        $where[] = '(t.number ILIKE :qn OR t.subject ILIKE :q OR t.requester_name ILIKE :q)';
-        $args['q'] = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $q) . '%';
-        $args['qn'] = str_replace(['%', '_'], ['\\%', '\\_'], $q) . '%';
-    }
-    return [implode(' AND ', $where), $args];
+    return view_filters_sql($f, $memberId);                      // slice 4: the ONE translator (app/features/views/filters.php)
 }
 
 /** One page of tickets the caller may see, filtered and sorted. */
 function find_tickets_filtered(PDO $pdo, array $filters, int $memberId, int $limit = 50, int $offset = 0): array
 {
     [$where, $args] = ticket_where($filters, $memberId);
-    $sort = TICKET_SORTS[$filters['sort'] ?? ''] ?? TICKET_SORTS['last_activity'];
-    $st = $pdo->prepare('SELECT t.* FROM mcp_tickets t WHERE ' . $where . ' ORDER BY ' . $sort . ', t.ticket_id DESC LIMIT ' . (int) $limit . ' OFFSET ' . (int) $offset);
+    $sort = view_sort_sql((string) ($filters['sort_by'] ?? ($filters['sort'] ?? 'last_activity_at')), (string) ($filters['sort_dir'] ?? 'desc'));
+    $st = $pdo->prepare('SELECT t.* FROM mcp_tickets t WHERE ' . $where . ' ORDER BY ' . $sort . ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $offset);
     $st->execute($args);
     return array_map('ticket_cast', $st->fetchAll());
 }

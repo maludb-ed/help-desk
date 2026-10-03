@@ -135,10 +135,10 @@ const groupsOf = async (page) => (await page.locator('.nxl-navbar .nxl-caption l
   ok(bar.x >= nav.width - 1 && bar.y + bar.height >= 780, `the command bar sits at the bottom, right of the sidebar (x ${Math.round(bar.x)}, sidebar ${Math.round(nav.width)})`);
   ok((await page.locator('#header-role-badge').innerText()).includes('Super-admin'), 'the badge reads Super-admin');
   await page.screenshot({ path: `${SHOTS}/desktop-dashboard.png` });
-  await page.click('#nav-board .nxl-link');                       // a placeholder until slice 4 (the inbox was slice 3's)
-  await page.waitForURL(BASE + '/board');
-  await page.waitForSelector('#board-coming');
-  ok((await page.title()).startsWith('Board'), 'HTMX navigation: /board pushed, title "' + (await page.title()) + '"');
+  await page.click('#nav-canned .nxl-link');                      // a placeholder until slice 5 (the inbox was slice 3's, the board slice 4's)
+  await page.waitForURL(BASE + '/canned/');
+  await page.waitForSelector('#canned-coming');
+  ok((await page.title()).startsWith('Canned'), 'HTMX navigation: /canned/ pushed, title "' + (await page.title()) + '"');
   await page.screenshot({ path: `${SHOTS}/desktop-placeholder.png` });
   await page.goBack();
   await page.waitForURL(BASE + '/');

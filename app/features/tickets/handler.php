@@ -20,6 +20,8 @@ require_once __DIR__ . '/transition.php';
 require_once __DIR__ . '/dispatch.php';
 require_once dirname(__DIR__) . '/messages/queries.php';
 require_once dirname(__DIR__) . '/messages/present.php';
+require_once dirname(__DIR__) . '/views/board.php';
+require_once dirname(__DIR__) . '/views/present.php';
 
 /** The ticket a request names (`ticket`, `ticket_id`, `id`), visible to the caller — else 404 "Ticket not found." */
 function ticket_from_request(PDO $pdo, string ...$fields): array
