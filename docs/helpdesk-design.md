@@ -367,6 +367,16 @@ three days is the honest estimate, the tickets-core slice being half of it.
 
 ## 15. State
 
+**PHASE 3 COMPLETE — 2026-10-04.** Every screen (65) and action (96) of the manifest is built; no placeholder is left; the registry `--check` is clean; the installer's `plan` with the domain
+runs 60 steps with no stop; every slice's proof suite is green on its own scratch database (Phase 2 250, slices 211 · 129 · 223 · 114 · 116 · 130 · 134 · 110 · 160 · 101 = 1,578 checks).
+The decisions taken per slice stand in each spec's "Decisions taken while building" and the slice lines below. Next: Phase 4 (the MCP tools over the same query functions; the agents'
+proof), after the owner's `apply` makes the application live.
+
+**Slice 10 (reports and settings) — BUILT and proven 2026-10-04** (`docs/build-specs/reports-settings.md`): the queue dashboard (`/reports/`: six count cards each a link into the inbox
+listing exactly that count, by priority, aging, workload with capacity and availability, a 60-second refresh) and eight reports (`/reports/{report}`: volume, first response, resolution,
+SLA attainment, reopen rate, CSAT, workload, aging) over a period and a grouping, as a table and a CSV; one set of query functions over the mcp views (`app/features/reports/queries.php`)
+that Phase 4's tools reuse; a queue's holder reads their queues' numbers without `reports.view`. 2 screens, no action. **Proof:** `tests/phase3/slice10/run.sh` — 101 checks green.
+
 **Slice 9 (the knowledge base) — BUILT and proven 2026-10-03** (`docs/build-specs/knowledge-base.md`): sections and Markdown articles (`app/features/kb/markdown.php`, a
 whitelist renderer, no library; `body_html` cached on save), public ones with no session on the bare layout (`/kb/`, `/kb/s/{slug}`, `/kb/{slug}`, feedback, a public article's file),
 internal ones for `kb.read`, drafts and the desk (`/kb/admin/`) for `kb.edit`; one visibility rule `kb_visible_filter()` over the base tables; suggest and send from the composer

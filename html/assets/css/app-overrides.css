@@ -233,3 +233,7 @@ details > summary::-webkit-details-marker { display: none; }
 .article-body h2 { font-size: 1.25rem; margin-top: 1.25rem; }
 .article-body h3 { font-size: 1.1rem; margin-top: 1rem; }
 .article-body h4 { font-size: 1rem; margin-top: .75rem; }
+
+/* Slice 10 — reports: a count card is one link; each table scrolls inside its card. */
+.count-card .card-body:hover { background: #f8f9fb; }
+#queue-dashboard-tables .table-responsive { max-height: 24rem; }

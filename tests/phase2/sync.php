@@ -26,14 +26,14 @@ ok($state()['next_cursor'] !== $before && str_starts_with($state()['next_cursor'
 
 echo "3. A role change reaches members.roles in one pass\n";
 [$jm, ] = sign_on(27);
-ok(page($jm, '/reports/')['code'] === 403, 'Marco (support) may not see Reports');
+ok(page($jm, '/settings/queues/')['code'] === 403 && page($jm, '/reports/')['code'] === 200, 'Marco (support) may not see Queues — Reports he may, for his own queue (slice 10)');
 kernel_state(function ($s) { $s['incremental'] = incr(['access' => [['member_id' => 27, 'role' => 'lead', 'roles' => ['lead', 'support', 'user'], 'capability' => 'write', 'scopes' => []]]], '2026-03-02T00:00:00.000000Z'); return $s; });
 $out = sync();
 ok(str_contains($out, '1 holdings') && q('SELECT roles FROM members WHERE id = 27')[0]['roles'] === '{lead,support,user}', "one holding applied, roles now lead,support,user: $out");
-ok(page($jm, '/reports/')['code'] === 200 && badge_of($jm) === 'Lead', 'his open session sees Reports at once and the badge reads Lead — no new sign-on needed');
+ok(page($jm, '/settings/queues/')['code'] === 200 && badge_of($jm) === 'Lead', 'his open session sees Queues at once and the badge reads Lead — no new sign-on needed');
 kernel_state(function ($s) { $s['incremental'] = incr(['access' => [['member_id' => 27, 'role' => 'support', 'roles' => ['support', 'user'], 'capability' => 'write', 'scopes' => []]]], '2026-03-03T00:00:00.000000Z'); return $s; });
 sync();
-ok(page($jm, '/reports/')['code'] === 403 && q('SELECT roles FROM members WHERE id = 27')[0]['roles'] === '{support,user}', 'and back to support: Reports 403 again');
+ok(page($jm, '/settings/queues/')['code'] === 403 && q('SELECT roles FROM members WHERE id = 27')[0]['roles'] === '{support,user}', 'and back to support: Queues 403 again');
 
 echo "4. Access withdrawn ends the member's sessions in the same pass\n";
 [$jp, ] = sign_on(26);

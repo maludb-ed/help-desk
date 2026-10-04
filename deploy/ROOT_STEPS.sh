@@ -47,3 +47,13 @@ echo "   - the K6 text sender, if texts are wanted: php $KERNEL/bin/notify_endpo
 echo "   - DNS and TLS for helpdesk.subello.com (until then /etc/hosts maps it to this host)"
 echo "   - the agents' duties (triage */5, frontline */10) in Agent HR until the installer reads agents[].duty"
 echo "   - add helpdesk to $KERNEL/bin/install_default_applications.sh (K10) and build K8, K9, K11 in the kernel"
+
+# ------------------------------------------------------------------------------------------------------------------
+# 4. PHASE 3 (slices 8–10, 2026-10-03/04) — after 2, or again if 2 ran before Phase 3:
+echo "== 4. Phase 3"
+echo "   - the worker timer (slice 8): the installer installs deploy/helpdesk-worker.{service,timer}; if 2 ran earlier, re-run apply so the units land, then"
+echo "     systemctl status helpdesk-worker.timer   (one pass a minute: outbox, mail poll, SLA, snooze, auto-close, rules, surveys, dispatch retries, housekeeping)"
+echo "   - the vhost gained rewrites in Phase 3 (a rule's runs, a merge, /reports/{report}, /kb/s/{slug}, /kb/{slug} — both vhosts): if 2 ran earlier, re-run apply so the"
+echo "     rendered deploy/apache-helpdesk.conf is installed again, then apachectl configtest && systemctl reload apache2"
+echo "   - the knowledge base's files live under $APP/storage/attachments/articles (slice 9): the storage directory must be writable by www-data (the installer makes storage/)"
+echo "   - nothing else: reports (slice 10) write no table and need no key"

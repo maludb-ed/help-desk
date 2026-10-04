@@ -64,20 +64,46 @@ the menu item `my-settings` is the screen `settings`.
 - A chart library (see open questions); scheduled or mailed reports; a per-requester or per-organization scorecard page; exports other than CSV.
 
 ## Phase 3 closing checklist (this slice ends with it)
-- [ ] `php bin/build_action_registry.php` reports **65 screens built, 96 actions built**; `--check` OK; no unresolved endpoint.
-- [ ] The three rewrites added in Phase 3 (slice 8 `runs`, slice 9 the two `/kb/` ones, slice 10 `/reports/{report}`) are in `deploy/apache-helpdesk.conf` **both vhosts** and `tests/dev_router.php`, and rendered by the installer without a placeholder left.
-- [ ] `php /var/www/bin/app_install.php plan /srv/apps/helpdesk --domain subello.com` — no stop; only owner/apply todos.
-- [ ] Every earlier slice's proof re-run green, one at a time, on its own scratch database; the live application (if installed) answers health `database: ok` after each.
-- [ ] `app/features/shell/nav.php` has no placeholder item; every menu URL answers 200 or 403 by right.
-- [ ] The record written: `docs/helpdesk-design.md` §15 (Phase 3 complete, the decisions taken per slice), `CLAUDE.md` State, `deploy/ROOT_STEPS.sh` with every owner step so far.
+- [x] `php bin/build_action_registry.php` reports **65 screens built, 96 actions built**; `--check` OK; no unresolved endpoint (the builder learned the three slug rewrites, 2026-10-04).
+- [x] The three rewrites added in Phase 3 (slice 8 `runs`, slice 9 the two `/kb/` ones, slice 10 `/reports/{report}`) are in `deploy/apache-helpdesk.conf` **both vhosts** (the internal vhost gained them, and slice 3's `merge`, 2026-10-04) and `tests/dev_router.php`, and rendered by the installer without a placeholder left (the json proof counts them).
+- [x] `php /var/www/bin/app_install.php plan /srv/apps/helpdesk --domain subello.com` — 60 steps, 5 notes, no stop (2026-10-04).
+- [x] Every earlier slice's proof re-run green, one at a time, on its own scratch database (2026-10-04; the application is not installed here yet — no live health to read).
+- [x] `app/features/shell/nav.php` has no placeholder item (no `render_nav_stub()` call is left under `html/` — Phase 2's gates proof and the json proof both say so); every menu URL answers 200 or 403 by right (the gates matrix).
+- [x] The record written: `docs/helpdesk-design.md` §15 (Phase 3 complete, the decisions taken per slice), `CLAUDE.md` State, `deploy/ROOT_STEPS.sh` with every owner step so far (step 4, Phase 3).
 
-## Proof (scratch database with a dated fixture — tickets created, solved, reopened, rated across 60 days — curl as members; headless Chromium at 375 × 740 and 1280 × 800)
-- **Numbers reconcile**: each report's totals equal direct SQL over the fixture (the proof computes both); the CSV equals the table cell for cell and has every row when the table shows 50; formula-looking cells are prefixed; `report.export` logged with the row count.
-- **Period and grouping**: `from` > `to` → 422; 367 days → 422; `group_by=week` buckets on the business zone's Monday; an unknown report → 404 *"No such report."*
-- **Reach**: Lena (`reports.view`) sees every queue; Marco (IT holder, no `reports.view`) opens the dashboard and the reports **for IT only** (the queue selector offers IT alone; `?queue=` another → the views answer nothing, the page says *"Nothing to report for that queue."*); Priya → 403 *"You may not see reports."*; an agent granted `support` reads its queue's numbers through the same functions (the Phase 4 tools' proof reuses this fixture).
-- **Dashboard links**: every count links to `/inbox` with a filter that lists exactly that count (clicked in Chromium, the inbox's row count equals the card).
-- **Workload**: an agent assignee appears with its kind icon and no capacity when it has no presence row; a person over capacity is in danger.
-- **375 px**: cards stack; each table scrolls inside its card; the page never sideways; 1280 px: the three tables side by side.
+## Proof (`tests/phase3/slice10/run.sh`: the scratch database, slice 3's world plus a DATED fixture — thirteen tickets created, answered, solved, closed, reopened, rated and timed across 60 days in IT help and Facilities, an organization named `-SMOKE Dash Co`, an empty queue — curl as members and under a person token; headless Chromium at 375 × 740 and 1280 × 800; the registry `--check`)
+**Built and proven 2026-10-04: 101 checks green** (numbers 23, reach 20, period 18, json 12, browser 27, the registry); Phase 2's and slices 1–9's suites still green (Phase 2's
+gates matrix admits a queue's holders to `/reports/`; its placeholder check became "no placeholder is left"); the installer's `plan` with the domain: 60 steps, no stop.
+- [x] **The numbers reconcile.** Every report's totals equal direct SQL over the fixture, computed both ways: volume (created, solved, closed, reopened, open at end, the channels; IT's
+  own row; a zero row for the empty queue; one row per live queue), first response (tickets, responded, with a target, within target; IT's median minutes), resolution (solved; IT's median
+  hours), SLA attainment (due, met, breached; rows per queue × metric), reopen rate (solved, reopened; IT's median days to reopen = 2.0, the fixture's), CSAT (sent, answered, good, bad;
+  the bad reasons counted; the mean — on the good/bad scale), workload (Marco's open now, solved, minutes logged; the agent as an Agent), aging (the open total, the 4–7 d bucket, five
+  buckets for every queue). The dashboard's counts (open, unassigned, stale, new, needs reply) equal direct SQL; at risk and breached equal the view as Lena; Marco shows 3 open over a
+  capacity of 2, online; the agent has kind agent, no capacity and no availability; Lena is away; Colin is listed from Facilities.
+- [x] **Reach.** Lena (`reports.view`) is offered every live queue; Marco (IT holder, no `reports.view`) opens the dashboard with IT alone in the selector, `?queue=` another says *"Nothing
+  to report for that queue."* with no numbers, his volume report lists IT only and totals IT's own count; Priya → 403 *"You may not see reports."* on the dashboard, a report and its CSV;
+  Colin (collaborator) sees Facilities only; the agent under a person token: IT's numbers when it holds the queue, 403 when it does not.
+- [x] **The links and the words.** Each of the seven dashboard links (open, needs reply, unassigned, at risk, breached, new, stale) lists in the inbox exactly the count on the card; with a
+  queue chosen the links carry it; the workload row over capacity is in danger; the agent with its kind icon and no capacity; the dashboard refreshes every 60 s; the empty queue says
+  *"Nothing open in SMOKE Empty."* with nobody in the workload; the pages leak no address and no token.
+- [x] **The CSV and the period.** The CSV downloads with its name, CRLF, a header equal to the columns, every row (not a page), cell for cell the table's strings; `-SMOKE Dash Co` is
+  prefixed with an apostrophe in the CSV and shown unprefixed on the page; a cell that is a number (+1, −5) is never prefixed; `report.export` logged with report, period, grouping and
+  the row count; RFC 4180 quoting. from > to → 422 *"The period's start is after its end."*; 367 days → 422 *"A period is at most 366 days."*; 366 fine; a malformed date → 422; the default
+  is the last 30 days ending today in the business zone; `group_by=week` buckets on Mondays; `group_by=day` one row per day; an unknown grouping → 422 by name; an unknown report → 404
+  *"No such report."*; workload ignores a grouping; aging is about now whatever the period says.
+- [x] **JSON and the screens.** The dashboard answers counts, by_priority (urgent first), aging (five buckets), workload, links, queues, the chosen queue by name; a report answers report,
+  title, columns, rows, totals, row_count, csv, and the page shows the same cells with the totals row and Download CSV; a look is `screen.view` with `after.report` (the dashboard with
+  the queue); paging. Phase 3 closes: 65 screens and 96 actions built, no placeholder left, the three rewrites in both vhosts of the deploy template.
+- [x] **375 × 740 and 1280 × 800.** Six count cards and the three tables; on a phone the cards stack two a row, the tables stack and the workload table scrolls inside its card; on a desktop
+  the three tables sit side by side; clicking open, unassigned and needs reply lists exactly that count in the inbox (cards on a phone, rows on a desktop); the report page's wide table
+  scrolls inside; changing the grouping re-renders the table over HTMX and pushes the URL; no sideways scroll; no console errors.
+
+**Decisions taken while building (2026-10-04):** a queue's holder (`tickets.view_queue`) reads the dashboard and the reports for their queues without `reports.view` — the menu item
+stays for `reports.view` (the open question, answered yes); the query functions return typed numbers and `report_cells()` makes the strings the page, the JSON and the CSV share;
+`first_reopened_at` (db/016) gives "median days to reopen" from creation to the first reopening (the solve before it is not held); `workload` has no "assigned in period" column (the
+log is not read per row); a CSV cell that is a number is never prefixed; a report's three base-table reads are the business zone, the CSAT scale and `queue_presence` for the
+dashboard's capacity; the dashboard's refresh container carries `hx-disinherit="*"` so its links and forms do not inherit its `hx-select` (the lesson of the board, again); the
+registry builder knows the three slug rewrites; the internal vhost of the deploy template gained the same special rewrites as the public one.
 
 ## Open questions
 - **A chart library**: Projects vendored one for its reports (the owner allowed JavaScript packages where a screen earns them). Proposed for v1: tables and count cards only; a sparkline per report later if asked.

@@ -20,7 +20,7 @@ ok(req('GET', '/nosuchscreen', ['jar' => $j])['code'] === 404, 'an unknown path:
 ok(req('GET', '/request')['code'] === 200 && req('GET', '/t/' . str_repeat('ab', 24))['code'] === 404 && req('GET', '/t/' . str_repeat('ab', 24) . '/reply')['code'] === 405, '/request answers (slice 6); an unknown /t/{token} is the dead-link page (404); GET on its /reply is 405');
 ok(in_array(req('GET', '/settings/automation/1/runs')['code'], [302, 303], true), '/settings/automation/1/runs reaches runs.php (slice 8; an anonymous GET is sent to sign in)');
 ok(req('GET', '/kb/s/no-such-section', ['jar' => $j])['code'] === 404 && req('GET', '/kb/no-such-article', ['jar' => $j])['code'] === 404, '/kb/s/{slug} and /kb/{slug} are rewritten (slice 9); an unknown slug is 404');
-ok(req('GET', '/reports/backlog', ['jar' => $j])['code'] === 404, '/reports/backlog is rewritten but its handler is not built: 404 (slice 10 brings it)');
+ok(req('GET', '/reports/backlog', ['jar' => $j])['code'] === 404 && page($j, '/reports/volume')['code'] === 200, '/reports/{report} is rewritten (slice 10): an unknown report is 404, volume answers');
 ok(req('POST', '/channels/malumail/mail')['code'] === 403 && req('GET', '/channels/malumail/mail')['code'] === 405, 'POST /channels/malumail/mail unsigned: 403 (slice 7); GET: 405');
 $h = req('GET', '/api/v1/health');
 ok($h['code'] === 200 && json_decode($h['body'], true)['application'] === 'helpdesk', '/api/v1/health answers');

@@ -169,6 +169,12 @@ function screen_controller(string $url): ?string
     $path = parse_url($url, PHP_URL_PATH) ?: $url;
     $path = '/' . ltrim($path, '/');
     $path = preg_replace('/\{[a-z_]+\}/', '1', $path);          // /invoices/{id} → /invoices/1
+    // The vhost's slug rewrites outside the canonical shape (deploy/apache-helpdesk.conf, tests/dev_router.php): the knowledge base's slugs and a report's name.
+    foreach (['/kb/s/1' => '/kb/section.php', '/kb/1' => '/kb/article.php', '/reports/1' => '/reports/report.php'] as $slugUrl => $file) {
+        if ($path === $slugUrl) {
+            return is_file(WEB_ROOT . $file) ? WEB_ROOT . $file : null;
+        }
+    }
 
     if (str_ends_with($path, '/')) {
         return is_file(WEB_ROOT . $path . 'index.php') ? WEB_ROOT . $path . 'index.php' : null;

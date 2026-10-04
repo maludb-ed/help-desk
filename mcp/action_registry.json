@@ -1,6 +1,6 @@
 {
     "generated_from": "docs/business-os-action-manifest.md",
-    "generated_at": "2026-10-03T20:22:19+00:00",
+    "generated_at": "2026-10-03T20:55:32+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -573,7 +573,7 @@
             "section": "Knowledge base",
             "when": "one section's articles",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "kb-article": {
@@ -582,7 +582,7 @@
             "section": "Knowledge base",
             "when": "one article; a public article needs no session",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "kb-admin": {
@@ -648,8 +648,8 @@
             "params": [
                 "queue"
             ],
-            "built": false,
-            "stub": true
+            "built": true,
+            "stub": false
         },
         "reports": {
             "screen": "reports",
@@ -663,7 +663,7 @@
                 "group_by",
                 "format"
             ],
-            "built": false,
+            "built": true,
             "stub": false
         }
     },

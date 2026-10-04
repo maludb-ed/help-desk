@@ -14,7 +14,7 @@ $all = 'user collaborator support lead admin';
 $matrix = [
     '/' => $all, '/my-tickets' => $all, '/tickets/new' => $all, '/kb/' => $all, '/settings/' => $all, '/settings/tokens/' => $all, '/notifications' => $all, '/activity' => $all,
     '/inbox' => 'collaborator support lead admin', '/board' => 'collaborator support lead admin', '/requesters/' => 'collaborator support lead admin', '/organizations/' => 'collaborator support lead admin',
-    '/canned/' => 'support lead admin', '/reports/' => 'lead admin', '/settings/queues/' => 'lead admin',
+    '/canned/' => 'support lead admin', '/reports/' => 'collaborator support lead admin', '/settings/queues/' => 'lead admin',
     '/settings/statuses/' => 'admin', '/settings/vocabulary/' => 'admin', '/settings/fields/' => 'admin', '/settings/sla/' => 'admin', '/settings/automation/' => 'collaborator support lead admin',
     '/settings/mailboxes/' => 'admin', '/settings/csat' => 'admin', '/settings/agents' => 'admin',
 ];
@@ -37,9 +37,7 @@ foreach ($matrix as $route => $allowed) {
 ok($wrong === [], "$n role × screen checks (" . count($matrix) . ' screens × 5 roles) answer 200 or 403 as the rights say' . ($wrong ? ': ' . implode('; ', array_slice($wrong, 0, 6)) : ''));
 $r = page($jUser, '/inbox');
 ok(str_contains($r['body'], 'You may not see this queue&#039;s tickets.') || str_contains($r['body'], "You may not see this queue's tickets."), 'a refusal says what the person may not do, in words ("You may not see this queue\'s tickets.")');
-$r = page($jLead, '/reports/');                                                           // the knowledge base is slice 9's; reports are the one placeholder left until slice 10
-ok($r['code'] === 200 && str_contains($r['body'], 'id="reports-coming"') && str_contains($r['body'], 'slice 10'), 'a placeholder names the slice that builds it (Reports → slice 10)');
-ok((json_decode(page($jLead, '/reports/', $json)['body'], true)['error']['code'] ?? '') === 'not_built', 'and answers JSON callers not_built (501)');
+ok(trim((string) shell_exec('grep -rl "render_nav_stub(" ' . escapeshellarg(dirname(__DIR__, 2) . '/html') . ' 2>/dev/null')) === '', 'no placeholder screen is left — every screen of the manifest is built (Phase 3 complete)');
 $menu = fn (string $j): array => (preg_match_all('/id="nav-([a-z-]+)"/', page($j, '/')['body'], $m) ? $m[1] : []);
 $groups = fn (string $j): array => (preg_match_all('/nxl-caption"><label>([^<]+)</', page($j, '/')['body'], $m) ? $m[1] : []);
 ok($groups($jUser) === ['Help', 'Settings', 'Me'] && !in_array('inbox', $menu($jUser), true) && in_array('my-settings', $menu($jUser), true), 'a requester-only person sees Help, My settings (and Me): ' . implode(', ', $groups($jUser)));

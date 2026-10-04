@@ -68,8 +68,8 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `tests/` harness patterns. The kernel's `html/channels/malumail-mail.php` is the model for the mail webhook.
 - Kernel items this application waits on (design §11): K8 wake-an-agent, K9 escalation → ticket, K10 default
   application, K11 the installer's template check.
-- **State (2026-10-03): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; slices 1–9 (queues and people, the vocabulary, tickets core — THE EXEMPLAR, views and the board, working faster, the requesters' doors, email and notifications, automation and the worker, the knowledge base) BUILT and proven** —
-  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (61 screens + 96 actions built, 1 placeholder: reports),
+- **State (2026-10-04): Phase 0 BUILT; Phase 1 APPROVED; Phase 2 BUILT; PHASE 3 COMPLETE — slices 1–10 (queues and people, the vocabulary, tickets core — THE EXEMPLAR, views and the board, working faster, the requesters' doors, email and notifications, automation and the worker, the knowledge base, reports) BUILT and proven** —
+  the schema db/001–016, the kit, the tool surface (36 + 6), the manifest (65 screens, 96 actions) → `mcp/action_registry.json` (65 screens + 96 actions ALL built, no placeholder left),
   the shell (Phase 2), slices 1–2, slice 3 (`app/features/tickets/{queries,present,write,transition,dispatch,handler}.php`, `app/features/messages/`, `html/tickets/`, `html/inbox.php`;
   the prelude `tickets/handler.php` loads every feature a ticket reads; `ticket_from_request()` → `require_work()` → `hd_guard()` → `ticket_log()` (ticket_id + queue_id on every row) → `ticket_done()`),
   slice 4 (`app/features/views/{filters,queries,board,present}.php` — `view_filters_sql()` is THE translator of filters to SQL; `html/views/`, `html/board.php`, `html/board/{move,reorder}.php`),
@@ -82,8 +82,10 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   `html/settings/automation/`; a rule's note is authored by its creator else the first super-admin — the schema demands an author),
   slice 9 (`app/features/kb/{markdown,queries,search,present}.php` — `kb_visible_filter()` is THE visibility rule, over BASE tables (a visitor has no member); `md_render()` a whitelist renderer, no library;
   `html/kb/{index,section,article,feedback,attachment}.php` public on the bare layout, `html/kb/admin/` for `kb.edit`; the composer's Article picker → `link.php`/`send.php`; `attachment_add` takes `article`),
-  the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (116), `slice6/run.sh` (130), `slice7/run.sh` (134), `slice8/run.sh` (110), `slice9/run.sh` (160) — green 2026-10-03;
-  the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: slice 10 (`docs/build-specs/reports-settings.md`), the last.**
+  slice 10 (`app/features/reports/{queries,present,csv}.php` — the ONE set of report functions over the mcp views, Phase 4's tools reuse them; typed rows → `report_cells()` strings shared by page, JSON and CSV;
+  `html/reports/{index,report}.php`; a queue's holder reads their queues without `reports.view`; the dashboard's refresh container has `hx-disinherit="*"`),
+  the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (116), `slice6/run.sh` (130), `slice7/run.sh` (134), `slice8/run.sh` (110), `slice9/run.sh` (160), `slice10/run.sh` (101) — green 2026-10-04;
+  the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Next: Phase 4 (the MCP tools over the report and ticket query functions, the agents' proof) — after the owner's `apply` (deploy/ROOT_STEPS.sh).**
   Owed: the live launch (▲) after the owner's `apply`; the worker timer runs `bin/worker.php` once installed.
 - Proofs: `tests/phase2/run.sh` is the regression (sso, gates, sync, ingest, kernel_compat, vhost, browser.mjs, the registry check; the fakes `tests/fake_kernel.php`, `tests/fake_maludb.php`; ports 8291–8297). `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
   `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.
