@@ -3,7 +3,7 @@
 2026-10-02 · the fourth application from us beside the kernel, and the first that is **part of every OS install**:
 **the help desk**. Anyone — an employee, a customer with no OS account, an OS agent — files an issue or a request
 here, and humans and agents work it to a resolution. Its own repository `/srv/apps/helpdesk` (origin
-`github.com/maludb-ed/help-desk`), served as `helpdesk.<domain>` (`helpdesk.subello.com` here), built with
+`github.com/maludb/maludb-os-helpdesk`, moved into the maludb org 2026-10-04), served as `helpdesk.<domain>` (`helpdesk.subello.com` here), built with
 `htmx-php-builder` (how it is built) and fitted to `maludb-os-integration` 0.5.0 (how it fits), exactly as HR,
 Projects and txtSchedules were (`/srv/apps/txtschedules/docs/txtschedules-design.md` is the nearest exemplar).
 
