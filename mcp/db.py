@@ -155,7 +155,7 @@ def verify_kernel_token(token: str) -> bool:
         return False
     _, exp, app, nonce, sig = parts
     key = _action_key()
-    if key is None or not exp.isdigit() or app != ENV.get("APP_KEY", "hr") or len(nonce) != 32:
+    if key is None or not exp.isdigit() or app != ENV.get("APP_KEY", "helpdesk") or len(nonce) != 32:
         return False
     expected = hmac.new(key, f"kernel:{exp}.{app}.{nonce}".encode(), hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected, sig) and time.time() <= int(exp)
@@ -217,7 +217,7 @@ async def fetch_scoped(pool: asyncpg.Pool, sql: str, *params, member_id: int | N
             return [dict(r) for r in rows]
 
 
-SEARCH_DENY = ("set_config", "current_setting", "mcp_admit_agent", "ts_time_off_taken", "mcp_resolve_token", "pg_", "dblink", "lo_import", "lo_export")
+SEARCH_DENY = ("set_config", "current_setting", "mcp_admit_agent", "mcp_resolve_token", "hd_secure_link_", "hd_requester_for_", "hd_sla_", "hd_match_sla_policy", "pg_", "dblink", "lo_import", "lo_export")
 
 
 async def run_search(pool: asyncpg.Pool, sql: str, row_cap: int = 200) -> str:

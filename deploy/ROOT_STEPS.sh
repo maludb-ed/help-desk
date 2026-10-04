@@ -57,3 +57,11 @@ echo "   - the vhost gained rewrites in Phase 3 (a rule's runs, a merge, /report
 echo "     rendered deploy/apache-helpdesk.conf is installed again, then apachectl configtest && systemctl reload apache2"
 echo "   - the knowledge base's files live under $APP/storage/attachments/articles (slice 9): the storage directory must be writable by www-data (the installer makes storage/)"
 echo "   - nothing else: reports (slice 10) write no table and need no key"
+
+# ------------------------------------------------------------------------------------------------------------------
+# 5. PHASE 4 (the two MCP servers, 2026-10-04) — nothing new to decide; what `apply` now does that it did not:
+echo "== 5. Phase 4"
+echo "   - mcp/venv exists (python3 -m venv mcp/venv && mcp/venv/bin/pip install -r mcp/requirements.txt — the installer's step 'venv' says done); the proofs use it"
+echo "   - apply installs and starts helpdesk-records-mcp and helpdesk-activity-mcp on MCP_RECORDS_PORT and MCP_ACTIVITY_PORT (pinned in step 0), reachable as https://helpdesk.<domain>/mcp/records and /mcp/activity"
+echo "   - the installer's step 'registry' writes $KERNEL/mcp/registries/helpdesk.json (96 actions, 14 resolved entities) and asks you to restart certstudy-actions-mcp: that is when the kernel's Actions MCP offers Help Desk's actions"
+echo "   - check:  curl -s -o /dev/null -w '%{http_code}\n' https://helpdesk.<domain>/mcp/records   -> 401 (no token) means the server answers behind the proxy"

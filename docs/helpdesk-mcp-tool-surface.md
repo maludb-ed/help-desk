@@ -1,6 +1,6 @@
 # Help Desk — MCP tool surface
 
-2026-10-03 · **Phase 1, for the checkpoint.** The read tools every question in `docs/01-phase0-plan.md` §3 (Q1–Q44) and
+2026-10-03 · **Phase 1, for the checkpoint; BUILT in Phase 4, 2026-10-04** (`mcp/records_server.py`, `mcp/activity_server.py`, tool modules `mcp/hd_*.py`; proof `tests/phase4/run.sh`, 452 checks) — see "As built" at the foot. The read tools every question in `docs/01-phase0-plan.md` §3 (Q1–Q44) and
 `docs/helpdesk-design.md` is answered by. Writes are never here: they are the action tools the kernel's Actions MCP builds
 from `docs/helpdesk-action-manifest.md`.
 
@@ -164,3 +164,18 @@ addressed by its number when someone types ("HD-1042"), and by id in every table
 
 ## Size
 36 records tools (`app_roles` included), 6 activity tools, one guarded search each.
+
+## As built (Phase 4, 2026-10-04)
+
+36 records tools (app_roles and records_search included) and 6 activity tools, exactly the names above. What differs from the table, and why:
+- **`stale_tickets` and `tickets_changed_since` read `mcp_messages`, not `mcp_activity_log`.** The records role holds no grant on the activity view (db/015: the activity role alone reads it) and the schema is not
+  modified here. Each row carries `last_message_kind` and `last_message_by` instead of the last actor and action; the full trail of who did what is `ticket_history` on the activity server.
+- **A period is `[from 00:00, to 24:00)` in the CALLER's time zone** (`mcp_members.timezone`), where the PHP reports use the business zone (`app_settings.timezone`). The two agree whenever the zones do; the proof compares
+  `metrics_summary` with the report totals over a 70-day window (all UTC here). Times in answers are UTC with a `<field>_local` beside the key ones.
+- **Metrics are ported, not shared.** The PHP query functions cannot run in a Python server, so `metrics_summary` and `csat_summary` re-state the same definitions in SQL over the same views; the proof reconciles them.
+- **`similar_tickets`** scores by trigram similarity of the subject ×4, the same requester +3, the same organization +1, the same category +1; open tickets first.
+- **Resolve mode** is `q` alone (and perhaps `limit`) — decided from the fields the caller actually sent. The wrapper resolves fourteen entities (the table above); a repeated parameter (`tickets`, `cc`, `tags`…) is a list of
+  ids and is never looked up by name (the kernel would send the whole string as one query).
+- **The deny list of both searches** also refuses `hd_secure_link_*`, `hd_requester_for_*`, `hd_sla_*` and `hd_match_sla_policy` (all executable by the read roles by default, none a read).
+- **`app_roles`** reads `mcp_app_roles` and `hd_rights`: five roles, fourteen rights, `os.app-roles/1`.
+- Ports: records `MCP_RECORDS_PORT`, activity `MCP_ACTIVITY_PORT` (pinned in `config/.env` before `apply`, ROOT_STEPS 0); the scratch proofs use :8295, :8296 and :8297 (a records server whose kernel URL is dead).

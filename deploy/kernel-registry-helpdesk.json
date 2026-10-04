@@ -2,7 +2,7 @@
   "schema": "maludb-os.registry/1",
   "app_key": "helpdesk",
   "name": "Help Desk",
-  "note": "The installer (bin/app_install.php, step 'registry') writes mcp/registries/helpdesk.json in the kernel from this file's `resolve` block plus mcp/action_registry.json. Each resolve tool answers a plain LIST of rows carrying id_field and label_field when given `q` alone. The tools are the Phase 1 tool surface's names; Phase 4 builds them.",
+  "note": "The installer (bin/app_install.php, step 'registry') writes mcp/registries/helpdesk.json in the kernel from this file's `resolve` block plus mcp/action_registry.json. Each resolve tool answers a plain LIST of rows carrying id_field and label_field when given `q` alone. The tools are the Phase 1 tool surface's names; Phase 4 built them (mcp/records_server.py). A repeated param (tickets, cc) is a list of ids, never resolved by name.",
   "resolve": {
     "ticket": {
       "tool": "find_tickets",
@@ -12,8 +12,7 @@
       "params": [
         "ticket",
         "merge_into",
-        "other_ticket",
-        "tickets"
+        "other_ticket"
       ]
     },
     "queue": {
@@ -33,7 +32,6 @@
       "params": [
         "assignee",
         "member",
-        "follower",
         "on_behalf_of"
       ]
     },
@@ -43,8 +41,7 @@
       "id_field": "requester_id",
       "label_field": "display_name",
       "params": [
-        "requester",
-        "cc"
+        "requester"
       ]
     },
     "organization": {
@@ -99,6 +96,42 @@
       "label_field": "name",
       "params": [
         "view"
+      ]
+    },
+    "type": {
+      "tool": "get_vocabulary",
+      "query_param": "q",
+      "id_field": "type_id",
+      "label_field": "label",
+      "params": [
+        "type"
+      ]
+    },
+    "policy": {
+      "tool": "find_sla_policies",
+      "query_param": "q",
+      "id_field": "policy_id",
+      "label_field": "name",
+      "params": [
+        "policy"
+      ]
+    },
+    "rule": {
+      "tool": "find_rules",
+      "query_param": "q",
+      "id_field": "rule_id",
+      "label_field": "name",
+      "params": [
+        "rule"
+      ]
+    },
+    "mailbox": {
+      "tool": "find_mailboxes",
+      "query_param": "q",
+      "id_field": "mailbox_id",
+      "label_field": "address",
+      "params": [
+        "mailbox"
       ]
     }
   }
