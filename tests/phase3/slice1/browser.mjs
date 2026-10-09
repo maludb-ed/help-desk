@@ -64,7 +64,9 @@ const go = async (page, path) => page.goto(BASE + path, { waitUntil: 'networkidl
   ok((await page.locator('#queue-view-member-list').innerText()).includes('Through IT'), 'IT\'s members are listed "Through IT"');
   await page.screenshot({ path: `${SHOTS}/phone-queue-view.png` });
   // name a member as lead
-  await page.selectOption('#queue-member-form-field-member', { label: 'SMOKE Priya (person)' });
+  // the record picker (docs/record-picker.md): open it, choose a row
+  await page.click('#queue-member-form-field-member-open'); await page.waitForSelector('#record-picker .record-picker-row');
+  await page.click('#record-picker .record-picker-row[data-label="SMOKE Priya"]'); await page.waitForSelector('#record-picker', { state: 'hidden' });
   await page.check('#queue-member-form-field-lead');
   await page.click('#queue-member-form-save-btn');
   await page.waitForSelector('#queue-member-26-lead');

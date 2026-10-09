@@ -16,7 +16,7 @@ if ($id !== null) {
 $canOnBehalf = has_right('tickets.view_queue') || has_right('tickets.work');
 $categories = array_values(array_filter(find_category_tree($pdo), static fn (array $c): bool => $canOnBehalf || $c['requester_visible']));
 $data = ['cur' => $cur, 'queues' => $canOnBehalf ? find_queues($pdo) : [], 'categories' => $categories, 'types' => find_types($pdo), 'fieldDefs' => fields_for($pdo, 'ticket', $cur['type_id'] ?? null),
-         'members' => $canOnBehalf ? find_assignable_members($pdo) : [], 'onBehalfOf' => request_integer('on_behalf_of'), 'forCustomer' => request_string('requester') !== '', 'canOnBehalf' => $canOnBehalf, 'here' => here_url(),
+         'onBehalfOf' => request_integer('on_behalf_of'), 'forCustomer' => request_string('requester') !== '', 'canOnBehalf' => $canOnBehalf, 'here' => here_url(),
          'prefill' => ['subject' => mb_substr(request_string('subject'), 0, 300), 'body' => '', 'category' => request_integer('category'), 'queue' => request_integer('queue')]];
 $screen = $cur === null ? 'ticket-add' : 'ticket-edit';
 log_screen_view($pdo, $screen);

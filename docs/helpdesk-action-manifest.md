@@ -14,7 +14,11 @@
 - **Ids** are kebab-case `{entity}-list`, `{entity}-add`, `{entity}-view`, `{entity}-edit`, plus named screens.
 - **Canonical URLs** need the rewrites in `deploy/apache-helpdesk.conf`: `/{x}/new` → `form.php`, `/{x}/{id}/edit` →
   `form.php?id=`, `/{x}/{id}` → `view.php?id=`. A requester screen is designed at 375 px first; every screen is a page,
-  never a modal.
+  never a modal — the one exception is the record picker (below), which only chooses and closes.
+- **`GET /pick/?source=&q=&page=&<declared params>`** (`html/pick/index.php`, a fragment) is the record picker's one endpoint: it
+  answers the rows of a source in `app/pickers.php` (`person`, `assignee`, `member`, `organization`), gated by the right of the
+  screens that use the field. A search is not an action: nothing is logged and no tool or manifest row exists per source.
+  The hidden input under a picker keeps the old select's name and id, so no action's parameters changed.
 - **Prefill params** become query-string values the GET controller reads.
 - **Every screen partial stamps** `data-screen`, `data-entity`, `data-record-id` on `#page-content`, so "that", "this
   ticket" and "assign it to Marco" resolve against the page the user is on.

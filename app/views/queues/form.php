@@ -28,11 +28,9 @@ $back = $cur === null ? ['/settings/queues/', 'Queues'] : ['/settings/queues/' .
             <?php foreach (ASSIGNMENT_METHODS as $k => $label): ?>
                 <label class="d-flex align-items-center gap-2 border rounded px-3 mb-2 btn-touch" for="queue-form-field-method-<?= e($k) ?>"><input type="radio" class="form-check-input mt-0" name="assignment_method" value="<?= e($k) ?>" id="queue-form-field-method-<?= e($k) ?>" <?= ($cur['assignment_method'] ?? 'manual') === $k ? 'checked' : '' ?>><?= e($label) ?></label>
             <?php endforeach; ?>
-            <label class="form-label fs-12 text-muted mt-2" for="queue-form-field-assignee">Default assignee (a person or an agent; required for "Default assignee")</label>
-            <select name="default_assignee" id="queue-form-field-assignee" class="form-select btn-touch">
-                <option value="">Nobody</option>
-                <?php foreach ($members as $m): ?><option value="<?= (int) $m['member_id'] ?>" <?= ($cur['default_assignee_member_id'] ?? null) === (int) $m['member_id'] ? 'selected' : '' ?>><?= e($m['display_name']) ?> (<?= $m['member_kind'] === 'agent' ? 'agent' : 'person' ?>)</option><?php endforeach; ?>
-            </select>
+            <label class="form-label fs-12 text-muted mt-2" for="queue-form-field-assignee-open" id="queue-form-assignee-label">Default assignee (a person or an agent; required for "Default assignee")</label>
+            <?= picker_field(['id' => 'queue-form-field-assignee', 'name' => 'default_assignee', 'source' => 'member', 'value' => $cur['default_assignee_member_id'] ?? null, 'placeholder' => 'Nobody', 'title' => 'Default assignee',
+                'search' => 'Search people and agents…', 'labelledby' => 'queue-form-assignee-label']) ?>
         </div></div>
         <div class="card mb-3"><div class="card-header"><h5 class="card-title mb-0">Service and mail</h5></div><div class="card-body">
             <label class="form-label fs-12 text-muted" for="queue-form-field-schedule">Business hours</label>

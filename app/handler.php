@@ -208,6 +208,48 @@ function find_assignable_members(PDO $pdo): array
     return $pdo->query("SELECT member_id, display_name, member_kind FROM mcp_members WHERE capability IS NOT NULL ORDER BY member_kind DESC, display_name")->fetchAll();
 }
 
+/**
+ * One page of the same people, searchable — the record picker's people sources (app/pickers.php). $o: humans (bool: people only),
+ * queue (int: only those in that queue, named or through its department — the view's rule), not_named_in (int: leave out those already
+ * named in that queue). Reads mcp_members, so it lists exactly what the caller's screens list. Returns picker_result().
+ */
+function find_assignable_members_page(PDO $pdo, string $q, int $page, array $o = []): array
+{
+    $where = ['capability IS NOT NULL'];
+    $args = [];
+    if (!empty($o['humans'])) {
+        $where[] = "member_kind = 'human'";
+    }
+    if ($q !== '') {
+        $where[] = '(display_name ILIKE :q OR job_title ILIKE :q)';
+        $args['q'] = picker_like($q);
+    }
+    if (isset($o['queue'])) {
+        $where[] = 'member_id IN (SELECT member_id FROM mcp_queue_members WHERE queue_id = :queue)';
+        $args['queue'] = (int) $o['queue'];
+    }
+    if (isset($o['not_named_in'])) {
+        $where[] = "member_id NOT IN (SELECT member_id FROM mcp_queue_members WHERE queue_id = :xq AND how = 'named')";
+        $args['xq'] = (int) $o['not_named_in'];
+    }
+    $w = implode(' AND ', $where);
+    $n = $pdo->prepare("SELECT count(*) FROM mcp_members WHERE $w");
+    $n->execute($args);
+    $total = (int) $n->fetchColumn();
+    $st = $pdo->prepare("SELECT member_id, display_name, member_kind, job_title FROM mcp_members WHERE $w ORDER BY lower(display_name), member_id LIMIT " . PICKER_PAGE_SIZE . ' OFFSET ' . (($page - 1) * PICKER_PAGE_SIZE));
+    $st->execute($args);
+    return picker_result($st->fetchAll(), $total, $page);
+}
+
+/** One active member's name (a person or an agent) as the caller's views show it — the picker's label lookup. */
+function find_member_name(PDO $pdo, int $id): ?string
+{
+    $st = $pdo->prepare('SELECT display_name FROM mcp_members WHERE member_id = :id AND capability IS NOT NULL');
+    $st->execute(['id' => $id]);
+    $v = $st->fetchColumn();
+    return $v === false ? null : (string) $v;
+}
+
 /** The live departments of the mirror. [{department_id, name}] */
 function find_live_departments(PDO $pdo): array
 {

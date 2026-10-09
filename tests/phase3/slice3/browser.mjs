@@ -78,7 +78,9 @@ const shown = (page, sel) => page.evaluate((s) => { const e = document.querySele
   await page.waitForFunction(() => (document.querySelector('#ticket-conversation')?.innerText || '').includes('SMOKE browser reply'));
   ok(true, 'a reply lands in the conversation without a page load');
   // assign to the agent
-  await page.selectOption('#ticket-assign-form-field-assignee', '40');
+  // the record picker (docs/record-picker.md): open it, choose a row
+  await page.click('#ticket-assign-form-field-assignee-open'); await page.waitForSelector('#record-picker .record-picker-row[data-value="40"]');
+  await page.click('#record-picker .record-picker-row[data-value="40"]'); await page.waitForSelector('#record-picker', { state: 'hidden' });
   await page.click('#ticket-assign-form-save-btn');
   await page.waitForFunction(() => (document.querySelector('#ticket-head-queue')?.innerText || '').includes('SMOKE Frontline'));
   ok(true, 'assigning to the agent shows it in the header');

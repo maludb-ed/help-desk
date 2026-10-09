@@ -24,9 +24,10 @@
     <form <?= $post('assign.php') ?> id="ticket-assign-form" class="mb-3"><?= $hidden ?>
         <label class="form-label fs-12 text-muted mb-0" for="ticket-assign-form-field-queue">Queue</label>
         <select name="queue" id="ticket-assign-form-field-queue" class="form-select btn-touch mb-1"><?php foreach ($queues as $q): ?><option value="<?= (int) $q['queue_id'] ?>" <?= $q['queue_id'] === $facts['queue_id'] ? 'selected' : '' ?>><?= e($q['name']) ?></option><?php endforeach; ?></select>
-        <label class="form-label fs-12 text-muted mb-0" for="ticket-assign-form-field-assignee">Assignee</label>
-        <div class="input-group"><select name="assignee" id="ticket-assign-form-field-assignee" class="form-select btn-touch"><option value="none" <?= $facts['assignee_member_id'] === null ? 'selected' : '' ?>>Nobody</option><option value="me">Me</option><?php foreach ($assignees as $m): ?><option value="<?= (int) $m['member_id'] ?>" <?= $facts['assignee_member_id'] === (int) $m['member_id'] ? 'selected' : '' ?>><?= e($m['display_name']) ?><?= $m['member_kind'] === 'agent' ? ' (agent)' : '' ?></option><?php endforeach; ?></select>
-            <button type="submit" class="btn btn-light btn-touch" id="ticket-assign-form-save-btn"><i class="feather-check"></i></button></div>
+        <label class="form-label fs-12 text-muted mb-0" for="ticket-assign-form-field-assignee-open" id="ticket-assign-form-assignee-label">Assignee</label>
+        <?= picker_field(['id' => 'ticket-assign-form-field-assignee', 'name' => 'assignee', 'source' => 'assignee', 'value' => $facts['assignee_member_id'], 'label' => $facts['assignee_member_id'] === null ? null : ($t['assignee_name'] ?? null),
+            'placeholder' => 'Nobody', 'search' => 'Search who can take it…', 'include' => '#ticket-assign-form-field-queue', 'labelledby' => 'ticket-assign-form-assignee-label',
+            'append' => '<button type="submit" class="btn btn-light btn-touch" id="ticket-assign-form-save-btn"><i class="feather-check"></i></button>']) ?>
     </form>
     <?php if ($t['assignee_kind'] === 'agent'): ?>
     <form <?= $post('dispatch.php') ?> class="mb-3"><?= $hidden ?><button type="submit" class="btn btn-light btn-sm btn-touch w-100" id="ticket-dispatch-btn"><i class="feather-cpu me-1"></i>Hand it to <?= e($t['assignee_name']) ?> again</button></form>

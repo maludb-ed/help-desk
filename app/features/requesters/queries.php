@@ -202,3 +202,33 @@ function find_organizations_for_select(PDO $pdo): array
 {
     return $pdo->query('SELECT organization_id, name FROM mcp_organizations WHERE active ORDER BY lower(name)')->fetchAll();
 }
+
+/** One page of the live organizations, searchable by name or domain — the record picker's source. Reads mcp_organizations: what the caller may see. */
+function find_organizations_page(PDO $pdo, string $q, int $page): array
+{
+    $where = 'active';
+    $args = [];
+    if ($q !== '') {
+        $where .= ' AND (name ILIKE :q OR EXISTS (SELECT 1 FROM unnest(COALESCE(domains, ARRAY[]::text[])) d WHERE d ILIKE :q))';
+        $args['q'] = picker_like($q);
+    }
+    $n = $pdo->prepare("SELECT count(*) FROM mcp_organizations WHERE $where");
+    $n->execute($args);
+    $st = $pdo->prepare("SELECT organization_id, name, support_tier, domains FROM mcp_organizations WHERE $where ORDER BY lower(name), organization_id LIMIT " . PICKER_PAGE_SIZE . ' OFFSET ' . (($page - 1) * PICKER_PAGE_SIZE));
+    $st->execute($args);
+    $rows = $st->fetchAll();
+    foreach ($rows as &$r) {
+        $r['domains'] = pg_text_array((string) ($r['domains'] ?? '{}'));
+    }
+    unset($r);
+    return picker_result($rows, (int) $n->fetchColumn(), $page);
+}
+
+/** One live organization's name as the caller sees it — the picker's label lookup. */
+function find_organization_name(PDO $pdo, int $id): ?string
+{
+    $st = $pdo->prepare('SELECT name FROM mcp_organizations WHERE organization_id = :id AND active');
+    $st->execute(['id' => $id]);
+    $v = $st->fetchColumn();
+    return $v === false ? null : (string) $v;
+}

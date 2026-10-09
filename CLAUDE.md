@@ -48,7 +48,7 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
 - **Every port env (`APP_INTERNAL_PORT`, `MCP_RECORDS_PORT`, `MCP_ACTIVITY_PORT`) is in `maludb-os.json` `env.required`**
   and pinned in `config/.env` before the installer's `apply` (txtSchedules left two out and Apache went down with
   `{{…}}` in its vhost, 2026-10-02).
-- Phone first for requesters: every requester screen designed at 375 px before desktop; no modals; full-page
+- Phone first for requesters: every requester screen designed at 375 px before desktop; no modals — the ONE exception besides `hx-confirm` is the record picker's `#record-picker` (a modal that only chooses; docs/record-picker.md); full-page
   create/edit; cards for named things, tables for ledgers; every name a link, every page a way back.
 - Commit after every finished step on `main`, in the sibling repos' message style (`Help Desk: …`); never push.
 - Smokes and fixtures are named `SMOKE <run>`; proofs run on a scratch database and never touch the installed
@@ -87,6 +87,7 @@ Phase 1 exists — `docs/helpdesk-mcp-tool-surface.md`, `docs/helpdesk-action-ma
   the shared handler kit `app/handler.php`. **Proofs:** `tests/phase2/run.sh` (250), `tests/phase3/slice1/run.sh` (211), `slice2/run.sh` (129), `slice3/run.sh` (223), `slice4/run.sh` (114), `slice5/run.sh` (116), `slice6/run.sh` (130), `slice7/run.sh` (134), `slice8/run.sh` (110), `slice9/run.sh` (160), `slice10/run.sh` (101) — green 2026-10-04;
   the installer's `plan` clean. The record: `docs/helpdesk-design.md` §15 and each spec's "Proof". **Phase 4 proofs:** `tests/phase4/run.sh` (gate 58, tools 31 + 52 + 72 + 36, registry 60, hook 143) — green 2026-10-04; scratch ports :8295/:8296/:8297. **Next: Phase 5 — the owner's `apply` (deploy/ROOT_STEPS.sh), then the end-to-end proof.**
   Owed: the live launch (▲) after the owner's `apply`; the worker timer runs `bin/worker.php` once installed.
+- **Record picker (2026-10-09):** a form chooses a RECORD (a person, an organization) through `picker_field()` and the one modal, never a `<select>` listing every row — `app/picker.php`, `app/pickers.php` (the sources, each gated by the right of the screens that use the field), `html/pick/index.php`, `docs/record-picker.md`; proof `tests/picker/run.sh` (66 checks, `BROWSER=1` adds the headless pass). **`tests/setup_dev.sh` ALTERs the cluster's roles (helpdesk_rw, …, the installed application's too) to a scratch password whenever the checkout has no `config/.env` — never run it, or any `tests/phase*/run.sh`, from a worktree without a scratch `config/.env` that carries the roles' current passwords.**
 - Proofs: `tests/phase2/run.sh` is the regression (sso, gates, sync, ingest, kernel_compat, vhost, browser.mjs, the registry check; the fakes `tests/fake_kernel.php`, `tests/fake_maludb.php`; ports 8291–8297). `tests/setup_dev.sh` builds the scratch database and writes its environment to `$HD_DEV_ENV` (real environment variables, read ahead of
   `config/.env`); **never put a `config/.env` here before the installer's `apply`** except the three-line port pin of `deploy/ROOT_STEPS.sh` step 0.
 - The shell's menu table is `app/features/shell/nav.php` (the bootstrap requires it; Phase 2 builds the shell around it). `app/activity.php`

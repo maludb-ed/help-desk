@@ -1,4 +1,4 @@
-<?php /** One queue (screen `queue-view`). Data: q, members, presence, candidates, may (manage, members), notice, here */ $id = (int) $q['queue_id']; ?>
+<?php /** One queue (screen `queue-view`). Data: q, members, presence, may (manage, members), notice, here */ $id = (int) $q['queue_id']; ?>
 <?= view('shared/header.php', ['id' => 'queue-view', 'title' => $q['name'], 'crumbs' => [['Home', '/'], ['Queues', '/settings/queues/'], [$q['name'], null]], 'back' => back_link() ?? ['/settings/queues/', 'Queues'],
     'action' => $may['manage'] ? hx_link(with_back('/settings/queues/' . $id . '/edit', $here), '<i class="feather-edit-2 me-1"></i>Edit', 'btn btn-primary btn-touch', 'id="queue-view-edit-btn"') : '']) ?>
 <div class="main-content" id="queue-view-content">
@@ -33,11 +33,9 @@
                 <div class="card-body border-top">
                     <form method="post" action="/settings/queues/member.php" hx-post="/settings/queues/member.php" hx-target="#flash" id="queue-member-form" class="row g-2 align-items-end">
                         <?= csrf_field() ?><input type="hidden" name="queue" value="<?= $id ?>"><input type="hidden" name="return_to" value="<?= e($here) ?>">
-                        <div class="col-12 col-md-7"><label class="form-label fs-12 text-muted" for="queue-member-form-field-member">Add a member</label>
-                            <select name="member" id="queue-member-form-field-member" class="form-select btn-touch" required>
-                                <option value="">Choose a person or an agent…</option>
-                                <?php foreach ($candidates as $c): ?><option value="<?= (int) $c['member_id'] ?>"><?= e($c['display_name']) ?> (<?= $c['member_kind'] === 'agent' ? 'agent' : 'person' ?>)</option><?php endforeach; ?>
-                            </select></div>
+                        <div class="col-12 col-md-7"><label class="form-label fs-12 text-muted" for="queue-member-form-field-member-open" id="queue-member-form-member-label">Add a member</label>
+                            <?= picker_field(['id' => 'queue-member-form-field-member', 'name' => 'member', 'source' => 'member', 'value' => null, 'required' => true, 'placeholder' => 'Choose a person or an agent…', 'title' => 'Add a member',
+                                'search' => 'Search people and agents…', 'params' => ['not_named_in' => $id], 'labelledby' => 'queue-member-form-member-label']) ?></div>
                         <div class="col-7 col-md-3"><label class="d-flex align-items-center gap-2 border rounded px-3 btn-touch mb-0" for="queue-member-form-field-lead"><input type="checkbox" class="form-check-input mt-0" name="is_lead" value="yes" id="queue-member-form-field-lead">As lead</label></div>
                         <div class="col-5 col-md-2"><button type="submit" class="btn btn-primary btn-touch w-100" id="queue-member-form-save-btn">Add</button></div>
                     </form>

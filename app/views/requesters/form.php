@@ -20,11 +20,8 @@ $back = $cur === null ? ['/requesters/', 'Requesters'] : ['/requesters/' . (int)
                 <label class="form-label fs-12 text-muted" for="requester-form-field-phone">Phone</label>
                 <input type="text" name="phone" id="requester-form-field-phone" class="form-control btn-touch mb-3" maxlength="40" value="<?= e($cur['phone'] ?? '') ?>">
             <?php endif; ?>
-            <label class="form-label fs-12 text-muted" for="requester-form-field-organization">Organization</label>
-            <select name="organization" id="requester-form-field-organization" class="form-select btn-touch mb-3">
-                <option value="">None</option>
-                <?php foreach ($organizations as $o): ?><option value="<?= (int) $o['organization_id'] ?>" <?= ($cur['organization_id'] ?? $organization) === (int) $o['organization_id'] ? 'selected' : '' ?>><?= e($o['name']) ?></option><?php endforeach; ?>
-            </select>
+            <label class="form-label fs-12 text-muted" for="requester-form-field-organization-open" id="requester-form-field-organization-label">Organization</label>
+            <div class="mb-3"><?= picker_field(['id' => 'requester-form-field-organization', 'name' => 'organization', 'source' => 'organization', 'value' => $cur['organization_id'] ?? $organization, 'placeholder' => 'None', 'search' => 'Search organizations…', 'labelledby' => 'requester-form-field-organization-label']) ?></div>
             <?php if (!$managed): ?>
                 <div class="row g-2 mb-3">
                     <div class="col-6"><label class="form-label fs-12 text-muted" for="requester-form-field-locale">Locale</label><input type="text" name="locale" id="requester-form-field-locale" class="form-control btn-touch" maxlength="10" value="<?= e($cur['locale'] ?? '') ?>" placeholder="en"></div>

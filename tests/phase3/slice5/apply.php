@@ -52,5 +52,7 @@ ok($c === 200 && preg_match('#<textarea name="body" id="ticket-reply-form-field-
 ok(str_contains($html, 'id="ticket-reply-canned-effects" hx-swap-oob="true"') && str_contains($html, 'name="canned_id" value="' . $cid . '"') && str_contains($html, 'name="apply_side_effects" value="yes"') && str_contains($html, '→ Pending'), 'with the side-effect chips and the checkbox out-of-band');
 ok(count(messages_of($t4)) === 2, 'and no message written');
 $body = page($marco, '/tickets/' . $t4)['body'];
-ok(!str_contains($body, 'modal'), 'no modal anywhere on the ticket page');
+// The shell's ONE modal is the record picker's (#record-picker, docs/record-picker.md) — the second exemption to "no modals" beside hx-confirm; it is taken out first.
+$bodyNoPicker = preg_replace('#<div class="modal fade" id="record-picker".*?id="record-picker-create-btn">.*?</button>\s*</div>\s*</div>\s*</div>\s*</div>#s', '', $body);
+ok(!str_contains($bodyNoPicker, 'modal') && $bodyNoPicker !== $body, 'no modal anywhere on the ticket page (the record picker\'s is the one exception)');
 finish();
